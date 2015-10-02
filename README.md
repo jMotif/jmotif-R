@@ -1,4 +1,4 @@
-### jmotif -- an R package for Symbolic Aggregate approXimation
+### An R implementation for Symbolic Aggregate approXimation (i.e., SAX)
 
 Implements z-Normalization [1], PAA [2], and SAX [3] in R.
 
@@ -52,4 +52,22 @@ PAA reduces the time series dimensionality by averaging values of equal-sized se
     segments(1+7/3*2,y_paa3[3],8,y_paa3[3],lwd=1,col="red")
     points(x=1+7/3*2+7/3/2,y=y_paa3[3],col="red",pch=23,lwd=5)
       
-![z-normalization of a scaled sine wave](https://raw.githubusercontent.com/jMotif/jmotif-R/master/assets/fig_paa83.png)
+![PAA transform of an 8-points time series into 3 points](https://raw.githubusercontent.com/jMotif/jmotif-R/master/assets/fig_paa83.png)
+
+#### 3.0 SAX transform (`ts2string(ts, a_size)`)
+Transforms each of the input time series points into a letter. Typically, SAX applied to time series of reduced with PAA dimensionality in order to accelerate the time series search by their indexing in the symbolic space. Before processing with PAA and SAX, time series are usually z-Normalized.
+
+The figure below illustrates the PAA+SAX procedure: 8 points time series is converted into 3-points PAA representation at the first step, PAA values are converted into letters by using 3 letters alphabet at the second step.
+
+    y <- seq(-2,2, length=100)
+    x <- dnorm(y, mean=0, sd=1)
+    lines(x,y, type="l", lwd=5, col="magenta")
+    abline(h = alphabet2cuts(3)[2:3], lty=2, lwd=2, col="magenta")
+    text(0.7,-1,"a",cex=2,col="magenta")
+    text(0.7, 0,"b",cex=2,col="magenta")
+    text(0.7, 1,"c",cex=2,col="magenta")
+
+    > ts2string(y_paa3, 3)
+    [1] "a" "c" "c"
+      
+![an application of SAX transform (3 letters word size and 3 letters alphabet size) to an 8 points time series ](https://raw.githubusercontent.com/jMotif/jmotif-R/master/assets/fig_sax83.png)
