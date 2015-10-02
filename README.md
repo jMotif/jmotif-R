@@ -1,4 +1,4 @@
-# jmotif-R
+# jmotif-R -- an R package for Symbolic Aggregate approXimation of time series
 
 Implements z-Normalization [1], PAA [2], and SAX [3] in R.
 
@@ -30,7 +30,7 @@ Z-normalization is a time series preprocessing step proposed Goldin&Kannelakis w
       
 ![z-normalization of a scaled sine wave](https://raw.githubusercontent.com/jMotif/jmotif-R/master/assets/fig_znorm.png)
 
-### 1.0 Piecewise Aggregate Approximation (i.e., PAA)
+### 2.0 Piecewise Aggregate Approximation (i.e., PAA)
 PAA reduces the time series dimensionality by averaging values of equal-sized segments of the original time series. In the following example the time series of dimensionality 8 points is reduced to 3 points.
 
     y = c(-1, -2, -1, 0, 2, 1, 1, 0)
