@@ -9,7 +9,7 @@ znorm(ts, threshold)
   \item{threshold}{an optional parameter specifying the normalization threshold.}
 }
 \description{
-Subtracts mean and bring standard deviation to a unit value.
+Subtracts the mean and brings the standard deviation to a unit value.
 }
 \examples{
 x = seq(0, pi*4, 0.02)
