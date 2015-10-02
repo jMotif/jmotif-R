@@ -28,4 +28,4 @@ Z-normalization is a time series preprocessing step proposed Goldin&Kannelakis w
     legend(0, -4, c("scaled sine wave","z-normalized wave"),
       lty=c(1,1), lwd=c(1,1), col=c("blue","red"), cex=0.8)
       
-![z-normalization of a scaled sine wave](https://raw.githubusercontent.com/jMotif/jmotif-r/master/src/assets/fig_znorm.png)
+![z-normalization of a scaled sine wave](https://raw.githubusercontent.com/jMotif/jmotif-R/master/assets/fig_znorm.png)
