@@ -1,1 +1,5 @@
-exportPattern("^[[:alpha:]]+")
+## methods
+export(znorm)
+
+## base packages
+importFrom("matlab", reshape)

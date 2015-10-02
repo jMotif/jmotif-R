@@ -3,8 +3,11 @@ Type: Package
 Title: Symbolic Aggregate Approximation of time series
 Version: 0.1
 Date: 2015-10-02
-Author: Pavel Senin
+Author: Pavel Senin <seninp@gmail.com>
 Maintainer: Pavel Senin <seninp@gmail.com>
 Description: Symbolic Aggregate Approximation of time series. An experimental code.
-License: LGPL
+Depends: R (>= 3.1.0)
+License: GPL-2
 LazyData: TRUE
+Imports:
+    matlab
