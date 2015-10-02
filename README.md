@@ -1,4 +1,4 @@
-#### jmotif-R -- an R package for Symbolic Aggregate approXimation of time series
+### jmotif -- an R package for Symbolic Aggregate approXimation
 
 Implements z-Normalization [1], PAA [2], and SAX [3] in R.
 
