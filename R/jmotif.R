@@ -4,7 +4,7 @@
 #   Check Package:             'Ctrl + Shift + E'
 #   Test Package:              'Ctrl + Shift + T'
 
-znorm <- function(ts, threshold){
+znorm <- function(ts, threshold=0.01){
 
   if(is.matrix(ts)){
 
