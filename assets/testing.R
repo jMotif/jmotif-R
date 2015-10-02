@@ -16,3 +16,6 @@ points(x=1+7/3+7/3/2,y=y_paa3[2],col="red",pch=23,lwd=5)
 
 segments(1+7/3*2,y_paa3[3],8,y_paa3[3],lwd=1,col="red")
 points(x=1+7/3*2+7/3/2,y=y_paa3[3],col="red",pch=23,lwd=5)
+
+y_paa3
+ts2string(y_paa3,3)
