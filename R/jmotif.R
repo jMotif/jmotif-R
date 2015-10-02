@@ -52,4 +52,26 @@ znorm <- function(ts, threshold=0.01){
 #dim(y)<-c(1,2)
 #lines(x,znorm(y,0.01),type="l",col="green")
 #y=t(t(y))
-#lines(x,znorm(y,0.01),type="l",col="orange")
+#lines(x,znorm(y,0.01),type="l",colmatrix(colMeans(res), nrow=1, ncol=ap)="orange")
+
+paa <- function(ts, npoints){
+
+  len <- length(ts)
+
+  if(len != npoints){
+
+    if( (len %% npoints) == 0 ){
+      res <- reshape(ts, len %/% npoints, npoints)
+    }else{
+      tmp <- matrix(rep(ts,npoints),byrow=T,nrow=npoints)
+      res <- reshape(tmp, len, npoints)
+    }
+
+    matrix(colMeans(res), nrow=1, ncol=npoints)
+  } else {
+
+    ts
+
+  }
+
+}

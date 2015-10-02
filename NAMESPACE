@@ -1,5 +1,6 @@
 ## methods
 export(znorm)
+export(paa)
 
 ## base packages
 importFrom("matlab", reshape)

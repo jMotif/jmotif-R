@@ -5,8 +5,8 @@
 znorm(ts, threshold)
 }
 \arguments{
-  \item{ts}{an input time series.}
-  \item{threshold}{an optional parameter specifying the normalization threshold.}
+  \item{ts}{an input time series}
+  \item{threshold}{an optional parameter specifying the normalization threshold}
 }
 \description{
 Subtracts the mean and brings the standard deviation to a unit value.
