@@ -1,6 +1,6 @@
-### An R implementation for Symbolic Aggregate approXimation (i.e., SAX)
+### An R implementation of z-Normalization, PAA, and SAX
 
-Implements z-Normalization [1], PAA [2], and SAX [3] in R.
+Implements time series symbolic discretization built upon z-Normalization [1], PAA [2], and SAX [3] in R.
 
 [1] Dina Goldin and Paris Kanellakis,
 _On similarity queries for time-series data: Constraint specification and implementation._ 
