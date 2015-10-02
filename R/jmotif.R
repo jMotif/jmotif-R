@@ -81,8 +81,8 @@ num2letter <- function(num){
 ##
 ## Converts the timeseries into string
 ##
-ts2string <- function(ts, aSize){
-  cut_points <- alphabet2cuts(aSize)
+ts2string <- function(ts, a_size){
+  cut_points <- alphabet2cuts(a_size)
   res <- rep(0, ncol(ts))
   for(i in 1:ncol(ts)){
     res[i] = length(cut_points[cut_points<=ts[i]])
