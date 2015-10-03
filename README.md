@@ -1,5 +1,7 @@
 ### An R implementation of z-Normalization, PAA, and SAX
 
+![Continous CI with Travis](https://travis-ci.org/jMotif/jmotif-R.svg)
+
 Implements time series symbolic discretization built upon z-Normalization [1], PAA [2], and SAX [3] in R.
 
 [1] Dina Goldin and Paris Kanellakis,
