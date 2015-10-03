@@ -2,6 +2,41 @@ language: r
 sudo: true
 warnings_are_errors: true
 
+r_binary_packages
+  - crayon
+  - htmltools
+  - lazyeval
+  - rex
+  - colorspace
+  - dichromat
+  - formatR
+  - gridBase
+  - gTable
+  - highr
+  - irlba
+  - iterators
+  - labeling
+  - markdown
+  - plyr
+  - proto
+  - RColorBrewer
+  - registry
+  - stringdist
+  - testthat
+  - xtable
+  - yaml
+  - foreach
+  - knitr
+  - munsel
+  - pkgmaker
+  - reshape2
+  - doParallel
+  - rngools
+  - scales
+  - NMF
+  - ggplot2
+  - igraph
+
 r_github_packages:
   - jimhester/covr
   - jimhester/lintr
