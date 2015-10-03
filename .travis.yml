@@ -6,7 +6,6 @@ r_binary_packages:
   - crayon
   - htmltools
   - lazyeval
-  - rex
   - colorspace
   - dichromat
   - formatR
@@ -27,11 +26,9 @@ r_binary_packages:
   - yaml
   - foreach
   - knitr
-  - munsel
   - pkgmaker
   - reshape2
   - doParallel
-  - rngools
   - scales
   - NMF
   - ggplot2
