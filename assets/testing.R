@@ -46,3 +46,5 @@ ts2string(y_paa3, 3)
 min_dist(ts2string(y_paa3, 3), ts2string(rev(y_paa3), 3), 3)
 str1=ts2string(y_paa3, 3)
 str2=ts2string(rev(y_paa3), 3)
+
+letters2idx(c('a','b','c','a'))

@@ -1,16 +1,20 @@
-# Hello, world!
 #
 #   Build and Reload Package:  'Ctrl + Shift + B'
 #   Check Package:             'Ctrl + Shift + E'
 #   Test Package:              'Ctrl + Shift + T'
 
+letters <- c("a",  "b",  "c",  "d",  "e", "f",  "g",  "h",  "i",  "j",
+             "k",  "l",  "m",  "n",  "o", "p",  "q",  "r",  "s",  "t",
+             "u",  "v",  "w",  "x",  "y",  "z")
+
 ##
-## Converts the specified resolution into the cut points
+## Converts the given alphabet size into a set of cut points (lines)
 ##
 alphabet2cuts <- function(a_size){
 
-  if(a_size>20 && a_size < 1){
-    stop(paste("unable to get alphabet cuts for the alphabet size",a_size))
+  if(a_size>20 || a_size < 2){
+    stop(paste("unable to get alphabet cuts for the alphabet size ",
+               a_size, ", valid sizes 2 - 20.",sep=""))
   }
 
   switch(a_size,
@@ -37,7 +41,6 @@ alphabet2cuts <- function(a_size){
   )
 
 }
-
 
 ##
 ## computes distance matrix for the alphabet size specified
@@ -68,26 +71,22 @@ sax_distance_matrix <- function (a_size){
 ##
 ## Converts the specified resolution into the cut points
 ##
-num2letter <- function(num){
-  letters <- c("a",  "b",  "c",  "d",  "e",
-               "f",  "g",  "h",  "i",  "j",
-               "k",  "l",  "m",  "n",  "o",
-               "p",  "q",  "r",  "s",  "t",
-               "u",  "v",  "w",  "x",  "y",  "z")
-  letters[num]
+idx2letter <- function(idx){
+  letters[idx]
 }
 
+##
+## Translates a letter to the alphabet index
+##
 letter2idx <- function(letter){
-  which(c("a",  "b",  "c",  "d",  "e",
-               "f",  "g",  "h",  "i",  "j",
-               "k",  "l",  "m",  "n",  "o",
-               "p",  "q",  "r",  "s",  "t",
-               "u",  "v",  "w",  "x",  "y",  "z")
-        %in% letter)
+  which(letters %in% letter)
 }
 
+##
+## Converts the specified resolution into the cut points
+##
 letters2idx <- function(str){
-  as.vector(aaply(str, 1, letter2idx))
+  as.vector(plyr::aaply(str, 1, letter2idx))
 }
 
 ##
@@ -105,7 +104,7 @@ ts2string <- function(ts, a_size){
   for(i in 1:len){
     res[i] = length(cut_points[cut_points<=ts[i]])
   }
-  num2letter(res)
+  idx2letter(res)
 }
 
 ##

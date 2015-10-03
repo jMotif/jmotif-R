@@ -8,11 +8,11 @@ Maintainer: Pavel Senin <seninp@gmail.com>
 Description: Symbolic Aggregate Approximation of time series. An experimental code.
 Depends: R (>= 3.1.0)
 License: GPL-2
-URL: https://github.com/jMotif/jmotif-R
-BugReports: https://github.com/jMotif/jmotif-R/issues
 LazyData: TRUE
 Imports:
-   matlab
+   matlab,
    plyr
 Suggests:
    testthat
+URL: https://github.com/jMotif/jmotif-R
+BugReports: https://github.com/jMotif/jmotif-R/issues
