@@ -52,3 +52,12 @@ letters2idx(c('a','b','c','a'))
 library(testthat)
 library(covr)
 package_coverage()
+
+X = c(-1, -2, -1, 0, 2, 1, 1, 0)
+p1=mean(X[1:4])
+p2=sum(X[5:8])/4
+
+p1
+p2
+sd(znorm(X))
+mean(znorm(X))

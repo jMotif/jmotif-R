@@ -123,19 +123,12 @@ min_dist <- function(str1, str2, alphabet_size, compression_ratio=1){
       dist <- 0
       dist = sqrt(
          compression_ratio *
-          sum(diag(dist_table[letters2idx(str1),letters2idx(str2)]))
+          sum(diag(dist_table[letters2idx(str1),letters2idx(str2)])^2)
         )
+      dist
     }
   }
 }
-
-##
-## compute the Euclidean distance between the set of points
-##
-# euclidean <- function(x, y){
-#   as.numeric( dist( rbind(x,y) ) )
-# }
-
 
 znorm <- function(ts, threshold=0.01){
 
@@ -177,16 +170,6 @@ znorm <- function(ts, threshold=0.01){
 
 }
 
-#library(jmotif)
-#x=seq(0,pi*4,0.02)
-#y=sin(x)*5+rnorm(length(x))
-#plot(x,y,type="l",col="blue")
-#lines(x,znorm(y,0.01),type="l",col="red")
-#dim(y)<-c(1,2)
-#lines(x,znorm(y,0.01),type="l",col="green")
-#y=t(t(y))
-#lines(x,znorm(y,0.01),type="l",colmatrix(colMeans(res), nrow=1, ncol=ap)="orange")
-
 paa <- function(ts, npoints){
 
   len <- length(ts)
@@ -194,16 +177,16 @@ paa <- function(ts, npoints){
   if(len != npoints){
 
     if( (len %% npoints) == 0 ){
-      res <- reshape(ts, len %/% npoints, npoints)
+      res <- matlab::reshape(matrix(ts, ncol=1), c(len %/% npoints, npoints))
     }else{
-      tmp <- matrix(rep(ts,npoints),byrow=T,nrow=npoints)
-      res <- reshape(tmp, len, npoints)
+      tmp <- matrix(rep(ts, npoints), byrow=T, nrow=npoints)
+      res <- matlab::reshape(tmp, len, npoints)
     }
 
     matrix(colMeans(res), nrow=1, ncol=npoints)
   } else {
 
-    ts
+    matrix(ts, nrow=1)
 
   }
 
