@@ -2,7 +2,7 @@
 
 ![Continous CI with Travis](https://travis-ci.org/jMotif/jmotif-R.svg) [![codecov.io](http://codecov.io/github/jMotif/jmotif-R/coverage.svg?branch=master)](http://codecov.io/github/jMotif/jmotif-R?branch=master)
 
-Implements time series symbolic discretization built upon z-Normalization [1], PAA [2], and SAX [3] in R.
+Implements time series symbolic discretization via z-Normalization [1], PAA [2], and SAX [3] in R.
 
 [1] Dina Goldin and Paris Kanellakis,
 _On similarity queries for time-series data: Constraint specification and implementation._ 
