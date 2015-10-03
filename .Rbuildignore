@@ -1,2 +1,6 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
+^\.travis.yml$
+^assets$
+^\.lintr$^.*\.Rproj$
+^\.Rproj\.user$
