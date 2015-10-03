@@ -12,5 +12,7 @@ ts2string(ts, a_size)
 Returns a SAX transform for the time series and the alphabet size.
 }
 \examples{
-num2letter(2)
+y = c(-1, -2, -1, 0, 2, 1, 1, 0)
+y_paa3 = paa(y, 3)
+ts2string(y_paa3, 3)
 }

@@ -5,7 +5,7 @@
 idx2letter(idx)
 }
 \arguments{
-  \item{idx}{the letter' ordinal index}
+  \item{idx}{the letter ordinal index}
 }
 \description{
 Returns a letter at the specified English alphabet's position.
