@@ -1,5 +1,5 @@
 language: r
-sudo: false
+sudo: true
 warnings_are_errors: true
 
 r_github_packages:
