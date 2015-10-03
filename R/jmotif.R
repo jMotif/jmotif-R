@@ -77,14 +77,32 @@ num2letter <- function(num){
   letters[num]
 }
 
+letter2idx <- function(letter){
+  which(c("a",  "b",  "c",  "d",  "e",
+               "f",  "g",  "h",  "i",  "j",
+               "k",  "l",  "m",  "n",  "o",
+               "p",  "q",  "r",  "s",  "t",
+               "u",  "v",  "w",  "x",  "y",  "z")
+        %in% letter)
+}
+
+letters2idx <- function(str){
+  as.vector(aaply(str, 1, letter2idx))
+}
 
 ##
 ## Converts the timeseries into string
 ##
 ts2string <- function(ts, a_size){
   cut_points <- alphabet2cuts(a_size)
-  res <- rep(0, ncol(ts))
-  for(i in 1:ncol(ts)){
+  len=0
+  if(is.vector(ts)){
+    len=length(ts)
+  }else if(is.matrix(ts)){
+    len=ncol(ts)
+  }
+  res <- rep(0, len)
+  for(i in 1:len){
     res[i] = length(cut_points[cut_points<=ts[i]])
   }
   num2letter(res)
@@ -93,16 +111,21 @@ ts2string <- function(ts, a_size){
 ##
 ## compute distance between strings
 ##
-min_dist <- function(str1, str2, alphabet_size, compression_ratio){
+min_dist <- function(str1, str2, alphabet_size, compression_ratio=1){
   if(length(str1) != length(str2)){
-    stop("error: the strings must have equal length");
+    stop("error: the strings must have equal length")
   }else{
-    if(any(str1 > alphabet_size) | any(str2 > alphabet_size)){
-      stop('error: some symbol(s) in the string(s) exceed(s) the alphabet size!');
+    if( any(letters2idx(str1) > alphabet_size) |
+        any(letters2idx(str2) > alphabet_size)){
+           stop('error: some symbol(s) in the string(s) exceed(s)
+                the alphabet size!');
     }else{
-      dist_table <- distance_matrix(alphabet_size);
-      dist <- 0;
-      dist = sqrt(compression_ratio * sum(diag(dist_table[str1,str2])));
+      dist_table <- sax_distance_matrix(alphabet_size)
+      dist <- 0
+      dist = sqrt(
+         compression_ratio *
+          sum(diag(dist_table[letters2idx(str1),letters2idx(str2)]))
+        )
     }
   }
 }

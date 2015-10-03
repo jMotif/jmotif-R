@@ -5,7 +5,7 @@
 sax_distance_matrix(a_size)
 }
 \arguments{
-  \item{a_size}{the alphabet size, a value between 2 and 20 (inclusive)}d}
+  \item{a_size}{the alphabet size, a value between 2 and 20 (inclusive)}
 }
 \description{
 Returns a MINDIST distance matrix for a given alphabet value.

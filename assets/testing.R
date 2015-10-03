@@ -42,3 +42,7 @@ text(0.7, 0,"b",cex=2,col="magenta")
 text(0.7, 1,"c",cex=2,col="magenta")
 
 ts2string(y_paa3, 3)
+
+min_dist(ts2string(y_paa3, 3), ts2string(rev(y_paa3), 3), 3)
+str1=ts2string(y_paa3, 3)
+str2=ts2string(rev(y_paa3), 3)

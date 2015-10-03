@@ -5,7 +5,7 @@
 alphabet2cuts(a_size)
 }
 \arguments{
-  \item{a_size}{the alphabet size, a value between 2 and 20 (inclusive)}d}
+  \item{a_size}{the alphabet size, a value between 2 and 20 (inclusive)}
 }
 \description{
 Returns an array of "cut points" for SAX alphabet.

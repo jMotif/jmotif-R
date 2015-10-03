@@ -4,6 +4,7 @@ export(paa)
 export(alphabet2cuts)
 export(sax_distance_matrix)
 export(num2letter)
+export(letter2idx)
 export(ts2string)
 export(min_dist)
 
