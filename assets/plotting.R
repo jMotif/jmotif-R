@@ -1,5 +1,5 @@
 y = c(-1, -2, -1, 0, 2, 1, 1, 0)
-plot(y, type="l", col="blue", xlim=c(0,8),
+plot(y, type = "l", col = "blue", xlim = c(0,8),
      main="8-points time series and its PAA transform into 3 points")
 
 points(y, pch=16, lwd=5, col="blue")
