@@ -1,4 +1,4 @@
-m3 = sax_distance_matrix(3)
+m3 <- sax_distance_matrix(3)
 
 test_that("testing Distance Matrix", {
   expect_equal(m3[1, 1], 0)
@@ -7,9 +7,9 @@ test_that("testing Distance Matrix", {
   expect_error(sax_distance_matrix(21))
 })
 
-str1 = c('a', 'b', 'c')
-str2 = c('c', 'b', 'a')
-str3 = c('a', 'b', 'b')
+str1 <- c('a', 'b', 'c')
+str2 <- c('c', 'b', 'a')
+str3 <- c('a', 'b', 'b')
 
 test_that("testing MINDIST", {
 
@@ -23,4 +23,3 @@ test_that("testing MINDIST", {
 
   expect_error(min_dist(str1, str3[1:2], 2))
 })
-

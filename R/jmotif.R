@@ -47,7 +47,7 @@ alphabet2cuts <- function(a_size) {
 ##
 sax_distance_matrix <- function(a_size) {
   if (a_size > 1 && a_size <= 20) {
-    cutlines <- alphabet2cuts(a_size)[2:a_size]
+    cutlines <- jmotif::alphabet2cuts(a_size)[2:a_size]
     distance_matrix <- matrix(rep(0, a_size * a_size), byrow = T, nrow = a_size, ncol = a_size)
     i <- 1
     while (i <= a_size) {
@@ -86,14 +86,14 @@ letter2idx <- function(letter) {
 ## Converts the specified resolution into the cut points
 ##
 letters2idx <- function(str) {
-  as.vector(plyr::aaply(str, 1, letter2idx))
+  as.vector(plyr::aaply(str, 1, jmotif::letter2idx))
 }
 
 ##
 ## Converts the timeseries into string
 ##
 ts2string <- function(ts, a_size) {
-  cut_points <- alphabet2cuts(a_size)
+  cut_points <- jmotif::alphabet2cuts(a_size)
   len <- 0
   if (is.vector(ts)) {
     len <- length(ts)
@@ -104,7 +104,7 @@ ts2string <- function(ts, a_size) {
   for (i in 1:len) {
     res[i] <- length(cut_points[cut_points <= ts[i]])
   }
-  idx2letter(res)
+  jmotif::idx2letter(res)
 }
 
 ##
@@ -119,7 +119,7 @@ min_dist <- function(str1, str2, alphabet_size, compression_ratio = 1) {
            stop('error: some symbol(s) in the string(s) exceed(s)
                 the alphabet size!');
     }else{
-      dist_table <- sax_distance_matrix(alphabet_size)
+      dist_table <- jmotif::sax_distance_matrix(alphabet_size)
       dist <- 0
       dist <- sqrt(
          compression_ratio *
@@ -143,7 +143,7 @@ znorm <- function(ts, threshold = 0.01) {
       if (ts_sd < threshold) {
         return(unlist(ts[1,], use.names = F))
       }else{
-        return(unlist((ts[1,] - mean(ts[1,]))/ts_sd, use.names = F))
+        return(unlist((ts[1,] - mean(ts[1,])) / ts_sd, use.names = F))
       }
 
     } else if (1 == dim(ts)[2]) {
@@ -151,7 +151,7 @@ znorm <- function(ts, threshold = 0.01) {
       if (ts_sd < threshold) {
         return(unlist(ts[,1], use.names = F))
       }else{
-        return(unlist((ts[,1] - mean(ts[,1]))/ts_sd, use.names = F))
+        return(unlist((ts[,1] - mean(ts[,1])) / ts_sd, use.names = F))
       }
 
     } else {
@@ -163,7 +163,7 @@ znorm <- function(ts, threshold = 0.01) {
     if (ts_sd < threshold) {
       return(ts)
     }else{
-      return(unlist((ts - mean(ts))/ts_sd, use.names = F))
+      return(unlist((ts - mean(ts)) / ts_sd, use.names = F))
     }
 
 
