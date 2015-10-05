@@ -17,5 +17,8 @@ test_that("testing ZNorm", {
 
   expect_equal(znorm(Xscaled, 0.1), Xscaled)
 
-  expect_error(znorm(matrix(X, ncol=2)))
+  expect_error(znorm(matrix(X, ncol = 2)))
+
+  expect_error(znorm(list("c", "d")))
+
 })

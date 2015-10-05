@@ -10,11 +10,11 @@ letters <- c("a",  "b",  "c",  "d",  "e", "f",  "g",  "h",  "i",  "j",
 ##
 ## Converts the given alphabet size into a set of cut points (lines)
 ##
-alphabet2cuts <- function(a_size){
+alphabet2cuts <- function(a_size) {
 
-  if(a_size>20 || a_size < 2){
+  if (a_size > 20 || a_size < 2) {
     stop(paste("unable to get alphabet cuts for the alphabet size ",
-               a_size, ", valid sizes 2 - 20.",sep=""))
+               a_size, ", valid sizes 2 - 20.",sep = ""))
   }
 
   switch(a_size,
@@ -45,22 +45,22 @@ alphabet2cuts <- function(a_size){
 ##
 ## computes distance matrix for the alphabet size specified
 ##
-sax_distance_matrix <- function (a_size){
-  if(a_size>1 && a_size<=20){
+sax_distance_matrix <- function(a_size) {
+  if (a_size > 1 && a_size <= 20) {
     cutlines <- alphabet2cuts(a_size)[2:a_size]
-    distance_matrix <- matrix(rep(0, a_size*a_size), byrow=T, nrow=a_size, ncol=a_size)
-    i=1
-    while(i <= a_size){
+    distance_matrix <- matrix(rep(0, a_size*a_size), byrow = T, nrow = a_size, ncol = a_size)
+    i = 1
+    while (i <= a_size) {
       # the min_dist for adjacent symbols are 0, so we start with i+2
-      j=i+2;
-      while(j <= a_size){
+      j = i + 2;
+      while (j <= a_size) {
         # square the distance now for future use
-        distance_matrix[i,j]=(cutlines[i]-cutlines[j-1])*(cutlines[i]-cutlines[j-1])
+        distance_matrix[i,j] = (cutlines[i] - cutlines[j - 1]) * (cutlines[i] - cutlines[j - 1])
         # the distance matrix is symmetric
         distance_matrix[j,i] = distance_matrix[i,j]
-        j=j+1;
+        j = j + 1
       }
-      i=i+1;
+      i = i + 1
     }
     distance_matrix
   } else {
@@ -71,38 +71,38 @@ sax_distance_matrix <- function (a_size){
 ##
 ## Converts the specified resolution into the cut points
 ##
-idx2letter <- function(idx){
+idx2letter <- function(idx) {
   letters[idx]
 }
 
 ##
 ## Translates a letter to the alphabet index
 ##
-letter2idx <- function(letter){
+letter2idx <- function(letter) {
   which(letters %in% letter)
 }
 
 ##
 ## Converts the specified resolution into the cut points
 ##
-letters2idx <- function(str){
+letters2idx <- function(str) {
   as.vector(plyr::aaply(str, 1, letter2idx))
 }
 
 ##
 ## Converts the timeseries into string
 ##
-ts2string <- function(ts, a_size){
+ts2string <- function(ts, a_size) {
   cut_points <- alphabet2cuts(a_size)
-  len=0
-  if(is.vector(ts)){
-    len=length(ts)
-  }else if(is.matrix(ts)){
-    len=ncol(ts)
+  len = 0
+  if (is.vector(ts)) {
+    len = length(ts)
+  }else if (is.matrix(ts)) {
+    len = ncol(ts)
   }
   res <- rep(0, len)
-  for(i in 1:len){
-    res[i] = length(cut_points[cut_points<=ts[i]])
+  for (i in 1:len) {
+    res[i] = length(cut_points[cut_points <= ts[i]])
   }
   idx2letter(res)
 }
@@ -110,12 +110,12 @@ ts2string <- function(ts, a_size){
 ##
 ## compute distance between strings
 ##
-min_dist <- function(str1, str2, alphabet_size, compression_ratio=1){
-  if(length(str1) != length(str2)){
+min_dist <- function(str1, str2, alphabet_size, compression_ratio = 1) {
+  if (length(str1) != length(str2)) {
     stop("error: the strings must have equal length")
   }else{
-    if( any(letters2idx(str1) > alphabet_size) |
-        any(letters2idx(str2) > alphabet_size)){
+    if ( any(letters2idx(str1) > alphabet_size) |
+        any(letters2idx(str2) > alphabet_size)) {
            stop('error: some symbol(s) in the string(s) exceed(s)
                 the alphabet size!');
     }else{
@@ -123,44 +123,44 @@ min_dist <- function(str1, str2, alphabet_size, compression_ratio=1){
       dist <- 0
       dist = sqrt(
          compression_ratio *
-          sum(diag(dist_table[letters2idx(str1),letters2idx(str2)])^2)
+          sum(diag(dist_table[letters2idx(str1), letters2idx(str2)]) ^ 2)
         )
       dist
     }
   }
 }
 
-znorm <- function(ts, threshold=0.01){
+znorm <- function(ts, threshold=0.01) {
 
-  if(is.matrix(ts)){
+  if (is.matrix(ts)) {
 
     # check dimensions
-    if(1 == dim(ts)[1]){
+    if (1 == dim(ts)[1]) {
       ts_sd = sd(ts[1,])
-      if(ts_sd<threshold){
-        return (unlist(ts[1,], use.names=F))
+      if (ts_sd < threshold) {
+        return(unlist(ts[1,], use.names = F))
       }else{
-        return (unlist((ts[1,] - mean(ts[1,]))/ts_sd, use.names=F))
+        return(unlist((ts[1,] - mean(ts[1,]))/ts_sd, use.names = F))
       }
 
-    } else if(1 == dim(ts)[2]){
+    } else if (1 == dim(ts)[2]) {
       ts_sd = sd(ts[,1])
-      if(ts_sd<threshold){
-        return (unlist(ts[,1], use.names=F))
+      if (ts_sd < threshold) {
+        return(unlist(ts[,1], use.names = F))
       }else{
-        return (unlist((ts[,1] - mean(ts[,1]))/ts_sd, use.names=F))
+        return(unlist((ts[,1] - mean(ts[,1]))/ts_sd, use.names = F))
       }
 
     } else {
       stop(paste("don't know how to process matrix of dimension",dim(ts)))
     }
 
-  }else if (is.vector(ts)){
+  }else if (is.vector(ts)) {
     ts_sd = sd(ts)
-    if(ts_sd<threshold){
+    if (ts_sd < threshold) {
       return(ts)
     }else{
-      return (unlist((ts - mean(ts))/ts_sd, use.names=F))
+      return(unlist((ts - mean(ts))/ts_sd, use.names = F))
     }
 
 
@@ -170,23 +170,23 @@ znorm <- function(ts, threshold=0.01){
 
 }
 
-paa <- function(ts, npoints){
+paa <- function(ts, npoints) {
 
   len <- length(ts)
 
-  if(len != npoints){
+  if (len != npoints) {
 
-    if( (len %% npoints) == 0 ){
-      res <- matlab::reshape(matrix(ts, ncol=1), c(len %/% npoints, npoints))
+    if ( (len %% npoints) == 0 ) {
+      res <- matlab::reshape(matrix(ts, ncol = 1), c(len %/% npoints, npoints))
     }else{
-      tmp <- matrix(rep(ts, npoints), byrow=T, nrow=npoints)
+      tmp <- matrix(rep(ts, npoints), byrow = T, nrow = npoints)
       res <- matlab::reshape(tmp, len, npoints)
     }
 
-    matrix(colMeans(res), nrow=1, ncol=npoints)
+    matrix(colMeans(res), nrow = 1, ncol = npoints)
   } else {
 
-    matrix(ts, nrow=1)
+    matrix(ts, nrow = 1)
 
   }
 
