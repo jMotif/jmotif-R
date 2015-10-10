@@ -200,3 +200,4 @@ CharacterVector ts2string_cpp(NumericVector ts, int a_size) {
   }
   return res;
 }
+
