@@ -19,6 +19,11 @@ dim(b)
 y = c(-1, -2, -1, 0, 2, 1, 1, 0)
 
 microbenchmark (
-  b = matlab::reshape(a, 5, 20),
-  c = jmotif::reshape_cpp(a, 5, 20)
+  matlab::reshape(a, 5, 20),
+  jmotif::reshape_cpp(a, 5, 20)
+)
+
+microbenchmark (
+  paa(y, 3),
+  paa_cpp(y,3)
 )
