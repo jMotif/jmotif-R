@@ -68,3 +68,23 @@ letters2idx_cpp <- function(str) {
     .Call('jmotif_letters2idx_cpp', PACKAGE = 'jmotif', str)
 }
 
+#' Translates an alphabet size into the array of corresponding
+#' SAX cut-lines assuming the Normal distribution
+#'
+#' @param a_size the alphabet size, a value between 2 and 20 (inclusive).
+#' @useDynLib jmotif
+#' @export
+alphabet2cuts_cpp <- function(a_size) {
+    .Call('jmotif_alphabet2cuts_cpp', PACKAGE = 'jmotif', a_size)
+}
+
+#' Transforms a time series into a char array
+#'
+#' @param ts the timeseries
+#' @param a_size the alphabet size
+#' @useDynLib jmotif
+#' @export
+ts2string_cpp <- function(ts, a_size) {
+    .Call('jmotif_ts2string_cpp', PACKAGE = 'jmotif', ts, a_size)
+}
+
