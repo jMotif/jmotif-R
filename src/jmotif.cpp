@@ -171,7 +171,7 @@ NumericVector alphabet2cuts_cpp(int a_size) {
 //' @useDynLib jmotif
 //' @export
 // [[Rcpp::export]]
-CharacterVector ts2string_cpp(NumericVector ts, int a_size) {
+CharacterVector ts2chars_cpp(NumericVector ts, int a_size) {
   NumericVector cuts = alphabet2cuts_cpp(a_size);
   int len = ts.length();
   CharacterVector res(len);
@@ -180,5 +180,23 @@ CharacterVector ts2string_cpp(NumericVector ts, int a_size) {
       char b[] = {idx2letter_cpp(dd.length()), '\0'};
       res[i] = b;
     }
+  return res;
+}
+
+//' Transforms a time series into a char array
+//'
+//' @param ts the timeseries
+//' @param a_size the alphabet size
+//' @useDynLib jmotif
+//' @export
+// [[Rcpp::export]]
+CharacterVector ts2string_cpp(NumericVector ts, int a_size) {
+  NumericVector cuts = alphabet2cuts_cpp(a_size);
+  int len = ts.length();
+  std::string res(len, ' ');
+  for (int i=0; i<len; i++) {
+    NumericVector dd = cuts[cuts <= ts[i]];
+    res[i] = idx2letter_cpp(dd.length());
+  }
   return res;
 }

@@ -84,6 +84,16 @@ alphabet2cuts_cpp <- function(a_size) {
 #' @param a_size the alphabet size
 #' @useDynLib jmotif
 #' @export
+ts2chars_cpp <- function(ts, a_size) {
+    .Call('jmotif_ts2chars_cpp', PACKAGE = 'jmotif', ts, a_size)
+}
+
+#' Transforms a time series into a char array
+#'
+#' @param ts the timeseries
+#' @param a_size the alphabet size
+#' @useDynLib jmotif
+#' @export
 ts2string_cpp <- function(ts, a_size) {
     .Call('jmotif_ts2string_cpp', PACKAGE = 'jmotif', ts, a_size)
 }

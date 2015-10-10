@@ -42,3 +42,9 @@ microbenchmark (
   letters2idx_cpp(c('a','e','s','g')),
   letters2idx(c('a','e','s','g'))
 )
+
+microbenchmark (
+  ts2string(c(-1.375, 0.75, 0.625), 3),
+  ts2chars_cpp(c(-1.375, 0.75, 0.625), 3),
+  ts2string_cpp(c(-1.375, 0.75, 0.625), 3)
+)
