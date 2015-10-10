@@ -53,3 +53,36 @@ BEGIN_RCPP
     return __result;
 END_RCPP
 }
+// idx2letter_cpp
+char idx2letter_cpp(int idx);
+RcppExport SEXP jmotif_idx2letter_cpp(SEXP idxSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< int >::type idx(idxSEXP);
+    __result = Rcpp::wrap(idx2letter_cpp(idx));
+    return __result;
+END_RCPP
+}
+// letter2idx_cpp
+int letter2idx_cpp(char letter);
+RcppExport SEXP jmotif_letter2idx_cpp(SEXP letterSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< char >::type letter(letterSEXP);
+    __result = Rcpp::wrap(letter2idx_cpp(letter));
+    return __result;
+END_RCPP
+}
+// letters2idx_cpp
+IntegerVector letters2idx_cpp(CharacterVector str);
+RcppExport SEXP jmotif_letters2idx_cpp(SEXP strSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< CharacterVector >::type str(strSEXP);
+    __result = Rcpp::wrap(letters2idx_cpp(str));
+    return __result;
+END_RCPP
+}

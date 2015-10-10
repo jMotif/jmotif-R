@@ -1,6 +1,11 @@
 #include <Rcpp.h>
 using namespace Rcpp;
 
+const char LETTERS[] = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h',
+                        'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p',
+                        'q', 'r', 's', 't', 'u',  'v', 'w', 'x',
+                        'y', 'z'};
+
 //' z-Normalize a time series
 //'
 //' @param x A time series.
@@ -90,4 +95,38 @@ NumericVector paa_cpp(NumericVector ts, int paa_num) {
       return res;
   }
 
+}
+
+//' Get a letter by index
+//'
+//' @param idx The index.
+//' @useDynLib jmotif
+//' @export
+// [[Rcpp::export]]
+char idx2letter_cpp(int idx) {
+  return LETTERS[idx-1];
+}
+
+//' Get an index for a letter
+//'
+//' @param letter The letter.
+//' @useDynLib jmotif
+//' @export
+// [[Rcpp::export]]
+int letter2idx_cpp(char letter) {
+  return letter - 96;
+}
+
+//' Get an index sequence by string
+//'
+//' @param str The char array.
+//' @useDynLib jmotif
+//' @export
+// [[Rcpp::export]]
+IntegerVector letters2idx_cpp(CharacterVector str) {
+  IntegerVector res(str.length());
+  for(int i=0; i<str.length(); i++){
+    res[i] = letter2idx_cpp((str[i])[0]);
+  }
+  return res;
 }

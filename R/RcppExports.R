@@ -41,3 +41,30 @@ paa_cpp <- function(ts, paa_num) {
     .Call('jmotif_paa_cpp', PACKAGE = 'jmotif', ts, paa_num)
 }
 
+#' Get a letter by index
+#'
+#' @param idx The index.
+#' @useDynLib jmotif
+#' @export
+idx2letter_cpp <- function(idx) {
+    .Call('jmotif_idx2letter_cpp', PACKAGE = 'jmotif', idx)
+}
+
+#' Get an index for a letter
+#'
+#' @param letter The letter.
+#' @useDynLib jmotif
+#' @export
+letter2idx_cpp <- function(letter) {
+    .Call('jmotif_letter2idx_cpp', PACKAGE = 'jmotif', letter)
+}
+
+#' Get an index sequence by string
+#'
+#' @param str The char array.
+#' @useDynLib jmotif
+#' @export
+letters2idx_cpp <- function(str) {
+    .Call('jmotif_letters2idx_cpp', PACKAGE = 'jmotif', str)
+}
+

@@ -27,3 +27,18 @@ microbenchmark (
   paa(y, 3),
   paa_cpp(y,3)
 )
+
+microbenchmark (
+  idx2letter(sample(1:21, 1)),
+  idx2letter_cpp(sample(1:21, 1))
+)
+
+microbenchmark (
+  letter2idx('c'),
+  letter2idx_cpp('c')
+)
+
+microbenchmark (
+  letters2idx_cpp(c('a','e','s','g')),
+  letters2idx(c('a','e','s','g'))
+)
