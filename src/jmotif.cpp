@@ -9,19 +9,39 @@ using namespace Rcpp;
 //' @export
 // [[Rcpp::export]]
 NumericVector znorm_cpp(NumericVector x, double threshold = 0.01) {
+
   double x_sd = sd(x);
+
    if (x_sd < threshold){
     return clone(x);
   }
+
   return (x - mean(x)) / x_sd;
+
 }
 
+//' Reshape matrix
+//'
+//' @param a A matrix to reshape.
+//' @param n new row size.
+//' @param m new column size.
+//' @useDynLib jmotif
+//' @export
+// [[Rcpp::export]]
+NumericMatrix reshape_cpp(NumericMatrix a, int n, int m) {
 
-// You can include R code blocks in C++ files processed with sourceCpp
-// (useful for testing and development). The R code will be automatically
-// run after the compilation.
-//
+  int ce = 0;
+  int n_rows = a.nrow();
 
-// /*** R
-// timesTwo(42)
-// */
+  NumericMatrix res(n, m);
+
+  for (int j = 0; j < m; j++) {
+    for (int i = 0; i < n; i++) {
+      res(i,j) = a(ce % n_rows, ce / n_rows);
+      ce++;
+    }
+  }
+
+  return res;
+
+}

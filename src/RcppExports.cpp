@@ -17,3 +17,16 @@ BEGIN_RCPP
     return __result;
 END_RCPP
 }
+// reshape_cpp
+NumericMatrix reshape_cpp(NumericMatrix a, int n, int m);
+RcppExport SEXP jmotif_reshape_cpp(SEXP aSEXP, SEXP nSEXP, SEXP mSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< NumericMatrix >::type a(aSEXP);
+    Rcpp::traits::input_parameter< int >::type n(nSEXP);
+    Rcpp::traits::input_parameter< int >::type m(mSEXP);
+    __result = Rcpp::wrap(reshape_cpp(a, n, m));
+    return __result;
+END_RCPP
+}

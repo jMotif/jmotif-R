@@ -11,3 +11,14 @@ znorm_cpp <- function(x, threshold = 0.01) {
     .Call('jmotif_znorm_cpp', PACKAGE = 'jmotif', x, threshold)
 }
 
+#' Reshape matrix
+#'
+#' @param a A matrix to reshape.
+#' @param n new row size.
+#' @param m new column size.
+#' @useDynLib jmotif
+#' @export
+reshape_cpp <- function(a, n, m) {
+    .Call('jmotif_reshape_cpp', PACKAGE = 'jmotif', a, n, m)
+}
+
