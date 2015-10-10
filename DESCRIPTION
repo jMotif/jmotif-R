@@ -1,18 +1,19 @@
 Package: jmotif
-Type: Package
-Title: Symbolic Aggregate Approximation of time series
-Version: 0.1
-Date: 2015-10-02
-Author: Pavel Senin <seninp@gmail.com>
-Maintainer: Pavel Senin <seninp@gmail.com>
-Description: Symbolic Aggregate Approximation of time series. An experimental code.
-Depends: R (>= 3.1.0)
-License: GPL-2
-LazyData: TRUE
-Imports:
-   matlab,
-   plyr
-Suggests:
-   testthat
+Version: 0.0.1
+Title: Tools for time series analysis based on symbolic dicretization
+Description: A set of tools that solves a common set of time series patterns
+             analysis problems based on Symbolic Aggregate approXimation.
+Authors@R: person("Pavel", "Senin", , "seninp@gmail.com", c("aut", "cre"))
 URL: https://github.com/jMotif/jmotif-R
 BugReports: https://github.com/jMotif/jmotif-R/issues
+Depends:
+    R (>= 3.1.0)
+Imports:
+    matlab,
+    plyr,
+    Rcpp (>= 0.11.0)
+Suggests:
+   testthat
+LinkingTo: Rcpp
+LazyData: true
+License: GPL-2
