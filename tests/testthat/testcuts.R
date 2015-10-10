@@ -6,6 +6,7 @@ test_that("testing the cuts points", {
   for(i in c(2:20)){
     cuts = alphabet2cuts(i)
     expect_equal(cuts[1], -Inf)
+    expect_equal(length(cuts), i)
     expect_true(cuts[length(cuts)] < 2.0)
   }
 })
@@ -18,6 +19,7 @@ test_that("testing the cuts points, CPP", {
   for(i in c(2:20)){
     cuts = alphabet2cuts_cpp(i)
     expect_equal(cuts[1], -Inf)
+    expect_equal(length(cuts), i)
     expect_true(cuts[length(cuts)] < 2.0)
   }
 })

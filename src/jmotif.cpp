@@ -201,3 +201,13 @@ CharacterVector ts2string_cpp(NumericVector ts, int a_size) {
   return res;
 }
 
+//' @useDynLib jmotif
+//' @export
+// [[Rcpp::export]]
+std::map<int, std::string> test_df() {
+  typedef std::map<int, std::string> idx2wordMap;
+  idx2wordMap idx2word;
+  idx2word.insert(std::make_pair(10,"test10"));
+  idx2word.insert(std::make_pair(15,"test15"));
+  return idx2word;
+}

@@ -121,3 +121,13 @@ BEGIN_RCPP
     return __result;
 END_RCPP
 }
+// test_df
+std::map<int, std::string> test_df();
+RcppExport SEXP jmotif_test_df() {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    __result = Rcpp::wrap(test_df());
+    return __result;
+END_RCPP
+}
