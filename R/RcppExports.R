@@ -22,3 +22,22 @@ reshape_cpp <- function(a, n, m) {
     .Call('jmotif_reshape_cpp', PACKAGE = 'jmotif', a, n, m)
 }
 
+#' Computes column means
+#'
+#' @param a A matrix to use.
+#' @useDynLib jmotif
+#' @export
+col_means_cpp <- function(a) {
+    .Call('jmotif_col_means_cpp', PACKAGE = 'jmotif', a)
+}
+
+#' Compute PAA
+#'
+#' @param ts A timeseries to convert into PAA.
+#' @param paa_num the desired PAA size.
+#' @useDynLib jmotif
+#' @export
+paa_cpp <- function(ts, paa_num) {
+    .Call('jmotif_paa_cpp', PACKAGE = 'jmotif', ts, paa_num)
+}
+

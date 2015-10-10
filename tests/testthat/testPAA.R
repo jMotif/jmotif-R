@@ -6,3 +6,10 @@ test_that("points to points via PAA", {
   expect_equal(paa(y, 8), t(y))
   expect_equal(paa(y, 2), t(c(-1, 1)))
 })
+
+vv <- c(-1.375, 0.75, 0.625)
+test_that("points to points via PAA_CPP", {
+  expect_equal(paa_cpp(y, 3), vv)
+  expect_equal(paa_cpp(y, 8), y)
+  expect_equal(paa_cpp(y, 2), c(-1, 1))
+})

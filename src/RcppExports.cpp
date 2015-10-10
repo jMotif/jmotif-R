@@ -30,3 +30,26 @@ BEGIN_RCPP
     return __result;
 END_RCPP
 }
+// col_means_cpp
+NumericVector col_means_cpp(NumericMatrix a);
+RcppExport SEXP jmotif_col_means_cpp(SEXP aSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< NumericMatrix >::type a(aSEXP);
+    __result = Rcpp::wrap(col_means_cpp(a));
+    return __result;
+END_RCPP
+}
+// paa_cpp
+NumericVector paa_cpp(NumericVector ts, int paa_num);
+RcppExport SEXP jmotif_paa_cpp(SEXP tsSEXP, SEXP paa_numSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< NumericVector >::type ts(tsSEXP);
+    Rcpp::traits::input_parameter< int >::type paa_num(paa_numSEXP);
+    __result = Rcpp::wrap(paa_cpp(ts, paa_num));
+    return __result;
+END_RCPP
+}
