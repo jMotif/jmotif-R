@@ -3,6 +3,8 @@
 #   Check Package:             'Ctrl + Shift + E'
 #   Test Package:              'Ctrl + Shift + T'
 #   Roxigenize                 'Ctrl + Shift + D'?
+
+#'@importFrom Rcpp evalCpp
 letters <- c("a",  "b",  "c",  "d",  "e", "f",  "g",  "h",  "i",  "j",
              "k",  "l",  "m",  "n",  "o", "p",  "q",  "r",  "s",  "t",
              "u",  "v",  "w",  "x",  "y",  "z")
@@ -172,6 +174,7 @@ min_dist <- function(str1, str2, alphabet_size, compression_ratio = 1) {
 #' Time series z-normalization
 #'
 #' @param ts the timeseries
+#' @param threshold the normalization threshold value
 #' @return Returns a z-normalized time series.
 #' @export
 #' @examples

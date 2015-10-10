@@ -8,6 +8,8 @@ znorm(ts, threshold = 0.01)
 }
 \arguments{
 \item{ts}{the timeseries}
+
+\item{threshold}{the normalization threshold value}
 }
 \value{
 Returns a z-normalized time series.

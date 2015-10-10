@@ -9,13 +9,11 @@ using namespace Rcpp;
 //' @export
 // [[Rcpp::export]]
 NumericVector znorm_cpp(NumericVector x, double threshold = 0.01) {
-  //double x_sd = sd(x);
-  // if (x_sd < threshold){
-  //  return clone(x);
-  //}
-  double y = mean(x);
-  return y;
-  //return (x - mean(x)) / x_sd;
+  double x_sd = sd(x);
+   if (x_sd < threshold){
+    return clone(x);
+  }
+  return (x - mean(x)) / x_sd;
 }
 
 
