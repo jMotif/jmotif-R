@@ -24,3 +24,12 @@ test_that("testing ZNorm", {
   expect_error(znorm(list("c", "d")))
 
 })
+
+test_that("testing ZNorm_CPP", {
+
+  expect_equal(sd(znorm_cpp(X)), 1)
+  expect_equal(mean(znorm_cpp(X)), 0)
+
+  expect_equal(znorm_cpp(Xscaled, 0.1), Xscaled)
+
+})
