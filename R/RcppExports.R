@@ -98,6 +98,8 @@ ts2string_cpp <- function(ts, a_size) {
     .Call('jmotif_ts2string_cpp', PACKAGE = 'jmotif', ts, a_size)
 }
 
+#' Testing cpp 11
+#'
 #' @useDynLib jmotif
 #' @export
 test_df <- function() {

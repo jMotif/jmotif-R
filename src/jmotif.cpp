@@ -203,6 +203,8 @@ CharacterVector ts2string_cpp(NumericVector ts, int a_size) {
   return res;
 }
 
+//' Testing cpp 11
+//'
 //' @useDynLib jmotif
 //' @export
 // [[Rcpp::export]]
