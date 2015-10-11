@@ -1,5 +1,17 @@
 library(microbenchmark)
-data = read.table("assets/300_signal1.txt")
+dat = read.table("assets/test_data/300_signal1.txt")
+
+microbenchmark (
+  znorm(dat$V1, 0.01),
+  znorm_cpp(dat$V1, 0.01)
+)
+
+microbenchmark (
+  paa(znorm(dat$V1, 0.01), 500),
+  paa_cpp(znorm_cpp(dat$V1, 0.01), 500)
+)
+
+
 system.time(znorm(data, 0.01))
 system.time(jmotif::znorm_cpp(data, 0.01))
 
