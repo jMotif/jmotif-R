@@ -1,48 +1,32 @@
-test_that("points to letters, i.e. SAX", {
-  expect_equal(ts2string(c(-1.375, 0.75, 0.625), 3), c('a', 'c', 'c'))
-  expect_equal(ts2string(t(c(-1.375, 0.75, 0.625)), 3), c('a', 'c', 'c'))
-})
+dat <- read.table(textConnection(
+  gsub("\n", " ", "0 0 0 0 0 -0.270340178359072 -0.367828308500142 0.666980581124872 1.87088147328446
+       2.14548907684624 -0.480859313143032 -0.72911654245842 -0.490308602315934 -0.66152028906509
+       -0.221049033806403 0.367003418871239 0.631073992586373 0.0487728723414486 0.762655178750436
+       0.78574757843331 0.338239686422963 0.784206454089066 -2.14265084073625 2.11325193044223
+       0.186018356196443 0 0 0 0 0 0 0 0 0 0 0.519132472499234 -2.604783141655
+       -0.244519550114012 -1.6570790528784 3.34184602886343 2.10361226260999 1.9796808733979
+       -0.822247322003058 1.06850578033292 -0.678811824405992 0.804225748913681 0.57363964388698
+       0.437113583759113 0.437208643628268 0.989892093383503 1.76545983424176 0.119483882364649
+       -0.222311941138971 -0.74669456611669 -0.0663660879732063 0 0 0 0 0")
+  ), as.is=T)
 
-test_that("points to letters, i.e. SAX, CPP", {
-  expect_equal(ts2chars_cpp(c(-1.375, 0.75, 0.625), 3), c('a', 'c', 'c'))
-  expect_equal(strsplit(ts2string_cpp(c(-1.375, 0.75, 0.625), 3), "")[[1]],
-               c("a", "c", "c"))
-})
+test_that("wordbag #1", {
 
-dat1 <- c(2.02, 2.33, 2.99, 6.85, 9.2, 8.8, 7.5, 6, 5.85,
-          3.85, 4.85, 3.85, 2.22, 1.45, 1.34)
+  sax1 <- sax_via_window(t(dat), 6, 3, 3, "none", 0.01)
+  words <- table(matrix(unlist(sax1), ncol=1, byrow=T)[,1])
+  # words[names(words) == "bca"]
+  # words[names(words) == "abc"]
+  # words[names(words) == "bbb"]
 
-dats1_9_7 <- "bcggfddba"
-dats1_10_11 <- "bcjkiheebb"
-dats1_14_10 <- "bcdijjhgfeecbb"
+  wb1 <- series_to_wordbag(t(dat), 6, 3, 3, "none", 0.01)
 
-test_that("points to letters, i.e. SAX, CPP #2", {
-  str1_10_11 <- paste( matrix(unlist(sax_by_chunking(dat1, 10, 11, 0.01)),
-                             nrow=10, byrow=T)[,1], collapse="")
-  str1_14_10 <- paste( matrix(unlist(sax_by_chunking(dat1, 14, 10, 0.01)),
-                             nrow=14, byrow=T)[,1], collapse="")
-  str1_9_7 <- paste( matrix(unlist(sax_by_chunking(dat1, 9, 7, 0.01)),
-                             nrow=9, byrow=T)[,1], collapse="")
-  expect_equal(str1_10_11, dats1_10_11)
-  expect_equal(str1_14_10, dats1_14_10)
-  expect_equal(str1_9_7, dats1_9_7)
-})
+  expect_equal(words[names(words) == "bca"],
+                    wb1[names(wb1) == "bca"])
 
-dat2 <- c(0.5, 1.29, 2.58, 3.83, 3.25, 4.25, 3.83, 5.63, 6.44, 6.25, 8.75,
-          8.83, 3.25, 0.75, 0.72)
+  expect_equal(words[names(words) == "abc"],
+                    wb1[names(wb1) == "abc"])
 
-dats2_9_7 <- "accdefgda"
-dats2_10_11 <- "bcefgijkdb"
-dats2_14_10 <- "bbdeeffhijjfbb"
+  expect_equal(words[names(words) == "bbb"],
+                    wb1[names(wb1) == "bbb"])
 
-test_that("points to letters, i.e. SAX, CPP #3", {
-  str2_10_11 <- paste( matrix(unlist(sax_by_chunking(dat2, 10, 11, 0.01)),
-                             nrow=10, byrow=T)[,1], collapse="")
-  str2_14_10 <- paste( matrix(unlist(sax_by_chunking(dat2, 14, 10, 0.01)),
-                             nrow=14, byrow=T)[,1], collapse="")
-  str2_9_7 <- paste( matrix(unlist(sax_by_chunking(dat2, 9, 7, 0.01)),
-                           nrow=9, byrow=T)[,1], collapse="")
-  expect_equal(str2_10_11, dats2_10_11)
-  expect_equal(str2_14_10, dats2_14_10)
-  expect_equal(str2_9_7, dats2_9_7)
 })
