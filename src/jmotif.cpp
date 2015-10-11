@@ -208,8 +208,8 @@ CharacterVector ts2string_cpp(NumericVector ts, int a_size) {
 //' @useDynLib jmotif
 //' @export
 // [[Rcpp::export]]
-std::unordered_map<int, std::string> test_df() {
-  typedef std::unordered_map<int, std::string> idx2wordMap;
+std::map<int, std::string> test_df() {
+  typedef std::map<int, std::string> idx2wordMap;
   idx2wordMap idx2word;
   idx2word.insert(std::make_pair(10,"test10"));
   idx2word.insert(std::make_pair(15,"test15"));
