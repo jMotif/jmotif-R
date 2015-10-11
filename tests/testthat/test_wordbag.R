@@ -14,9 +14,6 @@ test_that("wordbag #1", {
 
   sax1 <- sax_via_window(t(dat), 6, 3, 3, "none", 0.01)
   words <- table(matrix(unlist(sax1), ncol=1, byrow=T)[,1])
-  # words[names(words) == "bca"]
-  # words[names(words) == "abc"]
-  # words[names(words) == "bbb"]
 
   wb1 <- series_to_wordbag(t(dat), 6, 3, 3, "none", 0.01)
 

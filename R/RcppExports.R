@@ -150,8 +150,10 @@ sax_by_chunking <- function(ts, paa_size, a_size, n_threshold) {
 #' SAXifying a timeseries
 #'
 #' @param ts the timeseries
+#' @param w_size the sliding window size
 #' @param paa_size the PAA size
 #' @param a_size the alphabet size
+#' @param nr_strategy the NR strategy
 #' @param n_threshold the normalization threshold
 #'
 #' @useDynLib jmotif
