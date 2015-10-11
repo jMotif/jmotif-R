@@ -48,3 +48,8 @@ microbenchmark (
   ts2chars_cpp(c(-1.375, 0.75, 0.625), 3),
   ts2string_cpp(c(-1.375, 0.75, 0.625), 3)
 )
+
+y = c(-1, -2, -1, 0, 2, 1, 1, 0)
+sax_via_window(y, 3, 2, 3, "none", 0.01)
+sax_via_window(y, 3, 2, 3, "exact", 0.01)
+

@@ -121,13 +121,44 @@ BEGIN_RCPP
     return __result;
 END_RCPP
 }
-// test_df
-std::unordered_map<int, std::string> test_df();
-RcppExport SEXP jmotif_test_df() {
+// subseries
+NumericVector subseries(NumericVector x, int start, int end);
+RcppExport SEXP jmotif_subseries(SEXP xSEXP, SEXP startSEXP, SEXP endSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
-    __result = Rcpp::wrap(test_df());
+    Rcpp::traits::input_parameter< NumericVector >::type x(xSEXP);
+    Rcpp::traits::input_parameter< int >::type start(startSEXP);
+    Rcpp::traits::input_parameter< int >::type end(endSEXP);
+    __result = Rcpp::wrap(subseries(x, start, end));
+    return __result;
+END_RCPP
+}
+// is_equal_str
+bool is_equal_str(CharacterVector a, CharacterVector b);
+RcppExport SEXP jmotif_is_equal_str(SEXP aSEXP, SEXP bSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< CharacterVector >::type a(aSEXP);
+    Rcpp::traits::input_parameter< CharacterVector >::type b(bSEXP);
+    __result = Rcpp::wrap(is_equal_str(a, b));
+    return __result;
+END_RCPP
+}
+// sax_via_window
+std::map<int, CharacterVector> sax_via_window(NumericVector ts, int w_size, int paa_size, int a_size, CharacterVector nr_strategy, double n_threshold);
+RcppExport SEXP jmotif_sax_via_window(SEXP tsSEXP, SEXP w_sizeSEXP, SEXP paa_sizeSEXP, SEXP a_sizeSEXP, SEXP nr_strategySEXP, SEXP n_thresholdSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< NumericVector >::type ts(tsSEXP);
+    Rcpp::traits::input_parameter< int >::type w_size(w_sizeSEXP);
+    Rcpp::traits::input_parameter< int >::type paa_size(paa_sizeSEXP);
+    Rcpp::traits::input_parameter< int >::type a_size(a_sizeSEXP);
+    Rcpp::traits::input_parameter< CharacterVector >::type nr_strategy(nr_strategySEXP);
+    Rcpp::traits::input_parameter< double >::type n_threshold(n_thresholdSEXP);
+    __result = Rcpp::wrap(sax_via_window(ts, w_size, paa_size, a_size, nr_strategy, n_threshold));
     return __result;
 END_RCPP
 }

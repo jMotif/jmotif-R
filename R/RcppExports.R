@@ -98,11 +98,39 @@ ts2string_cpp <- function(ts, a_size) {
     .Call('jmotif_ts2string_cpp', PACKAGE = 'jmotif', ts, a_size)
 }
 
-#' Testing cpp 11
+#' Extracting subseries
+#'
+#' @param x the timeseries (0-based)
+#' @param start the interval start
+#' @param end the interval end
+#' @useDynLib jmotif
+#' @export
+subseries <- function(x, start, end) {
+    .Call('jmotif_subseries', PACKAGE = 'jmotif', x, start, end)
+}
+
+#' Comparing strings
+#'
+#' @param a the string a
+#' @param b the string b
+#' @useDynLib jmotif
+#' @export
+is_equal_str <- function(a, b) {
+    .Call('jmotif_is_equal_str', PACKAGE = 'jmotif', a, b)
+}
+
+#' SAXifying a timeseries
+#'
+#' @param ts the timeseries
+#' @param w_size the sliding window size
+#' @param paa_size the PAA size
+#' @param a_size the alphabet size
+#' @param nr_strategy the NR strategy
+#' @param n_threshold the normalization threshold
 #'
 #' @useDynLib jmotif
 #' @export
-test_df <- function() {
-    .Call('jmotif_test_df', PACKAGE = 'jmotif')
+sax_via_window <- function(ts, w_size, paa_size, a_size, nr_strategy, n_threshold) {
+    .Call('jmotif_sax_via_window', PACKAGE = 'jmotif', ts, w_size, paa_size, a_size, nr_strategy, n_threshold)
 }
 

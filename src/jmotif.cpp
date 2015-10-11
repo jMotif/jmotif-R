@@ -200,19 +200,98 @@ CharacterVector ts2string_cpp(NumericVector ts, int a_size) {
     NumericVector dd = cuts[cuts <= ts[i]];
     res[i] = idx2letter_cpp(dd.length());
   }
+  return wrap(res);
+}
+
+//' Extracting subseries
+//'
+//' @param x the timeseries (0-based)
+//' @param start the interval start
+//' @param end the interval end
+//' @useDynLib jmotif
+//' @export
+// [[Rcpp::export]]
+NumericVector subseries(NumericVector x, int start, int end) {
+  NumericVector res(end-start);
+  for (int i=start; i<end; i++) {
+    res[i-start] = x[i];
+  }
   return res;
 }
 
-//' Testing cpp 11
+//' Comparing strings
+//'
+//' @param a the string a
+//' @param b the string b
+//' @useDynLib jmotif
+//' @export
+// [[Rcpp::export]]
+bool is_equal_str(CharacterVector a, CharacterVector b) {
+  std::string ca = Rcpp::as<std::string>(a);
+  std::string cb = Rcpp::as<std::string>(b);
+  Rcout << ca << " and " << cb << "\n";
+  return (ca == cb);
+}
+
+//' SAXifying a timeseries
+//'
+//' @param ts the timeseries
+//' @param w_size the sliding window size
+//' @param paa_size the PAA size
+//' @param a_size the alphabet size
+//' @param nr_strategy the NR strategy
+//' @param n_threshold the normalization threshold
 //'
 //' @useDynLib jmotif
 //' @export
 // [[Rcpp::export]]
-std::map<int, std::string> test_df() {
-  typedef std::map<int, std::string> idx2wordMap;
+std::map<int, CharacterVector> sax_via_window(
+  NumericVector ts, int w_size, int paa_size, int a_size,
+  CharacterVector nr_strategy, double n_threshold) {
+
+  Rcout << "ts of length " << ts.length();
+  Rcout << ", win " << w_size;
+  Rcout << ", paa " << paa_size;
+  Rcout << ", a " << a_size;
+  Rcout << ", nr_strategy '" << nr_strategy << "'";
+  Rcout << ", n_th " << n_threshold << "\n";
+
+  typedef std::map<int, CharacterVector> idx2wordMap;
   idx2wordMap idx2word;
-  idx2word.insert(std::make_pair(10,"test10"));
-  idx2word.insert(std::make_pair(15,"test15"));
-  idx2word.insert(std::make_pair(5,"test5"));
+
+  CharacterVector old_str("");
+
+  for (int i = 0; i < ts.length() - w_size; i++) {
+
+    NumericVector subSection = subseries(ts, i, i + w_size);
+
+    subSection = znorm_cpp(subSection, n_threshold);
+
+    subSection = paa_cpp(subSection, paa_size);
+
+    CharacterVector curr_str = ts2string_cpp(subSection, a_size);
+
+    Rcout << curr_str << "\n";
+
+    if (!(0 == old_str.length())) {
+
+      if ( is_equal_str("exact", nr_strategy)
+            && is_equal_str(old_str, curr_str) ) {
+        continue;
+      }
+      else if (is_equal_str("mindist", nr_strategy)
+                 && is_equal_str(old_str, curr_str) ) {
+        continue;
+      }
+
+    }
+
+    idx2word.insert(std::make_pair(i,curr_str));
+
+    old_str = curr_str;
+
+  }
+
   return idx2word;
 }
+
