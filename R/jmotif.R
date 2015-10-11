@@ -241,10 +241,10 @@ paa <- function(ts, npoints) {
   if (len != npoints) {
 
     if ( (len %% npoints) == 0 ) {
-      res <- reshape_cpp(matrix(ts, ncol = 1), len %/% npoints, npoints)
+      res <- jmotif::reshape_cpp(matrix(ts, ncol = 1), len %/% npoints, npoints)
     }else{
       tmp <- matrix(rep(ts, npoints), byrow = T, nrow = npoints)
-      res <- reshape_cpp(tmp, len, npoints)
+      res <- jmotif::reshape_cpp(tmp, len, npoints)
     }
 
     matrix(colMeans(res), nrow = 1, ncol = npoints)

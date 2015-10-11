@@ -1,5 +1,5 @@
 dat <- read.table(textConnection(
-gsub("\n"," ","0 0 0 0 0 -0.270340178359072 -0.367828308500142 0.666980581124872 1.87088147328446
+gsub("\n", " ", "0 0 0 0 0 -0.270340178359072 -0.367828308500142 0.666980581124872 1.87088147328446
 2.14548907684624 -0.480859313143032 -0.72911654245842 -0.490308602315934 -0.66152028906509
 -0.221049033806403 0.367003418871239 0.631073992586373 0.0487728723414486 0.762655178750436
 0.78574757843331 0.338239686422963 0.784206454089066 -2.14265084073625 2.11325193044223
@@ -14,13 +14,13 @@ test_that("SAX test #1", {
 
   sax1 <- sax_via_window(t(dat), 6, 3, 3, "none", 0.01)
 
-  expect_equal(length(sax1), length(t(dat))-6)
+  expect_equal(length(sax1), length(t(dat)) - 6)
 
   expect_equal(sax1$'0', "bba")
-  expect_equal(sax1[[0+1]], "bba")
+  expect_equal(sax1[[0 + 1]], "bba")
 
   expect_equal(sax1$'53', "acc")
-  expect_equal(sax1[[53+1]], "acc")
+  expect_equal(sax1[[53 + 1]], "acc")
 })
 
 test_that("SAX test #2", {
@@ -30,7 +30,7 @@ test_that("SAX test #2", {
   expect_equal(length(sax2), 45)
 
   expect_equal(sax2$'0', "bba")
-  expect_equal(sax2[[0+1]], "bba")
+  expect_equal(sax2[[0 + 1]], "bba")
 
   expect_equal(sax2$'52', "acc")
   expect_equal(sax2[[45]], "acc")
