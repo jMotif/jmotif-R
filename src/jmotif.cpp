@@ -229,7 +229,7 @@ NumericVector subseries(NumericVector x, int start, int end) {
 bool is_equal_str(CharacterVector a, CharacterVector b) {
   std::string ca = Rcpp::as<std::string>(a);
   std::string cb = Rcpp::as<std::string>(b);
-  Rcout << ca << " and " << cb << "\n";
+  // Rcout << ca << " and " << cb << "\n";
   return (ca == cb);
 }
 
@@ -249,12 +249,12 @@ std::map<int, CharacterVector> sax_via_window(
   NumericVector ts, int w_size, int paa_size, int a_size,
   CharacterVector nr_strategy, double n_threshold) {
 
-  Rcout << "ts of length " << ts.length();
-  Rcout << ", win " << w_size;
-  Rcout << ", paa " << paa_size;
-  Rcout << ", a " << a_size;
-  Rcout << ", nr_strategy '" << nr_strategy << "'";
-  Rcout << ", n_th " << n_threshold << "\n";
+  // Rcout << "ts of length " << ts.length();
+  // Rcout << ", win " << w_size;
+  // Rcout << ", paa " << paa_size;
+  // Rcout << ", a " << a_size;
+  // Rcout << ", nr_strategy '" << nr_strategy << "'";
+  // Rcout << ", n_th " << n_threshold << "\n";
 
   typedef std::map<int, CharacterVector> idx2wordMap;
   idx2wordMap idx2word;
@@ -271,7 +271,7 @@ std::map<int, CharacterVector> sax_via_window(
 
     CharacterVector curr_str = ts2string_cpp(subSection, a_size);
 
-    Rcout << curr_str << "\n";
+    // Rcout << curr_str << "\n";
 
     if (!(0 == old_str.length())) {
 
@@ -295,3 +295,37 @@ std::map<int, CharacterVector> sax_via_window(
   return idx2word;
 }
 
+//' SAXifying a timeseries
+//'
+//' @param ts the timeseries
+//' @param paa_size the PAA size
+//' @param a_size the alphabet size
+//' @param n_threshold the normalization threshold
+//'
+//' @useDynLib jmotif
+//' @export
+// [[Rcpp::export]]
+std::map<int, CharacterVector> sax_by_chunking(
+    NumericVector ts, int paa_size, int a_size, double n_threshold) {
+
+  // Rcout << "ts of length " << ts.length();
+  // Rcout << ", paa " << paa_size;
+  // Rcout << ", a " << a_size;
+  // Rcout << ", n_th " << n_threshold << "\n";
+
+  typedef std::map<int, CharacterVector> idx2wordMap;
+  idx2wordMap idx2word;
+
+  NumericVector vec = znorm_cpp(ts, n_threshold);
+
+  vec = paa_cpp(vec, paa_size);
+
+  std::string curr_str = Rcpp::as<std::string>(ts2string_cpp(vec, a_size));
+  // Rcout << curr_str << "\n";
+
+  for(int i=0; i<curr_str.length(); i++){
+    idx2word.insert(std::make_pair(i,curr_str.substr(i,1)));
+  }
+
+  return idx2word;
+}

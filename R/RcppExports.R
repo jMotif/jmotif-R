@@ -134,3 +134,16 @@ sax_via_window <- function(ts, w_size, paa_size, a_size, nr_strategy, n_threshol
     .Call('jmotif_sax_via_window', PACKAGE = 'jmotif', ts, w_size, paa_size, a_size, nr_strategy, n_threshold)
 }
 
+#' SAXifying a timeseries
+#'
+#' @param ts the timeseries
+#' @param paa_size the PAA size
+#' @param a_size the alphabet size
+#' @param n_threshold the normalization threshold
+#'
+#' @useDynLib jmotif
+#' @export
+sax_by_chunking <- function(ts, paa_size, a_size, n_threshold) {
+    .Call('jmotif_sax_by_chunking', PACKAGE = 'jmotif', ts, paa_size, a_size, n_threshold)
+}
+

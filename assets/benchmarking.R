@@ -53,3 +53,8 @@ y = c(-1, -2, -1, 0, 2, 1, 1, 0)
 sax_via_window(y, 3, 2, 3, "none", 0.01)
 sax_via_window(y, 3, 2, 3, "exact", 0.01)
 
+dat=read.table("assets/test_data/timeseries01.csv",as.is=T)
+dat_norm=read.table("assets/test_data/timeseries01.norm.csv",as.is=T)
+dd=znorm_cpp(dat$V1)
+plot(dd)
+points(dat_norm)

@@ -162,3 +162,17 @@ BEGIN_RCPP
     return __result;
 END_RCPP
 }
+// sax_by_chunking
+std::map<int, CharacterVector> sax_by_chunking(NumericVector ts, int paa_size, int a_size, double n_threshold);
+RcppExport SEXP jmotif_sax_by_chunking(SEXP tsSEXP, SEXP paa_sizeSEXP, SEXP a_sizeSEXP, SEXP n_thresholdSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< NumericVector >::type ts(tsSEXP);
+    Rcpp::traits::input_parameter< int >::type paa_size(paa_sizeSEXP);
+    Rcpp::traits::input_parameter< int >::type a_size(a_sizeSEXP);
+    Rcpp::traits::input_parameter< double >::type n_threshold(n_thresholdSEXP);
+    __result = Rcpp::wrap(sax_by_chunking(ts, paa_size, a_size, n_threshold));
+    return __result;
+END_RCPP
+}
