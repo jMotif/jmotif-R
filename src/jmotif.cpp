@@ -1,4 +1,5 @@
 #include <Rcpp.h>
+
 using namespace Rcpp;
 // Enable C++11 via this plugin (Rcpp 0.10.3 or later)
 // [[Rcpp::plugins("cpp11")]]
@@ -328,4 +329,63 @@ std::map<int, CharacterVector> sax_by_chunking(
   }
 
   return idx2word;
+}
+
+//' SAXifying a timeseries
+//'
+//' @param ts the timeseries
+//' @param paa_size the PAA size
+//' @param a_size the alphabet size
+//' @param n_threshold the normalization threshold
+//'
+//' @useDynLib jmotif
+//' @export
+// [[Rcpp::export]]
+std::map<std::string, int> series_to_wordbag(
+  NumericVector ts, int w_size, int paa_size, int a_size,
+  CharacterVector nr_strategy, double n_threshold) {
+
+  std::map<std::string, int> word_bag;
+
+  std::string old_str;
+
+  for (int i = 0; i < ts.length() - w_size; i++) {
+
+    NumericVector subSection = subseries(ts, i, i + w_size);
+
+    subSection = znorm_cpp(subSection, n_threshold);
+
+    subSection = paa_cpp(subSection, paa_size);
+
+    std::string curr_str = Rcpp::as<std::string>(
+      ts2string_cpp(subSection, a_size));
+
+    // Rcout << curr_str << "\n";
+
+    if (!(0 == old_str.length())) {
+      if ( is_equal_str("exact", nr_strategy)
+            && is_equal_str(old_str, curr_str) ) {
+        continue;
+      }
+      else if (is_equal_str("mindist", nr_strategy)
+                 && is_equal_str(old_str, curr_str) ) {
+        continue;
+      }
+    }
+
+    // Rcout << "processing " << curr_str << "\n";
+
+    if (word_bag.find(curr_str) == word_bag.end()){
+      // Rcout << "word " << curr_str << " not found \n";
+      word_bag.insert(std::make_pair(curr_str, 1));
+    }else{
+      // Rcout << "word " << curr_str << " found: " << word_bag[curr_str] << "\n";
+      word_bag[curr_str] += 1;
+    }
+
+    old_str = curr_str;
+
+  }
+
+  return word_bag;
 }
