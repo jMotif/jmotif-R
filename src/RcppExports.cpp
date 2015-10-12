@@ -177,7 +177,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // series_to_wordbag
-std::map<std::string, int> series_to_wordbag(NumericVector ts, int w_size, int paa_size, int a_size, CharacterVector nr_strategy, double n_threshold);
+Rcpp::DataFrame series_to_wordbag(NumericVector ts, int w_size, int paa_size, int a_size, CharacterVector nr_strategy, double n_threshold);
 RcppExport SEXP jmotif_series_to_wordbag(SEXP tsSEXP, SEXP w_sizeSEXP, SEXP paa_sizeSEXP, SEXP a_sizeSEXP, SEXP nr_strategySEXP, SEXP n_thresholdSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
@@ -193,14 +193,13 @@ BEGIN_RCPP
 END_RCPP
 }
 // tf_idf
-CharacterVector tf_idf(RawVector bag_a, RawVector bag_b);
-RcppExport SEXP jmotif_tf_idf(SEXP bag_aSEXP, SEXP bag_bSEXP) {
+double tf_idf(RawMatrix bags);
+RcppExport SEXP jmotif_tf_idf(SEXP bagsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
-    Rcpp::traits::input_parameter< RawVector >::type bag_a(bag_aSEXP);
-    Rcpp::traits::input_parameter< RawVector >::type bag_b(bag_bSEXP);
-    __result = Rcpp::wrap(tf_idf(bag_a, bag_b));
+    Rcpp::traits::input_parameter< RawMatrix >::type bags(bagsSEXP);
+    __result = Rcpp::wrap(tf_idf(bags));
     return __result;
 END_RCPP
 }

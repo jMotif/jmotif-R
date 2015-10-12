@@ -10,9 +10,10 @@ dat <- read.table(textConnection(
        -0.222311941138971 -0.74669456611669 -0.0663660879732063 0 0 0 0 0")
   ), as.is = T)
 
-wb1 <- series_to_wordbag(t(dat), 6, 3, 3, "none", 0.01)
-tf_idf(wb1, wb1)
-
+#wb1 <- series_to_wordbag(t(dat), 6, 3, 3, "none", 0.01)
+#wb2 <- series_to_wordbag(t(rev(dat)), 6, 3, 3, "none", 0.01)
+#merge(wb1, wb2, by.x="words", by.y="words", all=T)
+#tf_idf(wb1, wb1)
 
 test_that("wordbag #1", {
 
@@ -21,15 +22,13 @@ test_that("wordbag #1", {
 
   wb1 <- series_to_wordbag(t(dat), 6, 3, 3, "none", 0.01)
 
-  tf_idf(wb1, wb1)
+  expect_equal(as.numeric(words[names(words) == "bca"]),
+                    wb1[wb1$words == "bca",]$counts)
 
-  expect_equal(words[names(words) == "bca"],
-                    wb1[names(wb1) == "bca"])
+  expect_equal(as.numeric(words[names(words) == "abc"]),
+               wb1[wb1$words == "abc", ]$counts)
 
-  expect_equal(words[names(words) == "abc"],
-                    wb1[names(wb1) == "abc"])
-
-  expect_equal(words[names(words) == "bbb"],
-                    wb1[names(wb1) == "bbb"])
+  expect_equal(as.numeric(words[names(words) == "bbb"]),
+               wb1[wb1$words == "bbb", ]$counts)
 
 })

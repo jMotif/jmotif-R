@@ -185,11 +185,10 @@ series_to_wordbag <- function(ts, w_size, paa_size, a_size, nr_strategy, n_thres
 
 #' TFIDF
 #'
-#' @param bag_a the bag A.
-#' @param paa_size the bag B.
+#' @param bags the bags collection
 #' @useDynLib jmotif
 #' @export
-tf_idf <- function(bag_a, bag_b) {
-    .Call('jmotif_tf_idf', PACKAGE = 'jmotif', bag_a, bag_b)
+tf_idf <- function(bags) {
+    .Call('jmotif_tf_idf', PACKAGE = 'jmotif', bags)
 }
 

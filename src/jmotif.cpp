@@ -358,7 +358,7 @@ std::map<int, CharacterVector> sax_by_chunking(
 //' @useDynLib jmotif
 //' @export
 // [[Rcpp::export]]
-std::map<std::string, int> series_to_wordbag(
+Rcpp::DataFrame series_to_wordbag(
   NumericVector ts, int w_size, int paa_size, int a_size,
   CharacterVector nr_strategy, double n_threshold) {
 
@@ -404,28 +404,41 @@ std::map<std::string, int> series_to_wordbag(
 
   }
 
-  return word_bag;
+  std::vector<std::string> k;
+  std::vector<int> v;
+  for(std::map<std::string, int>::iterator it = word_bag.begin();
+      it != word_bag.end(); ++it) {
+    k.push_back(it->first);
+    v.push_back(it->second);
+  }
+
+  return Rcpp::DataFrame::create( Named("words")= k,
+                                  Named("counts") = v);
+
 }
 
 //' TFIDF
 //'
-//' @param bag_a the bag A.
-//' @param paa_size the bag B.
+//' @param bags the bags collection
 //' @useDynLib jmotif
 //' @export
 // [[Rcpp::export]]
-CharacterVector tf_idf(RawVector bag_a, RawVector bag_b) {
+double tf_idf(RawMatrix bags) {
 
-  CharacterVector names_a = bag_a.names();
-  CharacterVector names_b = bag_b.names();
+  //CharacterVector names_a = bag_a.names();
+  //CharacterVector names_b = bag_b.names();
 
-  std::set<std::string> all_words;
-  for(int i=0;i<names_a.size();i++){
-    all_words.insert( Rcpp::as<std::string>(names_a[i]) );
-  }
-  for(int i=0;i<names_b.size();i++){
-    all_words.insert( Rcpp::as<std::string>(names_b[i]) );
-  }
+  //std::set<std::string> all_words;
+  //for(int i=0;i<names_a.size();i++){
+  //  all_words.insert( Rcpp::as<std::string>(names_a[i]) );
+  //}
+  //for(int i=0;i<names_b.size();i++){
+  //  all_words.insert( Rcpp::as<std::string>(names_b[i]) );
+  //}
 
-  return wrap(all_words);
+  //for(std::string str : all_words){
+
+  //}
+
+  return 0.0;
 }
