@@ -11,7 +11,7 @@ str1 <- c('a', 'b', 'c')
 str2 <- c('c', 'b', 'a')
 str3 <- c('a', 'b', 'b')
 
-test_that("testing MINDIST", {
+test_that("testing min_dist", {
 
   expect_equal( sqrt((min_dist(str1, str2, 3)) ^ 2 / 2), 0.7396 )
 

@@ -17,27 +17,27 @@ BEGIN_RCPP
     return __result;
 END_RCPP
 }
-// reshape_cpp
-NumericMatrix reshape_cpp(NumericMatrix a, int n, int m);
-RcppExport SEXP jmotif_reshape_cpp(SEXP aSEXP, SEXP nSEXP, SEXP mSEXP) {
+// reshape
+NumericMatrix reshape(NumericMatrix a, int n, int m);
+RcppExport SEXP jmotif_reshape(SEXP aSEXP, SEXP nSEXP, SEXP mSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
     Rcpp::traits::input_parameter< NumericMatrix >::type a(aSEXP);
     Rcpp::traits::input_parameter< int >::type n(nSEXP);
     Rcpp::traits::input_parameter< int >::type m(mSEXP);
-    __result = Rcpp::wrap(reshape_cpp(a, n, m));
+    __result = Rcpp::wrap(reshape(a, n, m));
     return __result;
 END_RCPP
 }
-// col_means_cpp
-NumericVector col_means_cpp(NumericMatrix a);
-RcppExport SEXP jmotif_col_means_cpp(SEXP aSEXP) {
+// col_means
+NumericVector col_means(NumericMatrix a);
+RcppExport SEXP jmotif_col_means(SEXP aSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
     Rcpp::traits::input_parameter< NumericMatrix >::type a(aSEXP);
-    __result = Rcpp::wrap(col_means_cpp(a));
+    __result = Rcpp::wrap(col_means(a));
     return __result;
 END_RCPP
 }
@@ -53,59 +53,59 @@ BEGIN_RCPP
     return __result;
 END_RCPP
 }
-// idx2letter_cpp
-char idx2letter_cpp(int idx);
-RcppExport SEXP jmotif_idx2letter_cpp(SEXP idxSEXP) {
+// idx_to_letter
+char idx_to_letter(int idx);
+RcppExport SEXP jmotif_idx_to_letter(SEXP idxSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
     Rcpp::traits::input_parameter< int >::type idx(idxSEXP);
-    __result = Rcpp::wrap(idx2letter_cpp(idx));
+    __result = Rcpp::wrap(idx_to_letter(idx));
     return __result;
 END_RCPP
 }
-// letter2idx_cpp
-int letter2idx_cpp(char letter);
-RcppExport SEXP jmotif_letter2idx_cpp(SEXP letterSEXP) {
+// letter_to_idx
+int letter_to_idx(char letter);
+RcppExport SEXP jmotif_letter_to_idx(SEXP letterSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
     Rcpp::traits::input_parameter< char >::type letter(letterSEXP);
-    __result = Rcpp::wrap(letter2idx_cpp(letter));
+    __result = Rcpp::wrap(letter_to_idx(letter));
     return __result;
 END_RCPP
 }
-// letters2idx_cpp
-IntegerVector letters2idx_cpp(CharacterVector str);
-RcppExport SEXP jmotif_letters2idx_cpp(SEXP strSEXP) {
+// letters_to_idx
+IntegerVector letters_to_idx(CharacterVector str);
+RcppExport SEXP jmotif_letters_to_idx(SEXP strSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
     Rcpp::traits::input_parameter< CharacterVector >::type str(strSEXP);
-    __result = Rcpp::wrap(letters2idx_cpp(str));
+    __result = Rcpp::wrap(letters_to_idx(str));
     return __result;
 END_RCPP
 }
-// alphabet2cuts_cpp
-NumericVector alphabet2cuts_cpp(int a_size);
-RcppExport SEXP jmotif_alphabet2cuts_cpp(SEXP a_sizeSEXP) {
+// alphabet_to_cuts
+NumericVector alphabet_to_cuts(int a_size);
+RcppExport SEXP jmotif_alphabet_to_cuts(SEXP a_sizeSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
     Rcpp::traits::input_parameter< int >::type a_size(a_sizeSEXP);
-    __result = Rcpp::wrap(alphabet2cuts_cpp(a_size));
+    __result = Rcpp::wrap(alphabet_to_cuts(a_size));
     return __result;
 END_RCPP
 }
-// ts2chars_cpp
-CharacterVector ts2chars_cpp(NumericVector ts, int a_size);
-RcppExport SEXP jmotif_ts2chars_cpp(SEXP tsSEXP, SEXP a_sizeSEXP) {
+// ts_2_chars
+CharacterVector ts_2_chars(NumericVector ts, int a_size);
+RcppExport SEXP jmotif_ts_2_chars(SEXP tsSEXP, SEXP a_sizeSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
     Rcpp::traits::input_parameter< NumericVector >::type ts(tsSEXP);
     Rcpp::traits::input_parameter< int >::type a_size(a_sizeSEXP);
-    __result = Rcpp::wrap(ts2chars_cpp(ts, a_size));
+    __result = Rcpp::wrap(ts_2_chars(ts, a_size));
     return __result;
 END_RCPP
 }

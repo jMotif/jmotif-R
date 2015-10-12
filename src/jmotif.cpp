@@ -33,8 +33,7 @@ NumericVector znorm(NumericVector x, double threshold = 0.01) {
 
 }
 
-
-//' Reshape matrix
+//' Reshape a matrix
 //'
 //' @param a A matrix to reshape.
 //' @param n new row size.
@@ -42,22 +41,17 @@ NumericVector znorm(NumericVector x, double threshold = 0.01) {
 //' @useDynLib jmotif
 //' @export
 // [[Rcpp::export]]
-NumericMatrix reshape_cpp(NumericMatrix a, int n, int m) {
-
+NumericMatrix reshape(NumericMatrix a, int n, int m) {
   int ce = 0;
   int n_rows = a.nrow();
-
   NumericMatrix res(n, m);
-
   for (int j = 0; j < m; j++) {
     for (int i = 0; i < n; i++) {
       res(i,j) = a(ce % n_rows, ce / n_rows);
       ce++;
     }
   }
-
   return res;
-
 }
 
 //' Computes column means
@@ -66,7 +60,7 @@ NumericMatrix reshape_cpp(NumericMatrix a, int n, int m) {
 //' @useDynLib jmotif
 //' @export
 // [[Rcpp::export]]
-NumericVector col_means_cpp(NumericMatrix a) {
+NumericVector col_means(NumericMatrix a) {
   NumericVector res(a.ncol());
   for (int j = 0; j < a.ncol(); j++) {
     res[j] = mean(a(_,j));
@@ -82,10 +76,10 @@ NumericVector col_means_cpp(NumericMatrix a) {
 //' @export
 //' @examples
 //' x = c(-1, -2, -1, 0, 2, 1, 1, 0)
-//' plot(x,type="l",main="8-points time series and it PAA transform into three points")
-//' points(x,pch=16,lwd=5)
+//' plot(x, type = "l", main = "8-points time series and it PAA transform into three points")
+//' points(x,pch = 16, lwd = 5)
 //' # segments
-//' abline(v=c(1,1+7/3,1+7/3*2,8),lty=3,lwd=2)
+//' abline(v = c(1, 1+7/3, 1+7/3 * 2, 8), lty = 3, lwd = 2)
 // [[Rcpp::export]]
 NumericVector paa(NumericVector ts, int paa_num) {
 
@@ -116,8 +110,11 @@ NumericVector paa(NumericVector ts, int paa_num) {
 //' @param idx The index.
 //' @useDynLib jmotif
 //' @export
+//' @examples
+//' # letter 'b'
+//' idx_to_letter(2)
 // [[Rcpp::export]]
-char idx2letter_cpp(int idx) {
+char idx_to_letter(int idx) {
   return LETTERS[idx-1];
 }
 
@@ -126,8 +123,11 @@ char idx2letter_cpp(int idx) {
 //' @param letter The letter.
 //' @useDynLib jmotif
 //' @export
+//' @examples
+//' # letter 'b' translates to 2
+//' letter_to_idx('b')
 // [[Rcpp::export]]
-int letter2idx_cpp(char letter) {
+int letter_to_idx(char letter) {
   return letter - 96;
 }
 
@@ -136,23 +136,26 @@ int letter2idx_cpp(char letter) {
 //' @param str The char array.
 //' @useDynLib jmotif
 //' @export
+//' @examples
+//' letters_to_idx(c('a','b','c','a'))
 // [[Rcpp::export]]
-IntegerVector letters2idx_cpp(CharacterVector str) {
+IntegerVector letters_to_idx(CharacterVector str) {
   IntegerVector res(str.length());
   for(int i=0; i<str.length(); i++){
-    res[i] = letter2idx_cpp((str[i])[0]);
+    res[i] = letter_to_idx((str[i])[0]);
   }
   return res;
 }
 
-//' Translates an alphabet size into the array of corresponding
-//' SAX cut-lines assuming the Normal distribution
+//' Translates an alphabet size into the array of corresponding SAX cut-lines using the Normal distribution
 //'
 //' @param a_size the alphabet size, a value between 2 and 20 (inclusive).
 //' @useDynLib jmotif
 //' @export
+//' @examples
+//' alphabet_to_cuts(5)
 // [[Rcpp::export]]
-NumericVector alphabet2cuts_cpp(int a_size) {
+NumericVector alphabet_to_cuts(int a_size) {
   switch(a_size){
     case 2: {return NumericVector::create(R_NegInf,  0.00);}
     case 3: {return NumericVector::create(R_NegInf, -0.43,  0.43);}
@@ -185,13 +188,13 @@ NumericVector alphabet2cuts_cpp(int a_size) {
 //' @useDynLib jmotif
 //' @export
 // [[Rcpp::export]]
-CharacterVector ts2chars_cpp(NumericVector ts, int a_size) {
-  NumericVector cuts = alphabet2cuts_cpp(a_size);
+CharacterVector ts_2_chars(NumericVector ts, int a_size) {
+  NumericVector cuts = alphabet_to_cuts(a_size);
   int len = ts.length();
   CharacterVector res(len);
     for (int i=0; i<len; i++) {
       NumericVector dd = cuts[cuts <= ts[i]];
-      char b[] = {idx2letter_cpp(dd.length()), '\0'};
+      char b[] = {idx_to_letter(dd.length()), '\0'};
       res[i] = b;
     }
   return res;
@@ -209,12 +212,12 @@ CharacterVector ts2chars_cpp(NumericVector ts, int a_size) {
 //' ts_to_string(y_paa3, 3)
 // [[Rcpp::export]]
 CharacterVector ts_to_string(NumericVector ts, int a_size) {
-  NumericVector cuts = alphabet2cuts_cpp(a_size);
+  NumericVector cuts = alphabet_to_cuts(a_size);
   int len = ts.length();
   std::string res(len, ' ');
   for (int i=0; i<len; i++) {
     NumericVector dd = cuts[cuts <= ts[i]];
-    res[i] = idx2letter_cpp(dd.length());
+    res[i] = idx_to_letter(dd.length());
   }
   return wrap(res);
 }
@@ -257,7 +260,6 @@ bool is_equal_str(CharacterVector a, CharacterVector b) {
 //' @param a_size the alphabet size
 //' @param nr_strategy the NR strategy
 //' @param n_threshold the normalization threshold
-//'
 //' @useDynLib jmotif
 //' @export
 // [[Rcpp::export]]
@@ -317,7 +319,6 @@ std::map<int, CharacterVector> sax_via_window(
 //' @param paa_size the PAA size
 //' @param a_size the alphabet size
 //' @param n_threshold the normalization threshold
-//'
 //' @useDynLib jmotif
 //' @export
 // [[Rcpp::export]]
@@ -354,7 +355,6 @@ std::map<int, CharacterVector> sax_by_chunking(
 //' @param a_size the alphabet size
 //' @param nr_strategy the NR strategy
 //' @param n_threshold the normalization threshold
-//'
 //' @useDynLib jmotif
 //' @export
 // [[Rcpp::export]]

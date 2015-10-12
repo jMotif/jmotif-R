@@ -2,7 +2,7 @@
 % Please edit documentation in R/jmotif.R
 \name{sax_distance_matrix}
 \alias{sax_distance_matrix}
-\title{Translates an alphabet size value into the corresponding MINDIST distance matrix}
+\title{Translates an alphabet size value into the corresponding minDist distance matrix}
 \usage{
 sax_distance_matrix(a_size)
 }
@@ -10,10 +10,10 @@ sax_distance_matrix(a_size)
 \item{a_size}{the alphabet size, a value between 2 and 20 (inclusive)}
 }
 \value{
-Returns a MINDIST distance matrix for a given alphabet value
+Returns a distance matrix (for SAX minDist) for a given alphabet value
 }
 \description{
-Translates an alphabet size value into the corresponding MINDIST distance matrix
+Translates an alphabet size value into the corresponding minDist distance matrix
 }
 \examples{
 sax_distance_matrix(5)

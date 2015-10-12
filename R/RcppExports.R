@@ -16,15 +16,15 @@ znorm <- function(x, threshold = 0.01) {
     .Call('jmotif_znorm', PACKAGE = 'jmotif', x, threshold)
 }
 
-#' Reshape matrix
+#' Reshape a matrix
 #'
 #' @param a A matrix to reshape.
 #' @param n new row size.
 #' @param m new column size.
 #' @useDynLib jmotif
 #' @export
-reshape_cpp <- function(a, n, m) {
-    .Call('jmotif_reshape_cpp', PACKAGE = 'jmotif', a, n, m)
+reshape <- function(a, n, m) {
+    .Call('jmotif_reshape', PACKAGE = 'jmotif', a, n, m)
 }
 
 #' Computes column means
@@ -32,8 +32,8 @@ reshape_cpp <- function(a, n, m) {
 #' @param a A matrix to use.
 #' @useDynLib jmotif
 #' @export
-col_means_cpp <- function(a) {
-    .Call('jmotif_col_means_cpp', PACKAGE = 'jmotif', a)
+col_means <- function(a) {
+    .Call('jmotif_col_means', PACKAGE = 'jmotif', a)
 }
 
 #' Compute PAA
@@ -44,10 +44,10 @@ col_means_cpp <- function(a) {
 #' @export
 #' @examples
 #' x = c(-1, -2, -1, 0, 2, 1, 1, 0)
-#' plot(x,type="l",main="8-points time series and it PAA transform into three points")
-#' points(x,pch=16,lwd=5)
+#' plot(x, type = "l", main = "8-points time series and it PAA transform into three points")
+#' points(x,pch = 16, lwd = 5)
 #' # segments
-#' abline(v=c(1,1+7/3,1+7/3*2,8),lty=3,lwd=2)
+#' abline(v = c(1, 1+7/3, 1+7/3 * 2, 8), lty = 3, lwd = 2)
 paa <- function(ts, paa_num) {
     .Call('jmotif_paa', PACKAGE = 'jmotif', ts, paa_num)
 }
@@ -57,8 +57,11 @@ paa <- function(ts, paa_num) {
 #' @param idx The index.
 #' @useDynLib jmotif
 #' @export
-idx2letter_cpp <- function(idx) {
-    .Call('jmotif_idx2letter_cpp', PACKAGE = 'jmotif', idx)
+#' @examples
+#' # letter 'b'
+#' idx_to_letter(2)
+idx_to_letter <- function(idx) {
+    .Call('jmotif_idx_to_letter', PACKAGE = 'jmotif', idx)
 }
 
 #' Get an index for a letter
@@ -66,8 +69,11 @@ idx2letter_cpp <- function(idx) {
 #' @param letter The letter.
 #' @useDynLib jmotif
 #' @export
-letter2idx_cpp <- function(letter) {
-    .Call('jmotif_letter2idx_cpp', PACKAGE = 'jmotif', letter)
+#' @examples
+#' # letter 'b' translates to 2
+#' letter_to_idx('b')
+letter_to_idx <- function(letter) {
+    .Call('jmotif_letter_to_idx', PACKAGE = 'jmotif', letter)
 }
 
 #' Get an index sequence by string
@@ -75,18 +81,21 @@ letter2idx_cpp <- function(letter) {
 #' @param str The char array.
 #' @useDynLib jmotif
 #' @export
-letters2idx_cpp <- function(str) {
-    .Call('jmotif_letters2idx_cpp', PACKAGE = 'jmotif', str)
+#' @examples
+#' letters_to_idx(c('a','b','c','a'))
+letters_to_idx <- function(str) {
+    .Call('jmotif_letters_to_idx', PACKAGE = 'jmotif', str)
 }
 
-#' Translates an alphabet size into the array of corresponding
-#' SAX cut-lines assuming the Normal distribution
+#' Translates an alphabet size into the array of corresponding SAX cut-lines using the Normal distribution
 #'
 #' @param a_size the alphabet size, a value between 2 and 20 (inclusive).
 #' @useDynLib jmotif
 #' @export
-alphabet2cuts_cpp <- function(a_size) {
-    .Call('jmotif_alphabet2cuts_cpp', PACKAGE = 'jmotif', a_size)
+#' @examples
+#' alphabet_to_cuts(5)
+alphabet_to_cuts <- function(a_size) {
+    .Call('jmotif_alphabet_to_cuts', PACKAGE = 'jmotif', a_size)
 }
 
 #' Transforms a time series into a char array
@@ -95,8 +104,8 @@ alphabet2cuts_cpp <- function(a_size) {
 #' @param a_size the alphabet size
 #' @useDynLib jmotif
 #' @export
-ts2chars_cpp <- function(ts, a_size) {
-    .Call('jmotif_ts2chars_cpp', PACKAGE = 'jmotif', ts, a_size)
+ts_2_chars <- function(ts, a_size) {
+    .Call('jmotif_ts_2_chars', PACKAGE = 'jmotif', ts, a_size)
 }
 
 #' Transforms a time series into a string
@@ -142,7 +151,6 @@ is_equal_str <- function(a, b) {
 #' @param a_size the alphabet size
 #' @param nr_strategy the NR strategy
 #' @param n_threshold the normalization threshold
-#'
 #' @useDynLib jmotif
 #' @export
 sax_via_window <- function(ts, w_size, paa_size, a_size, nr_strategy, n_threshold) {
@@ -155,7 +163,6 @@ sax_via_window <- function(ts, w_size, paa_size, a_size, nr_strategy, n_threshol
 #' @param paa_size the PAA size
 #' @param a_size the alphabet size
 #' @param n_threshold the normalization threshold
-#'
 #' @useDynLib jmotif
 #' @export
 sax_by_chunking <- function(ts, paa_size, a_size, n_threshold) {
@@ -170,7 +177,6 @@ sax_by_chunking <- function(ts, paa_size, a_size, n_threshold) {
 #' @param a_size the alphabet size
 #' @param nr_strategy the NR strategy
 #' @param n_threshold the normalization threshold
-#'
 #' @useDynLib jmotif
 #' @export
 series_to_wordbag <- function(ts, w_size, paa_size, a_size, nr_strategy, n_threshold) {
