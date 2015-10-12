@@ -15,8 +15,13 @@ const char LETTERS[] = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h',
 //' @param threshold A z-normalization threshold.
 //' @useDynLib jmotif
 //' @export
+//' @examples
+//' x = seq(0, pi*4, 0.02)
+//' y = sin(x) * 5 + rnorm(length(x))
+//' plot(x, y, type="l", col="blue")
+//' lines(x, znorm(y, 0.01), type="l", col="red")
 // [[Rcpp::export]]
-NumericVector znorm_cpp(NumericVector x, double threshold = 0.01) {
+NumericVector znorm(NumericVector x, double threshold = 0.01) {
 
   double x_sd = sd(x);
 
@@ -75,8 +80,14 @@ NumericVector col_means_cpp(NumericMatrix a) {
 //' @param paa_num the desired PAA size.
 //' @useDynLib jmotif
 //' @export
+//' @examples
+//' #' x = c(-1, -2, -1, 0, 2, 1, 1, 0)
+//' plot(x,type="l",main="8-points time series and it PAA transform into three points")
+//' points(x,pch=16,lwd=5)
+//' #segments
+//' abline(v=c(1,1+7/3,1+7/3*2,8),lty=3,lwd=2)
 // [[Rcpp::export]]
-NumericVector paa_cpp(NumericVector ts, int paa_num) {
+NumericVector paa(NumericVector ts, int paa_num) {
 
   // fix the length
   int len = ts.length();
@@ -266,9 +277,9 @@ std::map<int, CharacterVector> sax_via_window(
 
     NumericVector subSection = subseries(ts, i, i + w_size);
 
-    subSection = znorm_cpp(subSection, n_threshold);
+    subSection = znorm(subSection, n_threshold);
 
-    subSection = paa_cpp(subSection, paa_size);
+    subSection = paa(subSection, paa_size);
 
     CharacterVector curr_str = ts2string_cpp(subSection, a_size);
 
@@ -317,9 +328,9 @@ std::map<int, CharacterVector> sax_by_chunking(
   typedef std::map<int, CharacterVector> idx2wordMap;
   idx2wordMap idx2word;
 
-  NumericVector vec = znorm_cpp(ts, n_threshold);
+  NumericVector vec = znorm(ts, n_threshold);
 
-  vec = paa_cpp(vec, paa_size);
+  vec = paa(vec, paa_size);
 
   std::string curr_str = Rcpp::as<std::string>(ts2string_cpp(vec, a_size));
   // Rcout << curr_str << "\n";
@@ -355,9 +366,9 @@ std::map<std::string, int> series_to_wordbag(
 
     NumericVector subSection = subseries(ts, i, i + w_size);
 
-    subSection = znorm_cpp(subSection, n_threshold);
+    subSection = znorm(subSection, n_threshold);
 
-    subSection = paa_cpp(subSection, paa_size);
+    subSection = paa(subSection, paa_size);
 
     std::string curr_str = Rcpp::as<std::string>(
       ts2string_cpp(subSection, a_size));

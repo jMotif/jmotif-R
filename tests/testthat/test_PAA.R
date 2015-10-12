@@ -1,18 +1,12 @@
 y <- c(-1, -2, -1, 0, 2, 1, 1, 0)
-v <- t(c(-1.375, 0.75, 0.625))
+v <- c(-1.375, 0.75, 0.625)
 
 test_that("points to points via PAA", {
   expect_equal(paa(y, 3), v)
-  expect_equal(paa(y, 8), t(y))
-  expect_equal(paa(y, 2), t(c(-1, 1)))
+  expect_equal(paa(y, 8), y)
+  expect_equal(paa(y, 2), c(-1, 1))
 })
 
-vv <- c(-1.375, 0.75, 0.625)
-test_that("points to points via PAA_CPP", {
-  expect_equal(paa_cpp(y, 3), vv)
-  expect_equal(paa_cpp(y, 8), y)
-  expect_equal(paa_cpp(y, 2), c(-1, 1))
-})
 
 dat <- c(-0.9796808,-0.8622706,-0.6123005,0.8496459,1.739691,1.588194,1.095829,
          0.5277147,0.4709033,-0.2865819,0.0921607,-0.2865819,-0.9039323,-1.195564,
@@ -20,7 +14,7 @@ dat <- c(-0.9796808,-0.8622706,-0.6123005,0.8496459,1.739691,1.588194,1.095829,
 dat_paa <- c(-0.9405441,-0.6956239,1.146328,1.638693,0.9064573,0.4898404,
              -0.1603344,-0.1603344,-1.001143,-1.223339)
 test_that("points to points via PAA_CPP #2", {
-  expect_equal(paa_cpp(dat, 10), dat_paa, tolerance=1e-6)
+  expect_equal(paa(dat, 10), dat_paa, tolerance = 1e-6)
 })
 
 dat <- c(-1.289433,-0.9992189,-0.5253246,-0.06612478,-0.2791935,0.08816637,
@@ -29,5 +23,5 @@ dat <- c(-1.289433,-0.9992189,-0.5253246,-0.06612478,-0.2791935,0.08816637,
 dat_paa <- c(-1.192695,-0.6832894,-0.1371477,-0.03428692,0.1542912,0.7934974,
              1.129019,1.760878,-0.5853268,-1.20494)
 test_that("points to points via PAA_CPP #3", {
-  expect_equal(paa_cpp(dat, 10), dat_paa, tolerance=1e-6)
+  expect_equal(paa(dat, 10), dat_paa, tolerance = 1e-6)
 })

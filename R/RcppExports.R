@@ -7,8 +7,13 @@
 #' @param threshold A z-normalization threshold.
 #' @useDynLib jmotif
 #' @export
-znorm_cpp <- function(x, threshold = 0.01) {
-    .Call('jmotif_znorm_cpp', PACKAGE = 'jmotif', x, threshold)
+#' @examples
+#' x = seq(0, pi*4, 0.02)
+#' y = sin(x) * 5 + rnorm(length(x))
+#' plot(x, y, type="l", col="blue")
+#' lines(x, znorm(y, 0.01), type="l", col="red")
+znorm <- function(x, threshold = 0.01) {
+    .Call('jmotif_znorm', PACKAGE = 'jmotif', x, threshold)
 }
 
 #' Reshape matrix
@@ -37,8 +42,14 @@ col_means_cpp <- function(a) {
 #' @param paa_num the desired PAA size.
 #' @useDynLib jmotif
 #' @export
-paa_cpp <- function(ts, paa_num) {
-    .Call('jmotif_paa_cpp', PACKAGE = 'jmotif', ts, paa_num)
+#' @examples
+#' #' x = c(-1, -2, -1, 0, 2, 1, 1, 0)
+#' plot(x,type="l",main="8-points time series and it PAA transform into three points")
+#' points(x,pch=16,lwd=5)
+#' #segments
+#' abline(v=c(1,1+7/3,1+7/3*2,8),lty=3,lwd=2)
+paa <- function(ts, paa_num) {
+    .Call('jmotif_paa', PACKAGE = 'jmotif', ts, paa_num)
 }
 
 #' Get a letter by index

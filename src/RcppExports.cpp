@@ -5,15 +5,15 @@
 
 using namespace Rcpp;
 
-// znorm_cpp
-NumericVector znorm_cpp(NumericVector x, double threshold);
-RcppExport SEXP jmotif_znorm_cpp(SEXP xSEXP, SEXP thresholdSEXP) {
+// znorm
+NumericVector znorm(NumericVector x, double threshold);
+RcppExport SEXP jmotif_znorm(SEXP xSEXP, SEXP thresholdSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
     Rcpp::traits::input_parameter< NumericVector >::type x(xSEXP);
     Rcpp::traits::input_parameter< double >::type threshold(thresholdSEXP);
-    __result = Rcpp::wrap(znorm_cpp(x, threshold));
+    __result = Rcpp::wrap(znorm(x, threshold));
     return __result;
 END_RCPP
 }
@@ -41,15 +41,15 @@ BEGIN_RCPP
     return __result;
 END_RCPP
 }
-// paa_cpp
-NumericVector paa_cpp(NumericVector ts, int paa_num);
-RcppExport SEXP jmotif_paa_cpp(SEXP tsSEXP, SEXP paa_numSEXP) {
+// paa
+NumericVector paa(NumericVector ts, int paa_num);
+RcppExport SEXP jmotif_paa(SEXP tsSEXP, SEXP paa_numSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
     Rcpp::traits::input_parameter< NumericVector >::type ts(tsSEXP);
     Rcpp::traits::input_parameter< int >::type paa_num(paa_numSEXP);
-    __result = Rcpp::wrap(paa_cpp(ts, paa_num));
+    __result = Rcpp::wrap(paa(ts, paa_num));
     return __result;
 END_RCPP
 }
