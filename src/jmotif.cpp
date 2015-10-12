@@ -406,3 +406,26 @@ std::map<std::string, int> series_to_wordbag(
 
   return word_bag;
 }
+
+//' TFIDF
+//'
+//' @param bag_a the bag A.
+//' @param paa_size the bag B.
+//' @useDynLib jmotif
+//' @export
+// [[Rcpp::export]]
+CharacterVector tf_idf(RawVector bag_a, RawVector bag_b) {
+
+  CharacterVector names_a = bag_a.names();
+  CharacterVector names_b = bag_b.names();
+
+  std::set<std::string> all_words;
+  for(int i=0;i<names_a.size();i++){
+    all_words.insert( Rcpp::as<std::string>(names_a[i]) );
+  }
+  for(int i=0;i<names_b.size();i++){
+    all_words.insert( Rcpp::as<std::string>(names_b[i]) );
+  }
+
+  return wrap(all_words);
+}

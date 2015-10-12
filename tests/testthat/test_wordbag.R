@@ -8,14 +8,20 @@ dat <- read.table(textConnection(
        -0.822247322003058 1.06850578033292 -0.678811824405992 0.804225748913681 0.57363964388698
        0.437113583759113 0.437208643628268 0.989892093383503 1.76545983424176 0.119483882364649
        -0.222311941138971 -0.74669456611669 -0.0663660879732063 0 0 0 0 0")
-  ), as.is=T)
+  ), as.is = T)
+
+wb1 <- series_to_wordbag(t(dat), 6, 3, 3, "none", 0.01)
+tf_idf(wb1, wb1)
+
 
 test_that("wordbag #1", {
 
   sax1 <- sax_via_window(t(dat), 6, 3, 3, "none", 0.01)
-  words <- table(matrix(unlist(sax1), ncol=1, byrow=T)[,1])
+  words <- table(matrix(unlist(sax1), ncol = 1, byrow = T)[,1])
 
   wb1 <- series_to_wordbag(t(dat), 6, 3, 3, "none", 0.01)
+
+  tf_idf(wb1, wb1)
 
   expect_equal(words[names(words) == "bca"],
                     wb1[names(wb1) == "bca"])

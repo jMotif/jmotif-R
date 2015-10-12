@@ -192,3 +192,15 @@ BEGIN_RCPP
     return __result;
 END_RCPP
 }
+// tf_idf
+CharacterVector tf_idf(RawVector bag_a, RawVector bag_b);
+RcppExport SEXP jmotif_tf_idf(SEXP bag_aSEXP, SEXP bag_bSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< RawVector >::type bag_a(bag_aSEXP);
+    Rcpp::traits::input_parameter< RawVector >::type bag_b(bag_bSEXP);
+    __result = Rcpp::wrap(tf_idf(bag_a, bag_b));
+    return __result;
+END_RCPP
+}
