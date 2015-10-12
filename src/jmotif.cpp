@@ -423,8 +423,12 @@ Rcpp::DataFrame series_to_wordbag(
 //' @useDynLib jmotif
 //' @export
 // [[Rcpp::export]]
-double tf_idf(RawMatrix bags) {
+double tf_idf(Rcpp::DataFrame bags) {
 
+  CharacterVector names = bags.names();
+  for(int i=0;i<names.size();i++){
+    Rcout << names[i] << "\n";
+  }
   //CharacterVector names_a = bag_a.names();
   //CharacterVector names_b = bag_b.names();
 

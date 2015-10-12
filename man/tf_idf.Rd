@@ -4,12 +4,10 @@
 \alias{tf_idf}
 \title{TFIDF}
 \usage{
-tf_idf(bag_a, bag_b)
+tf_idf(bags)
 }
 \arguments{
-\item{bag_a}{the bag A.}
-
-\item{paa_size}{the bag B.}
+\item{bags}{the bags collection}
 }
 \description{
 TFIDF

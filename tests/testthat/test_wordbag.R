@@ -12,8 +12,8 @@ dat <- read.table(textConnection(
 
 #wb1 <- series_to_wordbag(t(dat), 6, 3, 3, "none", 0.01)
 #wb2 <- series_to_wordbag(t(rev(dat)), 6, 3, 3, "none", 0.01)
-#merge(wb1, wb2, by.x="words", by.y="words", all=T)
-#tf_idf(wb1, wb1)
+#tt=merge(wb1, wb2, by.x="words", by.y="words", all=T)
+#tf_idf(tt)
 
 test_that("wordbag #1", {
 
