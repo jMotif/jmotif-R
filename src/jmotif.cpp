@@ -81,10 +81,10 @@ NumericVector col_means_cpp(NumericMatrix a) {
 //' @useDynLib jmotif
 //' @export
 //' @examples
-//' #' x = c(-1, -2, -1, 0, 2, 1, 1, 0)
+//' x = c(-1, -2, -1, 0, 2, 1, 1, 0)
 //' plot(x,type="l",main="8-points time series and it PAA transform into three points")
 //' points(x,pch=16,lwd=5)
-//' #segments
+//' # segments
 //' abline(v=c(1,1+7/3,1+7/3*2,8),lty=3,lwd=2)
 // [[Rcpp::export]]
 NumericVector paa(NumericVector ts, int paa_num) {
@@ -197,14 +197,18 @@ CharacterVector ts2chars_cpp(NumericVector ts, int a_size) {
   return res;
 }
 
-//' Transforms a time series into a char array
+//' Transforms a time series into a string
 //'
 //' @param ts the timeseries
 //' @param a_size the alphabet size
 //' @useDynLib jmotif
 //' @export
+//' @examples
+//' y = c(-1, -2, -1, 0, 2, 1, 1, 0)
+//' y_paa3 = paa(y, 3)
+//' ts_to_string(y_paa3, 3)
 // [[Rcpp::export]]
-CharacterVector ts2string_cpp(NumericVector ts, int a_size) {
+CharacterVector ts_to_string(NumericVector ts, int a_size) {
   NumericVector cuts = alphabet2cuts_cpp(a_size);
   int len = ts.length();
   std::string res(len, ' ');
@@ -281,7 +285,7 @@ std::map<int, CharacterVector> sax_via_window(
 
     subSection = paa(subSection, paa_size);
 
-    CharacterVector curr_str = ts2string_cpp(subSection, a_size);
+    CharacterVector curr_str = ts_to_string(subSection, a_size);
 
     // Rcout << curr_str << "\n";
 
@@ -332,7 +336,7 @@ std::map<int, CharacterVector> sax_by_chunking(
 
   vec = paa(vec, paa_size);
 
-  std::string curr_str = Rcpp::as<std::string>(ts2string_cpp(vec, a_size));
+  std::string curr_str = Rcpp::as<std::string>(ts_to_string(vec, a_size));
   // Rcout << curr_str << "\n";
 
   for(int i=0; i<curr_str.length(); i++){
@@ -371,7 +375,7 @@ std::map<std::string, int> series_to_wordbag(
     subSection = paa(subSection, paa_size);
 
     std::string curr_str = Rcpp::as<std::string>(
-      ts2string_cpp(subSection, a_size));
+      ts_to_string(subSection, a_size));
 
     // Rcout << curr_str << "\n";
 

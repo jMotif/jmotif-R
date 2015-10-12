@@ -109,15 +109,15 @@ BEGIN_RCPP
     return __result;
 END_RCPP
 }
-// ts2string_cpp
-CharacterVector ts2string_cpp(NumericVector ts, int a_size);
-RcppExport SEXP jmotif_ts2string_cpp(SEXP tsSEXP, SEXP a_sizeSEXP) {
+// ts_to_string
+CharacterVector ts_to_string(NumericVector ts, int a_size);
+RcppExport SEXP jmotif_ts_to_string(SEXP tsSEXP, SEXP a_sizeSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
     Rcpp::traits::input_parameter< NumericVector >::type ts(tsSEXP);
     Rcpp::traits::input_parameter< int >::type a_size(a_sizeSEXP);
-    __result = Rcpp::wrap(ts2string_cpp(ts, a_size));
+    __result = Rcpp::wrap(ts_to_string(ts, a_size));
     return __result;
 END_RCPP
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/jmotif.R
 \name{min_dist}
 \alias{min_dist}
-\title{Time series PAA transform}
+\title{Compute the mindist between two strings}
 \usage{
 min_dist(str1, str2, alphabet_size, compression_ratio = 1)
 }
@@ -19,7 +19,7 @@ min_dist(str1, str2, alphabet_size, compression_ratio = 1)
 Returns the distance between strings
 }
 \description{
-Time series PAA transform
+Compute the mindist between two strings
 }
 \examples{
 str1 <- c('a', 'b', 'c')

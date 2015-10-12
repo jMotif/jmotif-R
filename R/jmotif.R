@@ -114,32 +114,7 @@ letters2idx <- function(str) {
   as.vector(plyr::aaply(str, 1, jmotif::letter2idx))
 }
 
-#' Transforms a time series into a char array
-#'
-#' @param ts the timeseries
-#' @param a_size the alphabet size
-#' @return Returns a SAX transform for the time series and the alphabet size.
-#' @export
-#' @examples
-#' y = c(-1, -2, -1, 0, 2, 1, 1, 0)
-#' y_paa3 = paa(y, 3)
-#' ts2string(y_paa3, 3)
-ts2string <- function(ts, a_size) {
-  cut_points <- jmotif::alphabet2cuts(a_size)
-  len <- 0
-  if (is.vector(ts)) {
-    len <- length(ts)
-  }else if (is.matrix(ts)) {
-    len <- ncol(ts)
-  }
-  res <- rep(0, len)
-  for (i in 1:len) {
-    res[i] <- length(cut_points[cut_points <= ts[i]])
-  }
-  jmotif::idx2letter(res)
-}
-
-#' Time series PAA transform
+#' Compute the mindist between two strings
 #'
 #' @param str1 the first string
 #' @param str2 the second string
