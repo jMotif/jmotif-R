@@ -1,6 +1,7 @@
 ### An R implementation of z-Normalization, PAA, and SAX
 
 [![Build Status](https://travis-ci.org/jMotif/jmotif-R.svg?branch=master)](https://travis-ci.org/jMotif/jmotif-R) [![codecov.io](http://codecov.io/github/jMotif/jmotif-R/coverage.svg?branch=master)](http://codecov.io/github/jMotif/jmotif-R?branch=master)
+[![License](http://img.shields.io/:license-gpl2-green.svg)](http://www.gnu.org/licenses/gpl-2.0.html)
 
 Implements time series symbolic discretization via z-Normalization [1], PAA [2], and SAX [3] in R.
 
