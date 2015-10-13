@@ -28,7 +28,7 @@ tfidf = tf_idf(merge(bag1, bag2, by = c("words"), all = T))
 
 # classify the test data
 #
-test = read.table("assets/test_data/Gun_Point/Gun_Point_TEST")
+test = read.table("assets/test_data/Gun_Point/Gun_Point_TEST", as.is=T)
 test_labels = test[,1]
 predicted = rep(-1,length(labels))
 test = matrix(unlist(test[,-1]), nrow=length(test_labels))
@@ -49,6 +49,12 @@ error = length(which((test_labels != predicted))) / length(test_labels)
 error
 
 which((test_labels != predicted))
+
+#
+#
+#
+#
+#
 
 series = test[23, -1]
 
