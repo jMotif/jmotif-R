@@ -84,7 +84,7 @@ The figure below illustrates the PAA+SAX procedure: 8 points time series is conv
 #### 4.0 SAX-VSM classifier
 While the sampler is yet to be coded, the SAX-VSM-based classification of UCR data can be performed with this li version:
 
-    # load the test data
+    # load the TRAIN data
     #
     data = read.table("assets/test_data/Gun_Point/Gun_Point_TRAIN", as.is=T)
     labels = unlist(data[,1])
@@ -112,9 +112,9 @@ While the sampler is yet to be coded, the SAX-VSM-based classification of UCR da
     #
     tfidf = tf_idf(merge(bag1, bag2, by = c("words"), all = T))
 
-    # load the test data
+    # load the TEST data
     #
-    test = read.table("assets/test_data/Gun_Point/Gun_Point_TEST")
+    test = read.table("assets/test_data/Gun_Point/Gun_Point_TEST", as.is=T)
     test_labels = test[,1]
     
     # get ready for classification
