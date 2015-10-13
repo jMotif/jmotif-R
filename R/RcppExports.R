@@ -172,7 +172,7 @@ series_to_wordbag <- function(ts, w_size, paa_size, a_size, nr_strategy, n_thres
     .Call('jmotif_series_to_wordbag', PACKAGE = 'jmotif', ts, w_size, paa_size, a_size, nr_strategy, n_threshold)
 }
 
-#' SAXifying a timeseries
+#' SAXifying a bunch of timeseries
 #'
 #' @param data the timeseries data, row-wise
 #' @param w_size the sliding window size
