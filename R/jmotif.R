@@ -64,12 +64,22 @@ min_dist <- function(str1, str2, alphabet_size, compression_ratio = 1) {
   }
 }
 
-
 #' Compute the tfidf
 #'
 #' @param df the data frame to use
 #' @return Returns the tfidf matrix
 #' @export
+#' @examples
+#' bag1 = data.frame(
+#'     "words" = c("this", "is", "a", "sample"),
+#'     "counts" = c(1, 1, 2, 1)
+#'     )
+#' bag2 = data.frame(
+#'     "words" = c("this", "is", "another", "example"),
+#'     "counts" = c(1, 1, 2, 3)
+#'     )
+#' counts = merge(bag1, bag2, by = c("words"), all = T)
+#' tfidf = tf_idf(counts)
 tf_idf <- function(df) {
   ddply(df, .(words), function(x){
     vec = as.vector(unlist(x[,-1]))
@@ -79,4 +89,17 @@ tf_idf <- function(df) {
     idf = log(documents_num / documents_with_word)
     tf * idf
   })
+}
+
+#' Compute the cosine similarity
+#'
+#' @param m the data matrix
+#' @return Returns the cosine similarity
+#' @export
+#' @examples
+#' a <- c(2, 1, 0, 2, 0, 1, 1, 1)
+#' b <- c(2, 1, 1, 1, 1, 0, 1, 1)
+#' sim = cosineSim(rbind(a,b))
+cosineSim <- function(m) {
+  as.dist(1 - m %*% t(m)/(sqrt(rowSums(m ^ 2) %*% t(rowSums(m ^ 2)))))
 }

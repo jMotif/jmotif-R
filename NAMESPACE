@@ -2,6 +2,7 @@
 
 export(alphabet_to_cuts)
 export(col_means)
+export(cosineSim)
 export(idx_to_letter)
 export(is_equal_str)
 export(letter_to_idx)

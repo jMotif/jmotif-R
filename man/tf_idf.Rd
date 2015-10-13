@@ -15,4 +15,16 @@ Returns the tfidf matrix
 \description{
 Compute the tfidf
 }
+\examples{
+bag1 = data.frame(
+    "words" = c("this", "is", "a", "sample"),
+    "counts" = c(1, 1, 2, 1)
+    )
+bag2 = data.frame(
+    "words" = c("this", "is", "another", "example"),
+    "counts" = c(1, 1, 2, 3)
+    )
+counts = merge(bag1, bag2, by = c("words"), all = T)
+tfidf = tf_idf(counts)
+}
 
