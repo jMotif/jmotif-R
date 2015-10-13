@@ -17,19 +17,6 @@ BEGIN_RCPP
     return __result;
 END_RCPP
 }
-// reshape
-NumericMatrix reshape(NumericMatrix a, int n, int m);
-RcppExport SEXP jmotif_reshape(SEXP aSEXP, SEXP nSEXP, SEXP mSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject __result;
-    Rcpp::RNGScope __rngScope;
-    Rcpp::traits::input_parameter< NumericMatrix >::type a(aSEXP);
-    Rcpp::traits::input_parameter< int >::type n(nSEXP);
-    Rcpp::traits::input_parameter< int >::type m(mSEXP);
-    __result = Rcpp::wrap(reshape(a, n, m));
-    return __result;
-END_RCPP
-}
 // col_means
 NumericVector col_means(NumericMatrix a);
 RcppExport SEXP jmotif_col_means(SEXP aSEXP) {

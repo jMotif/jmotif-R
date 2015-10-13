@@ -16,17 +16,6 @@ znorm <- function(x, threshold = 0.01) {
     .Call('jmotif_znorm', PACKAGE = 'jmotif', x, threshold)
 }
 
-#' Reshape a matrix
-#'
-#' @param a A matrix to reshape.
-#' @param n new row size.
-#' @param m new column size.
-#' @useDynLib jmotif
-#' @export
-reshape <- function(a, n, m) {
-    .Call('jmotif_reshape', PACKAGE = 'jmotif', a, n, m)
-}
-
 #' Computes column means
 #'
 #' @param a A matrix to use.

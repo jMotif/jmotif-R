@@ -34,27 +34,6 @@ NumericVector znorm(NumericVector x, double threshold = 0.01) {
 
 }
 
-//' Reshape a matrix
-//'
-//' @param a A matrix to reshape.
-//' @param n new row size.
-//' @param m new column size.
-//' @useDynLib jmotif
-//' @export
-// [[Rcpp::export]]
-NumericMatrix reshape(NumericMatrix a, int n, int m) {
-  int ce = 0;
-  int n_rows = a.nrow();
-  NumericMatrix res(n, m);
-  for (int j = 0; j < m; j++) {
-    for (int i = 0; i < n; i++) {
-      res(i,j) = a(ce % n_rows, ce / n_rows);
-      ce++;
-    }
-  }
-  return res;
-}
-
 //' Computes column means
 //'
 //' @param a A matrix to use.
@@ -92,6 +71,18 @@ NumericVector paa(NumericVector ts, int paa_num) {
     return clone(ts);
   }
   else {
+    if (len % paa_num == 0) {
+      NumericVector res(paa_num);
+      int inc = len / paa_num;
+      for (int i = 0; i < len; i++) {
+        int idx = i / inc; // the spot
+        res[idx] += ts[i];
+      }
+      for (int i = 0; i < paa_num; i++) {
+        res[i] = res[i] / (double) (inc);
+      }
+      return res;
+    }else{
       NumericVector res(paa_num);
       for (int i = 0; i < len * paa_num; i++) {
         int idx = i / len; // the spot
@@ -102,6 +93,7 @@ NumericVector paa(NumericVector ts, int paa_num) {
         res[i] = res[i] / (double) len;
       }
       return res;
+    }
   }
 
 }
