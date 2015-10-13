@@ -7,6 +7,8 @@
 manyseries_to_wordbag(data, w_size, paa_size, a_size, nr_strategy, n_threshold)
 }
 \arguments{
+\item{data}{the timeseries data, row-wise}
+
 \item{w_size}{the sliding window size}
 
 \item{paa_size}{the PAA size}
@@ -16,8 +18,6 @@ manyseries_to_wordbag(data, w_size, paa_size, a_size, nr_strategy, n_threshold)
 \item{nr_strategy}{the NR strategy}
 
 \item{n_threshold}{the normalization threshold}
-
-\item{ts}{the timeseries}
 }
 \description{
 SAXifying a timeseries

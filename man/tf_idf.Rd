@@ -2,7 +2,7 @@
 % Please edit documentation in R/jmotif.R
 \name{tf_idf}
 \alias{tf_idf}
-\title{Compute the tfidf}
+\title{Computes the tfidf}
 \usage{
 tf_idf(df)
 }
@@ -13,7 +13,7 @@ tf_idf(df)
 Returns the tfidf matrix
 }
 \description{
-Compute the tfidf
+Computes the tfidf
 }
 \examples{
 bag1 = data.frame(

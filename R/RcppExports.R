@@ -174,7 +174,7 @@ series_to_wordbag <- function(ts, w_size, paa_size, a_size, nr_strategy, n_thres
 
 #' SAXifying a timeseries
 #'
-#' @param ts the timeseries
+#' @param data the timeseries data, row-wise
 #' @param w_size the sliding window size
 #' @param paa_size the PAA size
 #' @param a_size the alphabet size

@@ -411,7 +411,7 @@ Rcpp::DataFrame series_to_wordbag(
 
 }
 
-//' SAXifying a timeseries
+//' SAXifying a bunch of timeseries
 //'
 //' @param data the timeseries data, row-wise
 //' @param w_size the sliding window size
