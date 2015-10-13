@@ -410,3 +410,69 @@ Rcpp::DataFrame series_to_wordbag(
                                   Named("stringsAsFactors") = false);
 
 }
+
+//' SAXifying a timeseries
+//'
+//' @param ts the timeseries
+//' @param w_size the sliding window size
+//' @param paa_size the PAA size
+//' @param a_size the alphabet size
+//' @param nr_strategy the NR strategy
+//' @param n_threshold the normalization threshold
+//' @useDynLib jmotif
+//' @export
+// [[Rcpp::export]]
+Rcpp::DataFrame manyseries_to_wordbag(
+    NumericMatrix data, int w_size, int paa_size, int a_size,
+    CharacterVector nr_strategy, double n_threshold) {
+
+  std::map<std::string, int> word_bag; // the result
+
+  for(int s=0; s<data.nrow(); s++){
+
+    NumericVector ts = data.row(s);
+
+    std::string old_str;
+
+    for (int i = 0; i < ts.length() - w_size; i++) {
+
+      NumericVector subSection = subseries(ts, i, i + w_size);
+      subSection = znorm(subSection, n_threshold);
+      subSection = paa(subSection, paa_size);
+      std::string curr_str = Rcpp::as<std::string>(ts_to_string(subSection, a_size));
+
+      if (!(0 == old_str.length())) {
+        if ( is_equal_str("exact", nr_strategy)
+            && is_equal_str(old_str, curr_str) ) {
+          continue;
+        }
+        else if (is_equal_str("mindist", nr_strategy)
+            && is_equal_str(old_str, curr_str) ) {
+          continue;
+        }
+      }
+
+      if (word_bag.find(curr_str) == word_bag.end()){
+        word_bag.insert(std::make_pair(curr_str, 1));
+      }else{
+        word_bag[curr_str] += 1;
+      }
+
+      old_str = curr_str;
+
+    }
+  }
+
+  std::vector<std::string> k;
+  std::vector<int> v;
+  for(std::map<std::string, int>::iterator it = word_bag.begin();
+      it != word_bag.end(); ++it) {
+    k.push_back(it->first);
+    v.push_back(it->second);
+  }
+
+  return Rcpp::DataFrame::create( Named("words")= k,
+                                  Named("counts") = v,
+                                  Named("stringsAsFactors") = false);
+
+}

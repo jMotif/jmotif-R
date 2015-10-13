@@ -1,34 +1,42 @@
-data = read.table("assets/test_data/Gun_Point/Gun_Point_TRAIN")
-unique(data[,1])
+# load the test data
+#
+data = read.table("assets/test_data/Gun_Point/Gun_Point_TRAIN", as.is=T)
+labels = unlist(data[,1])
+unique(labels)
+data = matrix(unlist(data[,-1]), nrow=length(labels))
+str(data)
+plot(data[1,], type="l")
 
-ones = data[data[,1] == 1,-1]
-twos = data[data[,1] == 2,-1]
+# separate data sets according to labels
+#
+ones = data[labels == 1,]
+twos = data[labels == 2,]
 
-bag1 = series_to_wordbag(unlist(ones[1,]), 33, 17, 10, "exact", 0.01)
-for (i in c(2:length(ones[,1]))) {
-  bag = series_to_wordbag(unlist(ones[i,]), 33, 17, 10, "exact", 0.01)
-  bag1 = rbind.fill(list(bag1, bag))
-  bag1 <- ddply(bag1, .(words), function(x) { sum(x[,-1], na.rm = T) })
-}
+#
+w=30
+p=15
+a=10
 
-bag2 = series_to_wordbag(unlist(twos[1,]), 33, 17, 10, "exact", 0.01)
-for (i in c(2:length(twos[,1]))) {
-  bag = series_to_wordbag(unlist(twos[i,]), 33, 17, 10, "exact", 0.01)
-  bag2 = rbind.fill(list(bag2, bag))
-  bag2 <- ddply(bag2, .(words), function(x) { sum(x[,-1], na.rm = T) })
-}
+# convert these to word bags
+#
+bag1 = manyseries_to_wordbag(ones, w, p, a, "exact", 0.01)
+bag2 = manyseries_to_wordbag(twos, w, p, a, "exact", 0.01)
 
+# compute tf*idf
+#
 tfidf = tf_idf(merge(bag1, bag2, by = c("words"), all = T))
 
+# classify the test data
+#
 test = read.table("assets/test_data/Gun_Point/Gun_Point_TEST")
-labels = test[,1]
+test_labels = test[,1]
 predicted = rep(-1,length(labels))
+test = matrix(unlist(test[,-1]), nrow=length(test_labels))
+
 for (i in c(1:length(test[,1]))) {
-  series = test[i,-1]
-  bag = series_to_wordbag(unlist(series), 33, 17, 10, "exact", 0.01)
+  series = test[i,]
+  bag = series_to_wordbag(series, w, p, a, "exact", 0.01)
   mm = merge(tfidf, bag, by = c("words"), all = T)
-  # tmp=mm[!(is.na(mm$counts)),]
-  # tmp[sum(tmp[,c(2,3)])!=0,]
   mm[is.na(mm)] <- 0.0
   cosine1 = cosineSim(rbind(mm$`1`,mm$counts))
   cosine2 = cosineSim(rbind(mm$`2`,mm$counts))
@@ -36,17 +44,17 @@ for (i in c(1:length(test[,1]))) {
   predicted[i] = prediction
 }
 
-which((labels != predicted))
+which((test_labels != predicted))
 
 series = test[23, -1]
 
-bag = series_to_wordbag(unlist(series), 33, 17, 10, "exact", 0.01)
+bag = series_to_wordbag(unlist(series), w, p, a, "exact", 0.01)
 mm = merge(tfidf, bag, by = c("words"), all = T)
 weights = mm[!(is.na(mm$counts)),]
 weights[is.na(weights)] <- 0.0
 weights = weights[rowSums(weights[,2:3]) != 0, ]
 
-sax = list_to_df(sax_via_window(unlist(series), 33, 17, 10, "exact", 0.01))
+sax = list_to_df(sax_via_window(unlist(series), w, p, a, "exact", 0.01))
 names(sax) <- c("index","word")
 
 patterns = data.frame(0,0,0,0)
@@ -54,11 +62,13 @@ for (i in c(1:length(weights[,1]))) {
   word = weights[i,1]
   if (word %in% sax$word) {
     patterns = rbind(patterns,
-    c(word, sax[sax$word == word,1], tfidf[tfidf$words == word, 2],tfidf[tfidf$words == word, 3]))
+        c(word, sax[sax$word == word,1], tfidf[tfidf$words == word, 2],tfidf[tfidf$words == word, 3]))
   }
 }
 patterns = patterns[-1,]
 names(patterns) <- c("pattern", "pos", "weight1", "weight2")
+
+i=23
 
 list_to_df <- function(list_for_df) {
   list_for_df <- as.list(list_for_df)

@@ -64,7 +64,7 @@ min_dist <- function(str1, str2, alphabet_size, compression_ratio = 1) {
   }
 }
 
-#' Compute the tfidf
+#' Computes the tfidf
 #'
 #' @param df the data frame to use
 #' @return Returns the tfidf matrix
