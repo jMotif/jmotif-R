@@ -74,3 +74,68 @@ The figure below illustrates the PAA+SAX procedure: 8 points time series is conv
     [1] "a" "c" "c"
       
 ![an application of SAX transform (3 letters word size and 3 letters alphabet size) to an 8 points time series ](https://raw.githubusercontent.com/jMotif/jmotif-R/master/assets/fig_sax83.png)
+
+#### 4.0 SAX-VSM classifier
+While the sampler is yet to be coded, the SAX-VSM-based classification of UCR data can be performed with this li version:
+
+    # load the test data
+    #
+    data = read.table("assets/test_data/Gun_Point/Gun_Point_TRAIN", as.is=T)
+    labels = unlist(data[,1])
+    unique(labels)
+    data = matrix(unlist(data[,-1]), nrow=length(labels))
+    str(data)
+    plot(data[1,], type="l")
+
+    # separate data sets according to labels
+    #
+    ones = data[labels == 1,]
+    twos = data[labels == 2,]
+
+    # SAX parameters to use
+    w=30
+    p=15
+    a=10
+
+    # convert these to word bags
+    #
+    bag1 = manyseries_to_wordbag(ones, w, p, a, "exact", 0.01)
+    bag2 = manyseries_to_wordbag(twos, w, p, a, "exact", 0.01)
+
+    # compute tf*idf weights 
+    #
+    tfidf = tf_idf(merge(bag1, bag2, by = c("words"), all = T))
+
+    # load the test data
+    #
+    test = read.table("assets/test_data/Gun_Point/Gun_Point_TEST")
+    test_labels = test[,1]
+    
+    # get ready for classification
+    #
+    predicted = rep(-1,length(labels))
+    test = matrix(unlist(test[,-1]), nrow=length(test_labels))
+
+    # classify time series
+    #
+    for (i in c(1:length(test[,1]))) {
+    
+      # the current time series pre-processing
+      series = test[i,]  
+      bag = series_to_wordbag(series, w, p, a, "exact", 0.01)
+      
+      # classification
+      mm = merge(tfidf, bag, by = c("words"), all = T)
+      mm[is.na(mm)] <- 0.0
+      cosine1 = cosineSim(rbind(mm$`1`,mm$counts))
+      cosine2 = cosineSim(rbind(mm$`2`,mm$counts))
+      prediction = ifelse(cosine1 < cosine2, 1, 2)
+      predicted[i] = prediction
+      
+    }
+
+    error = length(which((test_labels != predicted))) / length(test_labels)
+    error
+
+    which((test_labels != predicted))
+    
