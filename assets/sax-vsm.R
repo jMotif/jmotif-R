@@ -4,16 +4,16 @@ unique(data[,1])
 ones = data[data[,1] == 1,-1]
 twos = data[data[,1] == 2,-1]
 
-bag1 = series_to_wordbag(unlist(ones[1,]), 33, 17, 15, "exact", 0.01)
+bag1 = series_to_wordbag(unlist(ones[1,]), 33, 17, 10, "exact", 0.01)
 for (i in c(2:length(ones[,1]))) {
-  bag = series_to_wordbag(unlist(ones[i,]), 33, 17, 15, "exact", 0.01)
+  bag = series_to_wordbag(unlist(ones[i,]), 33, 17, 10, "exact", 0.01)
   bag1 = rbind.fill(list(bag1, bag))
   bag1 <- ddply(bag1, .(words), function(x) { sum(x[,-1], na.rm = T) })
 }
 
-bag2 = series_to_wordbag(unlist(twos[1,]), 33, 17, 15, "exact", 0.01)
+bag2 = series_to_wordbag(unlist(twos[1,]), 33, 17, 10, "exact", 0.01)
 for (i in c(2:length(twos[,1]))) {
-  bag = series_to_wordbag(unlist(twos[i,]), 33, 17, 15, "exact", 0.01)
+  bag = series_to_wordbag(unlist(twos[i,]), 33, 17, 10, "exact", 0.01)
   bag2 = rbind.fill(list(bag2, bag))
   bag2 <- ddply(bag2, .(words), function(x) { sum(x[,-1], na.rm = T) })
 }
@@ -25,8 +25,10 @@ labels = test[,1]
 predicted = rep(-1,length(labels))
 for (i in c(1:length(test[,1]))) {
   series = test[i,-1]
-  bag = series_to_wordbag(unlist(series), 33, 17, 15, "exact", 0.01)
+  bag = series_to_wordbag(unlist(series), 33, 17, 10, "exact", 0.01)
   mm = merge(tfidf, bag, by = c("words"), all = T)
+  # tmp=mm[!(is.na(mm$counts)),]
+  # tmp[sum(tmp[,c(2,3)])!=0,]
   mm[is.na(mm)] <- 0.0
   cosine1 = cosineSim(rbind(mm$`1`,mm$counts))
   cosine2 = cosineSim(rbind(mm$`2`,mm$counts))
@@ -34,6 +36,38 @@ for (i in c(1:length(test[,1]))) {
   predicted[i] = prediction
 }
 
-sum((labels == predicted))
+which((labels != predicted))
 
+series = test[23, -1]
 
+bag = series_to_wordbag(unlist(series), 33, 17, 10, "exact", 0.01)
+mm = merge(tfidf, bag, by = c("words"), all = T)
+weights = mm[!(is.na(mm$counts)),]
+weights[is.na(weights)] <- 0.0
+weights = weights[rowSums(weights[,2:3]) != 0, ]
+
+sax = list_to_df(sax_via_window(unlist(series), 33, 17, 10, "exact", 0.01))
+names(sax) <- c("index","word")
+
+patterns = data.frame(0,0,0,0)
+for (i in c(1:length(weights[,1]))) {
+  word = weights[i,1]
+  if (word %in% sax$word) {
+    patterns = rbind(patterns,
+    c(word, sax[sax$word == word,1], tfidf[tfidf$words == word, 2],tfidf[tfidf$words == word, 3]))
+  }
+}
+patterns = patterns[-1,]
+names(patterns) <- c("pattern", "pos", "weight1", "weight2")
+
+list_to_df <- function(list_for_df) {
+  list_for_df <- as.list(list_for_df)
+
+  nm <- names(list_for_df)
+  if (is.null(nm))
+    nm <- seq_along(list_for_df)
+
+  df <- data.frame(name = nm, stringsAsFactors = FALSE)
+  df$value <- unname(list_for_df)
+  df
+}
