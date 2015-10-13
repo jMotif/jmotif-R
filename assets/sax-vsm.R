@@ -44,6 +44,10 @@ for (i in c(1:length(test[,1]))) {
   predicted[i] = prediction
 }
 
+error = length(which((test_labels != predicted))) / length(test_labels)
+
+error
+
 which((test_labels != predicted))
 
 series = test[23, -1]
