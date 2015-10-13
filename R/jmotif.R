@@ -78,7 +78,7 @@ min_dist <- function(str1, str2, alphabet_size, compression_ratio = 1) {
 #'     "words" = c("this", "is", "another", "example"),
 #'     "counts" = c(1, 1, 2, 3)
 #'     )
-#' counts = merge(bag1, bag2, by = c("words"), all = T)
+#' counts = merge(bag1, bag2, by = c("words"), all = TRUE)
 #' tfidf = tf_idf(counts)
 tf_idf <- function(df) {
   ddply(df, .(words), function(x){

@@ -24,7 +24,7 @@ bag2 = data.frame(
     "words" = c("this", "is", "another", "example"),
     "counts" = c(1, 1, 2, 3)
     )
-counts = merge(bag1, bag2, by = c("words"), all = T)
+counts = merge(bag1, bag2, by = c("words"), all = TRUE)
 tfidf = tf_idf(counts)
 }
 
