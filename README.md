@@ -23,6 +23,11 @@ In Proc. of the 2nd Workshop on Temporal Data Mining (pp. 53-68). (2002)
 _SAX-VSM: Interpretable Time Series ClassiCfication Using SAX and Vector Space Model._
 Data Mining (ICDM), 2013 IEEE 13th International Conference on, pp.1175,1180, 7-10 Dec. 2013.
 
+#### 0.0 Installation
+install.packages("devtools")
+library(devtools)
+install_github('jMotif/jmotif-R')
+
 #### 1.0 z-Normalization (`znorm(ts, threshold)`)
 Z-normalization is a time series preprocessing step proposed Goldin&Kannelakis whose goal is to enable downstream analyses to focus on the time series structural similarities/differences instead of their amplitude.
 
