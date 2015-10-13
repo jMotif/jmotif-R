@@ -192,14 +192,3 @@ BEGIN_RCPP
     return __result;
 END_RCPP
 }
-// tf_idf
-double tf_idf(Rcpp::DataFrame bags);
-RcppExport SEXP jmotif_tf_idf(SEXP bagsSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject __result;
-    Rcpp::RNGScope __rngScope;
-    Rcpp::traits::input_parameter< Rcpp::DataFrame >::type bags(bagsSEXP);
-    __result = Rcpp::wrap(tf_idf(bags));
-    return __result;
-END_RCPP
-}

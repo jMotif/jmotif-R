@@ -183,12 +183,3 @@ series_to_wordbag <- function(ts, w_size, paa_size, a_size, nr_strategy, n_thres
     .Call('jmotif_series_to_wordbag', PACKAGE = 'jmotif', ts, w_size, paa_size, a_size, nr_strategy, n_threshold)
 }
 
-#' TFIDF
-#'
-#' @param bags the bags collection
-#' @useDynLib jmotif
-#' @export
-tf_idf <- function(bags) {
-    .Call('jmotif_tf_idf', PACKAGE = 'jmotif', bags)
-}
-

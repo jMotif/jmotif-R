@@ -1,5 +1,6 @@
 #include <Rcpp.h>
-
+//#include <numeric>
+//#include <math>
 using namespace Rcpp;
 // Enable C++11 via this plugin (Rcpp 0.10.3 or later)
 // [[Rcpp::plugins("cpp11")]]
@@ -417,32 +418,62 @@ Rcpp::DataFrame series_to_wordbag(
 
 }
 
-//' TFIDF
-//'
-//' @param bags the bags collection
-//' @useDynLib jmotif
-//' @export
-// [[Rcpp::export]]
-double tf_idf(Rcpp::DataFrame bags) {
+// //' TFIDF
+// //'
+// //' @param bags the bags collection
+// //' @useDynLib jmotif
+// //' @export
+// // [[Rcpp::export]]
+// double tf_idf_cpp(Rcpp::DataFrame bags) {
 
-  CharacterVector names = bags.names();
-  for(int i=0;i<names.size();i++){
-    Rcout << names[i] << "\n";
-  }
-  //CharacterVector names_a = bag_a.names();
-  //CharacterVector names_b = bag_b.names();
-
-  //std::set<std::string> all_words;
-  //for(int i=0;i<names_a.size();i++){
-  //  all_words.insert( Rcpp::as<std::string>(names_a[i]) );
-  //}
-  //for(int i=0;i<names_b.size();i++){
-  //  all_words.insert( Rcpp::as<std::string>(names_b[i]) );
-  //}
-
-  //for(std::string str : all_words){
-
-  //}
-
-  return 0.0;
-}
+//   // document names start from index 1
+//   CharacterVector names = bags.names();
+//   int documents_num = names.size()-1;
+//
+//   // the all words
+//   CharacterVector words = bags[0];
+//   int words_num = words.size();
+//
+//   // words in each of documents
+//   std::vector<int> word_totals(words.size());
+//   for(int i=1; i<documents_num; i++){
+//     std::string name = Rcpp::as<std::string>(names[i]);
+//     Rcout << name << ": ";
+//     GenericVector vec = bags[name]);
+//     int sum_of_elems = 0;
+//     for(std::vector<int>::iterator it = vec.begin(); it != vec.end(); ++it){
+//       if(*it != NA_INTEGER)
+//         sum_of_elems += *it;
+//     }
+//     doc_totals[i-1] = sum_of_elems;
+//     Rcout << sum_of_elems << "\n";
+//   }
+//
+//   // iterating over each word computing the tf and idf
+//   std::vector< std::vector<double> > tfidf(documents_num, std::vector<double>(words_num));
+//   for(int i=1; i<words.size(); i++){
+//     std::string word = Rcpp::as<std::string>(words[i]);
+//     std::vectorstring
+//     // log normalized TF
+//     double tf = log(1.0 + )
+//   }
+//
+//
+//
+//   //CharacterVector names_a = bag_a.names();
+//   //CharacterVector names_b = bag_b.names();
+//
+//   //std::set<std::string> all_words;
+//   //for(int i=0;i<names_a.size();i++){
+//   //  all_words.insert( Rcpp::as<std::string>(names_a[i]) );
+//   //}
+//   //for(int i=0;i<names_b.size();i++){
+//   //  all_words.insert( Rcpp::as<std::string>(names_b[i]) );
+//   //}
+//
+//   //for(std::string str : all_words){
+//
+//   //}
+//
+//  return 0.0;
+// }

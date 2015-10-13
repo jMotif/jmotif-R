@@ -10,11 +10,6 @@ dat <- read.table(textConnection(
        -0.222311941138971 -0.74669456611669 -0.0663660879732063 0 0 0 0 0")
   ), as.is = T)
 
-#wb1 <- series_to_wordbag(t(dat), 6, 3, 3, "none", 0.01)
-#wb2 <- series_to_wordbag(t(rev(dat)), 6, 3, 3, "none", 0.01)
-#tt=merge(wb1, wb2, by.x="words", by.y="words", all=T)
-#tf_idf(tt)
-
 test_that("wordbag #1", {
 
   sax1 <- sax_via_window(t(dat), 6, 3, 3, "none", 0.01)

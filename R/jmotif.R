@@ -63,3 +63,20 @@ min_dist <- function(str1, str2, alphabet_size, compression_ratio = 1) {
     }
   }
 }
+
+
+#' Compute the tfidf
+#'
+#' @param df the data frame to use
+#' @return Returns the tfidf matrix
+#' @export
+tf_idf <- function(df) {
+  ddply(df, .(words), function(x){
+    vec = as.vector(unlist(x[,-1]))
+    documents_num = length(vec)
+    documents_with_word = sum(!is.na(vec))
+    tf = plyr::aaply(vec, 1, function(y){ifelse(is.na(y), 0.0, log(1 + y))})
+    idf = log(documents_num / documents_with_word)
+    tf * idf
+  })
+}
