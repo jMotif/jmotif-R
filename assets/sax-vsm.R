@@ -1,6 +1,11 @@
+dd=load("data/CBF_TEST.rda")
+
+
+
+
 # load the test data
 #
-data = read.table("data/Gun_Point/Gun_Point_TRAIN", as.is = T)
+data = read("data/CBF_TRAIN.rda", as.is = T)
 labels = unlist(data[,1])
 unique(labels)
 
@@ -113,3 +118,5 @@ list_to_df <- function(list_for_df) {
   df$value <- unname(list_for_df)
   df
 }
+
+diamonds
