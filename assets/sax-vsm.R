@@ -1,26 +1,48 @@
 # load the test data
 #
-data = read.table("assets/test_data/Gun_Point/Gun_Point_TRAIN", as.is=T)
+data = read.table("data/Gun_Point/Gun_Point_TRAIN", as.is = T)
 labels = unlist(data[,1])
 unique(labels)
-data = matrix(unlist(data[,-1]), nrow=length(labels))
+
+data = matrix(unlist(data[,-1]), nrow = length(labels))
 str(data)
-plot(data[1,], type="l")
+data <- cbind(t(t(labels)),data)
+names(data) <- c("label",paste(1:150))
+save(data, file = "data/Gun_Point_TRAIN.rda")
+
+data <- as.data.frame(data)
 
 # separate data sets according to labels
 #
-ones = data[labels == 1,]
-twos = data[labels == 2,]
+ones <- data[labels == 1,]
+twos <- data[labels == 2,]
+
+# plot the data
+#
+library(ggplot2)
+library(reshape)
+library(grid)
+library(gridExtra)
+pgun <- ggplot(data = melt(cbind(idx = c(1:length(ones[,1])), as.data.frame(ones)), c("idx")),
+                aes(x = variable,y = value,group = idx)) + geom_line(col = "cornflowerblue") +
+            theme(rect = element_blank(), line = element_blank(), text = element_blank(),
+                  axis.ticks.margin = unit(0, "lines"))
+ppoint <- ggplot(data = melt(cbind(idx = c(1:length(twos[,1])), as.data.frame(twos)), c("idx")),
+               aes(x = variable,y = value,group = idx)) + geom_line(col = "darkgoldenrod") +
+  theme(rect = element_blank(), line = element_blank(), text = element_blank(),
+        axis.ticks.margin = unit(0, "lines"))
+
+grid.arrange(pgun, ppoint, ncol = 1)
 
 #
-w=30
-p=15
-a=10
+w <- 60
+p <- 20
+a <- 6
 
 # convert these to word bags
 #
-bag1 = manyseries_to_wordbag(ones, w, p, a, "exact", 0.01)
-bag2 = manyseries_to_wordbag(twos, w, p, a, "exact", 0.01)
+bag1 <- manyseries_to_wordbag(ones, w, p, a, "exact", 0.01)
+bag2 <- manyseries_to_wordbag(twos, w, p, a, "exact", 0.01)
 
 # compute tf*idf
 #
