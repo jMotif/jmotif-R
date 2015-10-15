@@ -1,5 +1,4 @@
-ones <- GunPoint[["trainseries"]]
-twos <- data[labels == 2,]
+data("CBF")
 
 # plot the data
 #
@@ -7,7 +6,7 @@ library(ggplot2)
 library(reshape)
 library(grid)
 library(gridExtra)
-pgun <- ggplot(data = melt(cbind(idx = c(1:length(ones[,1])), as.data.frame(ones)), c("idx")),
+pc <- ggplot(data = melt(cbind(idx = c(1:length(ones[,1])), as.data.frame(ones)), c("idx")),
                 aes(x = variable,y = value,group = idx)) + geom_line(col = "cornflowerblue") +
             theme(rect = element_blank(), line = element_blank(), text = element_blank(),
                   axis.ticks.margin = unit(0, "lines"))
@@ -25,8 +24,10 @@ a <- 6
 
 # convert these to word bags
 #
-bag1 <- manyseries_to_wordbag(ones, w, p, a, "exact", 0.01)
-bag2 <- manyseries_to_wordbag(twos, w, p, a, "exact", 0.01)
+unique(CBF[["labels_train"]])
+bag1 <- manyseries_to_wordbag(CBF[["data_train"]][CBF[["labels_train"]] == 1,], w, p, a, "exact", 0.01)
+bag2 <- manyseries_to_wordbag(CBF[["data_train"]][CBF[["labels_train"]] == 2,], w, p, a, "exact", 0.01)
+bag3 <- manyseries_to_wordbag(CBF[["data_train"]][CBF[["labels_train"]] == 3,], w, p, a, "exact", 0.01)
 
 # compute tf*idf
 #
@@ -34,18 +35,17 @@ tfidf = tf_idf(merge(bag1, bag2, by = c("words"), all = T))
 
 # classify the test data
 #
-test = read.table("assets/test_data/Gun_Point/Gun_Point_TEST", as.is=T)
-test_labels = test[,1]
-predicted = rep(-1,length(labels))
-test = matrix(unlist(test[,-1]), nrow=length(test_labels))
+predicted = rep(-1, length(CBF[["labels_test"]]))
+test = CBF[["labels_test"]]
 
 for (i in c(1:length(test[,1]))) {
   series = test[i,]
   bag = series_to_wordbag(series, w, p, a, "exact", 0.01)
   mm = merge(tfidf, bag, by = c("words"), all = T)
   mm[is.na(mm)] <- 0.0
-  cosine1 = cosineSim(rbind(mm$`1`,mm$counts))
-  cosine2 = cosineSim(rbind(mm$`2`,mm$counts))
+  cosine[1] = cosineSim(rbind(mm$`1`,mm$counts))
+  cosine[2] = cosineSim(rbind(mm$`2`,mm$counts))
+  cosine[3] = cosineSim(rbind(mm$`2`,mm$counts))
   prediction = ifelse(cosine1 < cosine2, 1, 2)
   predicted[i] = prediction
 }

@@ -9,7 +9,7 @@ labels_test = unlist(dtest[,1])
 data_train = matrix(unlist(dtrain[,-1]), nrow = length(labels_train))
 data_test = matrix(unlist(dtest[,-1]), nrow = length(labels_test))
 
-Gun_Point = list("labels_train" = labels_train, "labels_test" = data_train,
+Gun_Point = list("labels_train" = labels_train, "data_train" = data_train,
                  "labels_test" = labels_test, "data_test" = data_test)
 
 save(Gun_Point, file = "data/Gun_Point.rda")
@@ -25,7 +25,7 @@ labels_test = unlist(dtest[,1])
 data_train = matrix(unlist(dtrain[,-1]), nrow = length(labels_train))
 data_test = matrix(unlist(dtest[,-1]), nrow = length(labels_test))
 
-CBF = list("labels_train" = labels_train, "labels_test" = data_train,
+CBF = list("labels_train" = labels_train, "data_train" = data_train,
                  "labels_test" = labels_test, "data_test" = data_test)
 
 save(CBF, file = "data/CBF.rda")
