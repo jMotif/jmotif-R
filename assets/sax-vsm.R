@@ -1,25 +1,4 @@
-dd=load("data/CBF_TEST.rda")
-
-
-
-
-# load the test data
-#
-data = read("data/CBF_TRAIN.rda", as.is = T)
-labels = unlist(data[,1])
-unique(labels)
-
-data = matrix(unlist(data[,-1]), nrow = length(labels))
-str(data)
-data <- cbind(t(t(labels)),data)
-names(data) <- c("label",paste(1:150))
-save(data, file = "data/Gun_Point_TRAIN.rda")
-
-data <- as.data.frame(data)
-
-# separate data sets according to labels
-#
-ones <- data[labels == 1,]
+ones <- GunPoint[["trainseries"]]
 twos <- data[labels == 2,]
 
 # plot the data
@@ -118,5 +97,3 @@ list_to_df <- function(list_for_df) {
   df$value <- unname(list_for_df)
   df
 }
-
-diamonds
