@@ -28,4 +28,4 @@ data_test = matrix(unlist(dtest[,-1]), nrow = length(labels_test))
 CBF = list("labels_train" = labels_train, "labels_test" = data_train,
                  "labels_test" = labels_test, "data_test" = data_test)
 
-save(Gun_Point, file = "data/CBF.rda")
+save(CBF, file = "data/CBF.rda")
