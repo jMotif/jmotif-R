@@ -485,29 +485,49 @@ Rcpp::DataFrame manyseries_to_wordbag(
 // [[Rcpp::export]]
 Rcpp::DataFrame bags_to_tfidf(Rcpp::List data) {
 
-  // get the class labels that suppose to be the list elements' names
+  // get the list element labels which a the class labels
   //
   std::vector<std::string> names = Rcpp::as< std::vector<std::string> > (data.names());
   for(std::vector<std::string>::iterator it = names.begin(); it != names.end(); ++it) {
     Rcout << *it << "\n";
   }
   int entry_array_size = names.size();
+  // the counts which correspond to class word occurrence will be
+  // kept in an array of this length and in the names array order
 
   // iterate over the list elements building the count matrix
   //
-  std::map<std::string, int[]> counts;
+  std::map<std::string, std::vector<int> > counts;
   for(int i = 0; i< names.size(); i++) {
-    std::string class_name = names[i];
 
+    std::string class_name = names[i];
     Rcpp::DataFrame df = (Rcpp::DataFrame) data[class_name];
 
-    std::vector<std::string> words = Rcpp::as< std::vector<std::string> > (dd["words"]);
-    for(std::vector<std::string>::iterator it = words.begin(); it != words.end(); ++it) {
-      Rcout << *it << "\n";
+    std::vector<std::string> bag_words = Rcpp::as< std::vector<std::string> > (df["words"]);
+    std::vector<int> bag_counts = Rcpp::as< std::vector<int> > (df["counts"]);
+
+    for(int j=0; j<bag_words.size(); j++) {
+      std::string curr_word = bag_words[j];
+      Rcout << curr_word << "\n";
+      int curr_count = bag_counts[j];
+//
+      std::vector<int> entry;
+      std::map<std::string,std::vector<int> >::iterator entry_it = counts.find(curr_word);
+      if (entry_it == counts.end()){
+        std::vector<int> empty_counts(entry_array_size);
+        char * new_key = new char [curr_word.size()+1];
+        std::copy(curr_word.begin(), curr_word.end(), new_key);
+        new_key[curr_word.size()] = '\0';
+        std::pair<std::string,std::vector<int> > new_entry = std::make_pair(new_key, empty_counts);
+        counts.insert(std::make_pair(new_key, empty_counts));
+        entry = new_entry.second;
+      } else {
+        entry = entry_it->second;
+      }
+      entry[i] += 1;
+
     }
   }
 
-  return Rcpp::DataFrame::create( Named("words")= 1,
-                                  Named("counts") = 2,
-                                  Named("stringsAsFactors") = 3);
+  return counts;
 }
