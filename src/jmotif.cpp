@@ -540,12 +540,12 @@ Rcpp::DataFrame bags_to_tfidf(Rcpp::List data) {
   // now, when the counts are known, iterate computing TFIDF
   //
   std::vector<std::string> res_words(counts.size());
-  std::map<std::string, std::vector<double> > tfidf;
+  std::map<std::string, NumericVector > tfidf;
   for(int k=0;k<names.size();k++){
     char * new_key = new char [names[k].size()+1];
     std::copy(names[k].begin(), names[k].end(), new_key);
     new_key[names[k].size()] = '\0';
-    std::vector<double> new_values(counts.size());
+    NumericVector new_values(counts.size());
     tfidf.insert(std::make_pair(new_key, new_values));
   }
 
@@ -575,7 +575,7 @@ Rcpp::DataFrame bags_to_tfidf(Rcpp::List data) {
       if(e_counts[k] != 0){
         double tf = log(1.0 + (double) e_counts[k]);
         double idf = log( (double) e_counts.size() / (double) docs_with_word);
-        std::vector<double> vector = tfidf[names[k]];
+        NumericVector vector = tfidf[names[k]];
         vector[counter] = tf * idf;
       }
     }
@@ -583,15 +583,24 @@ Rcpp::DataFrame bags_to_tfidf(Rcpp::List data) {
     counter++;
   }
 
-  DataFrame res =  Rcpp::DataFrame::create( Named("words")= res_words,
-                                  Named("stringsAsFactors") = false);
+  List pre_res (names.size() + 1);
+  pre_res[0] = res_words;
 
   for(int k=0;k<names.size();k++){
     char * new_key = new char [names[k].size()+1];
     std::copy(names[k].begin(), names[k].end(), new_key);
     new_key[names[k].size()] = '\0';
-    res[new_key] = tfidf[new_key];
+    // NumericVector vec = tfidf[new_key];
+    pre_res[1+k] = tfidf[new_key];
   }
 
-  return res;
+  CharacterVector df_names(names.size() + 1);
+  df_names[0] = "words";
+  for(int k=0;k<names.size();k++){
+    df_names[k+1] = names[k];
+  }
+  pre_res.names() = df_names;
+
+  DataFrame df = pre_res;
+  return df;
 }

@@ -1,16 +1,18 @@
 bag1 = data.frame(
   "words" = c("this", "is", "a", "sample"),
-  "counts" = c(1, 1, 2, 1)
+  "counts" = c(1, 1, 2, 1),
+  stringsAsFactors = FALSE
 )
 
 bag2 = data.frame(
   "words" = c("this", "is", "another", "example"),
-  "counts" = c(1, 1, 2, 3)
+  "counts" = c(1, 1, 2, 3),
+  stringsAsFactors = FALSE
 )
 
-counts = merge(bag1, bag2, by = c("words"), all = T)
+ll = list("1" = bag1, "2" = bag2)
 
-tfidf = tf_idf(counts)
+tfidf = bags_to_tfidf(ll)
 
 test_that("test tfidf #1", {
 
