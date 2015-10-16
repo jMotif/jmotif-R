@@ -488,9 +488,9 @@ Rcpp::DataFrame bags_to_tfidf(Rcpp::List data) {
   // get the list element labels which a the class labels
   //
   std::vector<std::string> names = Rcpp::as< std::vector<std::string> > (data.names());
-  for(std::vector<std::string>::iterator it = names.begin(); it != names.end(); ++it) {
-    Rcout << *it << "\n";
-  }
+  // for(std::vector<std::string>::iterator it = names.begin(); it != names.end(); ++it) {
+  //  Rcout << *it << "\n";
+  // }
   int entry_array_size = names.size();
   // the counts which correspond to class word occurrence will be
   // kept in an array of this length and in the names array order
@@ -500,34 +500,98 @@ Rcpp::DataFrame bags_to_tfidf(Rcpp::List data) {
   std::map<std::string, std::vector<int> > counts;
   for(int i = 0; i< names.size(); i++) {
 
+    // get a current class' wordbag
     std::string class_name = names[i];
     Rcpp::DataFrame df = (Rcpp::DataFrame) data[class_name];
 
+    // its words and counts
     std::vector<std::string> bag_words = Rcpp::as< std::vector<std::string> > (df["words"]);
     std::vector<int> bag_counts = Rcpp::as< std::vector<int> > (df["counts"]);
 
+    // iterate over words
     for(int j=0; j<bag_words.size(); j++) {
+
+      // cirrent word and its count
       std::string curr_word = bag_words[j];
-      Rcout << curr_word << "\n";
       int curr_count = bag_counts[j];
-//
-      std::vector<int> entry;
+
+      // try to find the word in the res map
       std::map<std::string,std::vector<int> >::iterator entry_it = counts.find(curr_word);
       if (entry_it == counts.end()){
+        // if not found, create one
         std::vector<int> empty_counts(entry_array_size);
+        empty_counts[i] = curr_count;
         char * new_key = new char [curr_word.size()+1];
         std::copy(curr_word.begin(), curr_word.end(), new_key);
         new_key[curr_word.size()] = '\0';
-        std::pair<std::string,std::vector<int> > new_entry = std::make_pair(new_key, empty_counts);
         counts.insert(std::make_pair(new_key, empty_counts));
-        entry = new_entry.second;
       } else {
-        entry = entry_it->second;
+        // if it was found, update the count array
+        std::vector<int> entry = entry_it->second;
+        // Rcout << entry[i] << "\n";
+        entry[i] = entry[i] + curr_count;
+        entry_it->second = entry;
+        // Rcout << entry[i] << "\n";
       }
-      entry[i] += 1;
 
     }
   }
 
-  return counts;
+  // now, when the counts are known, iterate computing TFIDF
+  //
+  std::vector<std::string> res_words(counts.size());
+  std::map<std::string, std::vector<double> > tfidf;
+  for(int k=0;k<names.size();k++){
+    char * new_key = new char [names[k].size()+1];
+    std::copy(names[k].begin(), names[k].end(), new_key);
+    new_key[names[k].size()] = '\0';
+    std::vector<double> new_values(counts.size());
+    tfidf.insert(std::make_pair(new_key, new_values));
+  }
+
+  int counter = 0;
+  for(std::map<std::string, std::vector<int> >::iterator it = counts.begin(); it != counts.end(); ++it) {
+
+    // get the word and counts
+    std::string e_key = it->first;
+    std::vector<int> e_counts = it->second;
+
+    // count docs which contain that word
+    int docs_with_word = 0;
+    for(int k=0; k<e_counts.size(); k++){
+      if(e_counts[k] > 0){
+        docs_with_word++;
+      }
+    }
+
+    // copy the word for the new key
+    char * new_key = new char [e_key.size()+1];
+    std::copy(e_key.begin(), e_key.end(), new_key);
+    new_key[e_key.size()] = '\0';
+    res_words[counter] = new_key;
+
+    // compute the tfidf for each of the elements
+    for(int k=0; k<e_counts.size(); k++){
+      if(e_counts[k] != 0){
+        double tf = log(1.0 + (double) e_counts[k]);
+        double idf = log( (double) e_counts.size() / (double) docs_with_word);
+        std::vector<double> vector = tfidf[names[k]];
+        vector[counter] = tf * idf;
+      }
+    }
+
+    counter++;
+  }
+
+  DataFrame res =  Rcpp::DataFrame::create( Named("words")= res_words,
+                                  Named("stringsAsFactors") = false);
+
+  for(int k=0;k<names.size();k++){
+    char * new_key = new char [names[k].size()+1];
+    std::copy(names[k].begin(), names[k].end(), new_key);
+    new_key[names[k].size()] = '\0';
+    res[new_key] = tfidf[new_key];
+  }
+
+  return res;
 }

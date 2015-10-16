@@ -16,7 +16,16 @@ bag3 <- manyseries_to_wordbag(CBF[["data_train"]][CBF[["labels_train"]] == 3,], 
 #
 str(bag1)
 ll = list("1" = bag1, "aa2" = bag2, "3" = bag3)
-bags_to_tfidf( ll )
+
+bag1 = data.frame(words = c("aaa","bbb","ccc"), counts = c(1,2,0), stringsAsFactors = FALSE)
+bag2 = data.frame(words = c("aaa","bbb","ccc"), counts = c(3,0,5), stringsAsFactors = FALSE)
+bag3 = data.frame(words = c("aaa","bbb","ccc"), counts = c(0,1,1), stringsAsFactors = FALSE)
+ll = list("1bb" = bag1, "aa2" = bag2, "3cc" = bag3)
+tfidf = bags_to_tfidf( ll )
+tfidf
+
+
+
 
 str(bag1)
 merge_word_bags(bag1, bag2, bag3, by = c("words"), all = T)
