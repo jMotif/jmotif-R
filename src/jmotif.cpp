@@ -482,6 +482,19 @@ Rcpp::DataFrame manyseries_to_wordbag(
 //' @param data the word bags list
 //' @useDynLib jmotif
 //' @export
+//' @examples
+//' bag1 = data.frame(
+//'    "words" = c("this", "is", "a", "sample"),
+//'    "counts" = c(1, 1, 2, 1),
+//'    stringsAsFactors = FALSE
+//'    )
+//' bag2 = data.frame(
+//'    "words" = c("this", "is", "another", "example"),
+//'    "counts" = c(1, 1, 2, 3),
+//'    stringsAsFactors = FALSE
+//'    )
+//' ll = list("bag1" = bag1, "bag2" = bag2)
+//' tfidf = bags_to_tfidf(ll)
 // [[Rcpp::export]]
 Rcpp::DataFrame bags_to_tfidf(Rcpp::List data) {
 
