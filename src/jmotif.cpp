@@ -411,7 +411,7 @@ Rcpp::DataFrame series_to_wordbag(
 
 }
 
-//' SAXifying a bunch of timeseries
+//' SAXifying a bunch of timeseries into a wod bag
 //'
 //' @param data the timeseries data, row-wise
 //' @param w_size the sliding window size
@@ -475,4 +475,39 @@ Rcpp::DataFrame manyseries_to_wordbag(
                                   Named("counts") = v,
                                   Named("stringsAsFactors") = false);
 
+}
+
+//' Computing the TFIDF matrix for a list of word bags
+//'
+//' @param data the word bags list
+//' @useDynLib jmotif
+//' @export
+// [[Rcpp::export]]
+Rcpp::DataFrame bags_to_tfidf(Rcpp::List data) {
+
+  // get the class labels that suppose to be the list elements' names
+  //
+  std::vector<std::string> names = Rcpp::as< std::vector<std::string> > (data.names());
+  for(std::vector<std::string>::iterator it = names.begin(); it != names.end(); ++it) {
+    Rcout << *it << "\n";
+  }
+  int entry_array_size = names.size();
+
+  // iterate over the list elements building the count matrix
+  //
+  std::map<std::string, int[]> counts;
+  for(int i = 0; i< names.size(); i++) {
+    std::string class_name = names[i];
+
+    Rcpp::DataFrame df = (Rcpp::DataFrame) data[class_name];
+
+    std::vector<std::string> words = Rcpp::as< std::vector<std::string> > (dd["words"]);
+    for(std::vector<std::string>::iterator it = words.begin(); it != words.end(); ++it) {
+      Rcout << *it << "\n";
+    }
+  }
+
+  return Rcpp::DataFrame::create( Named("words")= 1,
+                                  Named("counts") = 2,
+                                  Named("stringsAsFactors") = 3);
 }

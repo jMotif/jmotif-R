@@ -195,3 +195,14 @@ BEGIN_RCPP
     return __result;
 END_RCPP
 }
+// bags_to_tfidf
+Rcpp::DataFrame bags_to_tfidf(Rcpp::List data);
+RcppExport SEXP jmotif_bags_to_tfidf(SEXP dataSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< Rcpp::List >::type data(dataSEXP);
+    __result = Rcpp::wrap(bags_to_tfidf(data));
+    return __result;
+END_RCPP
+}

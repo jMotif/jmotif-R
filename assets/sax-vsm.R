@@ -1,22 +1,5 @@
 data("CBF")
 
-# plot the data
-#
-library(ggplot2)
-library(reshape)
-library(grid)
-library(gridExtra)
-pc <- ggplot(data = melt(cbind(idx = c(1:length(ones[,1])), as.data.frame(ones)), c("idx")),
-                aes(x = variable,y = value,group = idx)) + geom_line(col = "cornflowerblue") +
-            theme(rect = element_blank(), line = element_blank(), text = element_blank(),
-                  axis.ticks.margin = unit(0, "lines"))
-ppoint <- ggplot(data = melt(cbind(idx = c(1:length(twos[,1])), as.data.frame(twos)), c("idx")),
-               aes(x = variable,y = value,group = idx)) + geom_line(col = "darkgoldenrod") +
-  theme(rect = element_blank(), line = element_blank(), text = element_blank(),
-        axis.ticks.margin = unit(0, "lines"))
-
-grid.arrange(pgun, ppoint, ncol = 1)
-
 #
 w <- 60
 p <- 20
@@ -31,7 +14,13 @@ bag3 <- manyseries_to_wordbag(CBF[["data_train"]][CBF[["labels_train"]] == 3,], 
 
 # compute tf*idf
 #
-tfidf = tf_idf(merge(bag1, bag2, by = c("words"), all = T))
+str(bag1)
+ll = list("1" = bag1, "aa2" = bag2, "3" = bag3)
+bags_to_tfidf( ll )
+
+str(bag1)
+merge_word_bags(bag1, bag2, bag3, by = c("words"), all = T)
+tfidf = tf_idf(merge(bag1, bag2, bag3, by = c("words"), all = T))
 
 # classify the test data
 #

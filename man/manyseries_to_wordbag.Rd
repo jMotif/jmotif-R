@@ -2,7 +2,7 @@
 % Please edit documentation in R/RcppExports.R
 \name{manyseries_to_wordbag}
 \alias{manyseries_to_wordbag}
-\title{SAXifying a bunch of timeseries}
+\title{SAXifying a bunch of timeseries into a wod bag}
 \usage{
 manyseries_to_wordbag(data, w_size, paa_size, a_size, nr_strategy, n_threshold)
 }
@@ -20,6 +20,6 @@ manyseries_to_wordbag(data, w_size, paa_size, a_size, nr_strategy, n_threshold)
 \item{n_threshold}{the normalization threshold}
 }
 \description{
-SAXifying a bunch of timeseries
+SAXifying a bunch of timeseries into a wod bag
 }
 
