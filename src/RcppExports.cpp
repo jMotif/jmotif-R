@@ -6,14 +6,14 @@
 using namespace Rcpp;
 
 // znorm
-NumericVector znorm(NumericVector x, double threshold);
-RcppExport SEXP jmotif_znorm(SEXP xSEXP, SEXP thresholdSEXP) {
+NumericVector znorm(NumericVector ts, double threshold);
+RcppExport SEXP jmotif_znorm(SEXP tsSEXP, SEXP thresholdSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
-    Rcpp::traits::input_parameter< NumericVector >::type x(xSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type ts(tsSEXP);
     Rcpp::traits::input_parameter< double >::type threshold(thresholdSEXP);
-    __result = Rcpp::wrap(znorm(x, threshold));
+    __result = Rcpp::wrap(znorm(ts, threshold));
     return __result;
 END_RCPP
 }
@@ -203,6 +203,17 @@ BEGIN_RCPP
     Rcpp::RNGScope __rngScope;
     Rcpp::traits::input_parameter< Rcpp::List >::type data(dataSEXP);
     __result = Rcpp::wrap(bags_to_tfidf(data));
+    return __result;
+END_RCPP
+}
+// cosine_sim
+Rcpp::DataFrame cosine_sim(Rcpp::List data);
+RcppExport SEXP jmotif_cosine_sim(SEXP dataSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< Rcpp::List >::type data(dataSEXP);
+    __result = Rcpp::wrap(cosine_sim(data));
     return __result;
 END_RCPP
 }

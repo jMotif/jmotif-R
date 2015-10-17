@@ -12,7 +12,7 @@ const char LETTERS[] = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h',
 
 //' z-Normalize a time series
 //'
-//' @param x A time series.
+//' @param ts A time series to normalize.
 //' @param threshold A z-normalization threshold.
 //' @useDynLib jmotif
 //' @export
@@ -22,21 +22,17 @@ const char LETTERS[] = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h',
 //' plot(x, y, type="l", col="blue")
 //' lines(x, znorm(y, 0.01), type="l", col="red")
 // [[Rcpp::export]]
-NumericVector znorm(NumericVector x, double threshold = 0.01) {
-
-  double x_sd = sd(x);
-
-   if (x_sd < threshold){
-    return clone(x);
+NumericVector znorm(NumericVector ts, double threshold = 0.01) {
+  double ts_sd = sd(ts);
+   if (ts_sd < threshold){
+    return clone(ts);
   }
-
-  return (x - mean(x)) / x_sd;
-
+  return (ts - mean(ts)) / ts_sd;
 }
 
-//' Computes column means
+//' Computes column means for a matrix
 //'
-//' @param a A matrix to use.
+//' @param a A matrix to process.
 //' @useDynLib jmotif
 //' @export
 // [[Rcpp::export]]
@@ -48,10 +44,10 @@ NumericVector col_means(NumericMatrix a) {
   return res;
 }
 
-//' Compute PAA
+//' Compute PAA for a time series
 //'
-//' @param ts A timeseries to convert into PAA.
-//' @param paa_num the desired PAA size.
+//' @param ts A timeseries to compute the PAA for.
+//' @param paa_num a desired PAA size.
 //' @useDynLib jmotif
 //' @export
 //' @examples
@@ -71,6 +67,7 @@ NumericVector paa(NumericVector ts, int paa_num) {
     return clone(ts);
   }
   else {
+    // if the number of points in a segment is even
     if (len % paa_num == 0) {
       NumericVector res(paa_num);
       int inc = len / paa_num;
@@ -83,6 +80,7 @@ NumericVector paa(NumericVector ts, int paa_num) {
       }
       return res;
     }else{
+      // if the number of points in a segment is odd
       NumericVector res(paa_num);
       for (int i = 0; i < len * paa_num; i++) {
         int idx = i / len; // the spot
@@ -98,7 +96,7 @@ NumericVector paa(NumericVector ts, int paa_num) {
 
 }
 
-//' Get a letter by index
+//' Get a natural ASCII letter by an index
 //'
 //' @param idx The index.
 //' @useDynLib jmotif
@@ -111,7 +109,7 @@ char idx_to_letter(int idx) {
   return LETTERS[idx-1];
 }
 
-//' Get an index for a letter
+//' Get an index for an ASCII letter
 //'
 //' @param letter The letter.
 //' @useDynLib jmotif
@@ -124,7 +122,7 @@ int letter_to_idx(char letter) {
   return letter - 96;
 }
 
-//' Get an index sequence by string
+//' Get an ASCII index sequence for a given string
 //'
 //' @param str The char array.
 //' @useDynLib jmotif
@@ -411,7 +409,7 @@ Rcpp::DataFrame series_to_wordbag(
 
 }
 
-//' SAXifying a bunch of timeseries into a wod bag
+//' SAXifying a bunch of timeseries into a word bag
 //'
 //' @param data the timeseries data, row-wise
 //' @param w_size the sliding window size
@@ -576,6 +574,9 @@ Rcpp::DataFrame bags_to_tfidf(Rcpp::List data) {
         docs_with_word++;
       }
     }
+    if(docs_with_word == e_counts.size()){
+      continue;
+    }
 
     // copy the word for the new key
     char * new_key = new char [e_key.size()+1];
@@ -596,14 +597,13 @@ Rcpp::DataFrame bags_to_tfidf(Rcpp::List data) {
     counter++;
   }
 
-  List pre_res (names.size() + 1);
+  Rcpp::List pre_res(names.size() + 1);
   pre_res[0] = res_words;
 
   for(int k=0;k<names.size();k++){
     char * new_key = new char [names[k].size()+1];
     std::copy(names[k].begin(), names[k].end(), new_key);
     new_key[names[k].size()] = '\0';
-    // NumericVector vec = tfidf[new_key];
     pre_res[1+k] = tfidf[new_key];
   }
 
@@ -614,6 +614,97 @@ Rcpp::DataFrame bags_to_tfidf(Rcpp::List data) {
   }
   pre_res.names() = df_names;
 
-  DataFrame df = pre_res;
+  DataFrame df = Rcpp::DataFrame::create(pre_res, Rcpp::Named("stringsAsFactors")=false);
+
   return df;
+}
+
+//' Computing the cosine similarity between a bag of words and the TFIDF matrix columns
+//'
+//' @param data the list containing "bag" and "tfidf" objects
+//' @useDynLib jmotif
+//' @export
+// [[Rcpp::export]]
+Rcpp::DataFrame cosine_sim(Rcpp::List data) {
+
+  DataFrame bag_df = (Rcpp::DataFrame) data["bag"];
+
+  std::vector<std::string> bag_words = Rcpp::as< std::vector<std::string> > (bag_df["words"]);
+  std::vector<int> bag_counts = Rcpp::as< std::vector<int> > (bag_df["counts"]);
+  // .. Rcout << bag_words.size() << ": " << bag_counts.size() << "\n";
+
+  std::map< std::string, int > bag;
+   for(int i=0;i<bag_words.size();i++){
+
+     // Rcout << i << ": " << bag_words[i] << "\n";
+
+     std::string e_key = bag_words[i];
+     char * new_key = new char [e_key.size()+1];
+     std::copy(e_key.begin(), e_key.end(), new_key);
+     new_key[e_key.size()] = '\0';
+
+     // Rcout << new_key << " : " <<  bag_counts[i] <<"\n";
+
+     bag.insert( std::make_pair(new_key, bag_counts[i]) );
+   }
+
+  DataFrame tfidf = (Rcpp::DataFrame) data["tfidf"];
+  std::vector<std::string> tfidf_words = Rcpp::as< std::vector<std::string> > (tfidf["words"]);
+  std::vector<std::string> tfidf_classes = Rcpp::as< std::vector<std::string> > (tfidf.names());
+
+//   Rcout << "bag of " << bag.size() << " words, ";
+//   Rcout << "and TFIDF matrix of " << tfidf_words.size() << " words, ";
+//   Rcout << "and " << (tfidf_classes.size()-1) << " classes\n";
+
+  // align the wordbag vector to tfidf one
+  NumericVector wordbag_counts(tfidf_words.size());
+  for(int i=0; i<tfidf_words.size(); i++){
+
+    std::string curr_word = tfidf_words[i];
+
+    std::map<std::string, int >::iterator entry_it = bag.find(curr_word);
+    if (entry_it == bag.end()){
+      wordbag_counts[i] = 0.0;
+    } else {
+      wordbag_counts[i] = (double) entry_it -> second;
+    }
+
+  }
+
+  // computing cosines
+  NumericVector cosines(tfidf_classes.size()-1);
+  std::vector<std::string> class_names(tfidf_classes.size()-1);
+  for(int i=1; i<tfidf_classes.size(); i++){
+
+    //class_names[i] = tfidf_classes[i];
+    std::string e_key = tfidf_classes[i];
+    char * new_key = new char [e_key.size()+1];
+    std::copy(e_key.begin(), e_key.end(), new_key);
+    new_key[e_key.size()] = '\0';
+    class_names[i-1] = new_key;
+    // Rcout << new_key << "\n";
+
+    NumericVector tfidf_values = tfidf[new_key];
+    // std::vector<double> tfidf_values = Rcpp::as< std::vector<double> > (tfidf[new_key]);
+    // Rcout << tfidf_values.size() << "\n";
+    double norm_a_squared = 0;
+    double norm_b_squared = 0;
+    double sum_a_dot_b = 0;
+    for(int j=0;j<wordbag_counts.size();j++){
+      double a = (double) wordbag_counts[j];
+      double b = tfidf_values[j];
+      sum_a_dot_b = sum_a_dot_b + a * b;
+      norm_a_squared = norm_a_squared + a * a;
+      norm_b_squared = norm_b_squared + b * b;
+    }
+    cosines[i-1] = sum_a_dot_b / ( sqrt(norm_a_squared) * sqrt(norm_b_squared) );
+  }
+
+  // make results
+  return Rcpp::DataFrame::create(
+    Named("classes") = class_names,
+    Named("cosines") = cosines,
+    Named("stringsAsFactors") = false
+    );
+
 }

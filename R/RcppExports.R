@@ -3,7 +3,7 @@
 
 #' z-Normalize a time series
 #'
-#' @param x A time series.
+#' @param ts A time series to normalize.
 #' @param threshold A z-normalization threshold.
 #' @useDynLib jmotif
 #' @export
@@ -12,23 +12,23 @@
 #' y = sin(x) * 5 + rnorm(length(x))
 #' plot(x, y, type="l", col="blue")
 #' lines(x, znorm(y, 0.01), type="l", col="red")
-znorm <- function(x, threshold = 0.01) {
-    .Call('jmotif_znorm', PACKAGE = 'jmotif', x, threshold)
+znorm <- function(ts, threshold = 0.01) {
+    .Call('jmotif_znorm', PACKAGE = 'jmotif', ts, threshold)
 }
 
-#' Computes column means
+#' Computes column means for a matrix
 #'
-#' @param a A matrix to use.
+#' @param a A matrix to process.
 #' @useDynLib jmotif
 #' @export
 col_means <- function(a) {
     .Call('jmotif_col_means', PACKAGE = 'jmotif', a)
 }
 
-#' Compute PAA
+#' Compute PAA for a time series
 #'
-#' @param ts A timeseries to convert into PAA.
-#' @param paa_num the desired PAA size.
+#' @param ts A timeseries to compute the PAA for.
+#' @param paa_num a desired PAA size.
 #' @useDynLib jmotif
 #' @export
 #' @examples
@@ -41,7 +41,7 @@ paa <- function(ts, paa_num) {
     .Call('jmotif_paa', PACKAGE = 'jmotif', ts, paa_num)
 }
 
-#' Get a letter by index
+#' Get a natural ASCII letter by an index
 #'
 #' @param idx The index.
 #' @useDynLib jmotif
@@ -53,7 +53,7 @@ idx_to_letter <- function(idx) {
     .Call('jmotif_idx_to_letter', PACKAGE = 'jmotif', idx)
 }
 
-#' Get an index for a letter
+#' Get an index for an ASCII letter
 #'
 #' @param letter The letter.
 #' @useDynLib jmotif
@@ -65,7 +65,7 @@ letter_to_idx <- function(letter) {
     .Call('jmotif_letter_to_idx', PACKAGE = 'jmotif', letter)
 }
 
-#' Get an index sequence by string
+#' Get an ASCII index sequence for a given string
 #'
 #' @param str The char array.
 #' @useDynLib jmotif
@@ -172,7 +172,7 @@ series_to_wordbag <- function(ts, w_size, paa_size, a_size, nr_strategy, n_thres
     .Call('jmotif_series_to_wordbag', PACKAGE = 'jmotif', ts, w_size, paa_size, a_size, nr_strategy, n_threshold)
 }
 
-#' SAXifying a bunch of timeseries into a wod bag
+#' SAXifying a bunch of timeseries into a word bag
 #'
 #' @param data the timeseries data, row-wise
 #' @param w_size the sliding window size
@@ -206,5 +206,14 @@ manyseries_to_wordbag <- function(data, w_size, paa_size, a_size, nr_strategy, n
 #' tfidf = bags_to_tfidf(ll)
 bags_to_tfidf <- function(data) {
     .Call('jmotif_bags_to_tfidf', PACKAGE = 'jmotif', data)
+}
+
+#' Computing the cosine similarity between a bag of words and the TFIDF matrix columns
+#'
+#' @param data the list containing "bag" and "tfidf" objects
+#' @useDynLib jmotif
+#' @export
+cosine_sim <- function(data) {
+    .Call('jmotif_cosine_sim', PACKAGE = 'jmotif', data)
 }
 
