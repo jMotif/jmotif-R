@@ -89,64 +89,37 @@ The figure below illustrates the PAA+SAX procedure: 8 points time series is conv
 #### 4.0 SAX-VSM classifier
 While the sampler is yet to be coded, the SAX-VSM-based classification of UCR data can be performed with this li version:
 
-    # load the TRAIN data
-    #
-    data = read.table("assets/test_data/Gun_Point/Gun_Point_TRAIN", as.is=T)
-    labels = unlist(data[,1])
-    unique(labels)
-    data = matrix(unlist(data[,-1]), nrow=length(labels))
-    str(data)
-    plot(data[1,], type="l")
+    # load Cylinder-Bell-Funnel data
+    data("CBF")
 
-    # separate data sets according to labels
-    #
-    ones = data[labels == 1,]
-    twos = data[labels == 2,]
+    # set the discretization parameters
+    w <- 60
+    p <- 6
+    a <- 6
 
-    # SAX parameters to use
-    w=30
-    p=15
-    a=10
+    # convert the data to wordbags, dataset has three labels: 1, 2, 3
+    bag1 <- manyseries_to_wordbag(CBF[["data_train"]][CBF[["labels_train"]] == 1,],
+                              w, p, a, "exact", 0.01)
+    bag2 <- manyseries_to_wordbag(CBF[["data_train"]][CBF[["labels_train"]] == 2,],
+                              w, p, a, "exact", 0.01)
+    bag3 <- manyseries_to_wordbag(CBF[["data_train"]][CBF[["labels_train"]] == 3,],
+                              w, p, a, "exact", 0.01)
 
-    # convert these to word bags
-    #
-    bag1 = manyseries_to_wordbag(ones, w, p, a, "exact", 0.01)
-    bag2 = manyseries_to_wordbag(twos, w, p, a, "exact", 0.01)
+    # compute tf*idf for these three bags
+    tfidf = bags_to_tfidf(
+          list("cylinder" = bag1, "bell" = bag2, "funnel" = bag3) )
 
-    # compute tf*idf weights 
-    #
-    tfidf = tf_idf(merge(bag1, bag2, by = c("words"), all = T))
-
-    # load the TEST data
-    #
-    test = read.table("assets/test_data/Gun_Point/Gun_Point_TEST", as.is=T)
-    test_labels = test[,1]
-    
-    # get ready for classification
-    #
-    predicted = rep(-1,length(labels))
-    test = matrix(unlist(test[,-1]), nrow=length(test_labels))
-
-    # classify time series
-    #
-    for (i in c(1:length(test[,1]))) {
-    
-      # the current time series pre-processing
-      series = test[i,]  
-      bag = series_to_wordbag(series, w, p, a, "exact", 0.01)
-      
-      # classification
-      mm = merge(tfidf, bag, by = c("words"), all = T)
-      mm[is.na(mm)] <- 0.0
-      cosine1 = cosineSim(rbind(mm$`1`,mm$counts))
-      cosine2 = cosineSim(rbind(mm$`2`,mm$counts))
-      prediction = ifelse(cosine1 < cosine2, 1, 2)
-      predicted[i] = prediction
-      
+    # classify the test data
+    labels_predicted = rep(-1, length(CBF[["labels_test"]]))
+    labels_test = CBF[["labels_test"]]
+    data_test = CBF[["data_test"]]
+    for (i in c(1:length(data_test[,1]))) {
+        series = data_test[i,]
+        bag = series_to_wordbag(series, w, p, a, "exact", 0.01)
+        cosines = cosine_sim(list("bag"=bag, "tfidf" = tfidf))
+        labels_predicted[i] = which(cosines$cosines == max(cosines$cosines))
     }
-
-    error = length(which((test_labels != predicted))) / length(test_labels)
+    error = length(which((labels_test != labels_predicted))) / length(labels_test)
     error
 
-    which((test_labels != predicted))
-    
+    which((labels_test != labels_predicted))
