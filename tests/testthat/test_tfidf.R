@@ -22,10 +22,4 @@ test_that("test tfidf #1", {
   a = log(1 + 2) * log(2 / 1)
   expect_equal(a, tfidf[tfidf$words == "a",2])
 
-  expect_equal(0, tfidf[tfidf$words == "this",2])
-  expect_equal(0, tfidf[tfidf$words == "this",3])
-
-  expect_equal(0, tfidf[tfidf$words == "is",2])
-  expect_equal(0, tfidf[tfidf$words == "is",3])
-
 })

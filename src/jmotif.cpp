@@ -496,13 +496,10 @@ Rcpp::DataFrame manyseries_to_wordbag(
 // [[Rcpp::export]]
 Rcpp::DataFrame bags_to_tfidf(Rcpp::List data) {
 
-  // get the list element labels which a the class labels
-  //
+  // the class labels
   std::vector<std::string> names = Rcpp::as< std::vector<std::string> > (data.names());
-  // for(std::vector<std::string>::iterator it = names.begin(); it != names.end(); ++it) {
-  //  Rcout << *it << "\n";
-  // }
   int entry_array_size = names.size();
+  
   // the counts which correspond to class word occurrence will be
   // kept in an array of this length and in the names array order
 
@@ -539,10 +536,8 @@ Rcpp::DataFrame bags_to_tfidf(Rcpp::List data) {
       } else {
         // if it was found, update the count array
         std::vector<int> entry = entry_it->second;
-        // Rcout << entry[i] << "\n";
         entry[i] = entry[i] + curr_count;
         entry_it->second = entry;
-        // Rcout << entry[i] << "\n";
       }
 
     }
