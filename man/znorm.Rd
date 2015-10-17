@@ -4,10 +4,10 @@
 \alias{znorm}
 \title{z-Normalize a time series}
 \usage{
-znorm(x, threshold = 0.01)
+znorm(ts, threshold = 0.01)
 }
 \arguments{
-\item{x}{A time series.}
+\item{ts}{A time series to normalize.}
 
 \item{threshold}{A z-normalization threshold.}
 }

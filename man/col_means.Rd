@@ -2,14 +2,14 @@
 % Please edit documentation in R/RcppExports.R
 \name{col_means}
 \alias{col_means}
-\title{Computes column means}
+\title{Computes column means for a matrix}
 \usage{
 col_means(a)
 }
 \arguments{
-\item{a}{A matrix to use.}
+\item{a}{A matrix to process.}
 }
 \description{
-Computes column means
+Computes column means for a matrix
 }
 

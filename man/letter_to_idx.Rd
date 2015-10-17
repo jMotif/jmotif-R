@@ -2,7 +2,7 @@
 % Please edit documentation in R/RcppExports.R
 \name{letter_to_idx}
 \alias{letter_to_idx}
-\title{Get an index for a letter}
+\title{Get an index for an ASCII letter}
 \usage{
 letter_to_idx(letter)
 }
@@ -10,7 +10,7 @@ letter_to_idx(letter)
 \item{letter}{The letter.}
 }
 \description{
-Get an index for a letter
+Get an index for an ASCII letter
 }
 \examples{
 # letter 'b' translates to 2

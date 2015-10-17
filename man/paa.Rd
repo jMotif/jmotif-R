@@ -2,17 +2,17 @@
 % Please edit documentation in R/RcppExports.R
 \name{paa}
 \alias{paa}
-\title{Compute PAA}
+\title{Compute PAA for a time series}
 \usage{
 paa(ts, paa_num)
 }
 \arguments{
-\item{ts}{A timeseries to convert into PAA.}
+\item{ts}{A timeseries to compute the PAA for.}
 
-\item{paa_num}{the desired PAA size.}
+\item{paa_num}{a desired PAA size.}
 }
 \description{
-Compute PAA
+Compute PAA for a time series
 }
 \examples{
 x = c(-1, -2, -1, 0, 2, 1, 1, 0)
