@@ -87,27 +87,55 @@ The figure below illustrates the PAA+SAX procedure: 8 points time series is conv
 ![an application of SAX transform (3 letters word size and 3 letters alphabet size) to an 8 points time series ](https://raw.githubusercontent.com/jMotif/jmotif-R/master/assets/fig_sax83.png)
 
 #### 4.0 SAX-VSM classifier
-While the parameters optimization sampler is yet to be coded, the current code version illustrates SAX-VSM-based interpretable classification. For this a number of step 
+While the parameters optimization sampler is yet to be coded, the current code version illustrates SAX-VSM-based interpretable classification. 
+
+For this, at the *first step*, a training dataset needs to be discretized and represented as a bag of words list, where each list element represents a training class. The CBF is a standard UCR time series classification dataset that consists of three time series classes of length 128. The data embedded into the `jmotif` library:
+
 
     # load Cylinder-Bell-Funnel data
     data("CBF")
+    str(CBF)
+    
+the dataset overview:
+    
+    List of 4
+    $ labels_train: num [1:30] 1 1 1 3 2 2 1 3 2 1 ...
+    $ data_train  : num [1:30, 1:128] -0.464 -0.897 -0.465 -0.187 -1.136 ...
+    $ labels_test : num [1:900] 2 2 1 2 2 3 1 3 2 3 ...
+    $ data_test   : num [1:900, 1:128] -1.517 -0.703 -1.412 -0.955 -1.449 ...
+
+at the *second step*, the three classes of training data are discretized into bags of words using `manyseries_to_wordbag` function:
 
     # set the discretization parameters
     w <- 60
     p <- 6
     a <- 6
 
-    # convert the data to wordbags, dataset has three labels: 1, 2, 3
-    bag1 <- manyseries_to_wordbag(CBF[["data_train"]][CBF[["labels_train"]] == 1,],
-                              w, p, a, "exact", 0.01)
+    # convert the data to wordbags (the dataset has three labels: 1, 2, 3)
+    bag1 <- manyseries_to_wordbag(CBF[["data_train"]][CBF[["labels_train"]] == 1,], 
+                                                                w, p, a, "exact", 0.01)
     bag2 <- manyseries_to_wordbag(CBF[["data_train"]][CBF[["labels_train"]] == 2,],
-                              w, p, a, "exact", 0.01)
+                                                                w, p, a, "exact", 0.01)
     bag3 <- manyseries_to_wordbag(CBF[["data_train"]][CBF[["labels_train"]] == 3,],
-                              w, p, a, "exact", 0.01)
+                                                                w, p, a, "exact", 0.01)
 
-    # compute tf*idf for these three bags
+each of these bags is a two-column data frame:
+
+    > head(bag1)
+       words counts
+    1 aabeee      2
+    2 aabeef      1
+    3 aaceee      7
+    4 aacfee      1
+    5 aadeee      7
+    6 aaedde      1
+
+`TF*IDF` weights are computed at the *third step*, for this a list of _named_ (by class tokens) list of word bags is fed into `bags_to_tfidf` function:
+
+    # compute tf*idf for three bags
     tfidf = bags_to_tfidf(
           list("cylinder" = bag1, "bell" = bag2, "funnel" = bag3) )
+
 
     # classify the test data
     labels_predicted = rep(-1, length(CBF[["labels_test"]]))
