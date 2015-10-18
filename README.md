@@ -136,6 +136,18 @@ each of these bags is a two-column data frame:
     tfidf = bags_to_tfidf(
           list("cylinder" = bag1, "bell" = bag2, "funnel" = bag3) )
 
+this yields a data frame of four variables: the words which are "important" in `TF*IDF` terms (i.e. not presented at least in one of the bags) and their class-corresponding weights:
+
+    > tail(tfidf)
+         words  cylinder     bell funnel
+    640 ffcbbb 0.6525709 0.445449 0.0000
+    641 ffdbab 0.0000000 0.000000 0.7615
+    642 ffdbbb 1.7681483 0.000000 0.0000
+    643 ffdcaa 0.0000000 0.000000 0.7615
+    644 ffdcba 0.0000000 0.000000 0.7615
+    645 ffebbb 1.5230000 0.000000 0.0000
+
+
 
     # classify the test data
     labels_predicted = rep(-1, length(CBF[["labels_test"]]))
