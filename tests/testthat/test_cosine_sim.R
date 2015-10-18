@@ -5,4 +5,6 @@ test_that("cosine similarity test", {
 
   expect_equal(0.1784162, as.numeric(cosineSim(rbind(a,b))), tolerance = 1e-6)
 
+  expect_equal(0.1784162, as.numeric(cosineSim(rbind(a,b))), tolerance = 1e-6)
+
 })
