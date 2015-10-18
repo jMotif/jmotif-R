@@ -86,7 +86,10 @@ The figure below illustrates the PAA+SAX procedure: 8 points time series is conv
       
 ![an application of SAX transform (3 letters word size and 3 letters alphabet size) to an 8 points time series ](https://raw.githubusercontent.com/jMotif/jmotif-R/master/assets/fig_sax83.png)
 
-#### 4.0 SAX-VSM classifier
+#### 4.0 Time series SAX transform via sliding window (`sax_via_window(ts, win_size, paa_size, alp_size, nr_strategy, n_threshold)`)
+
+
+#### 5.0 SAX-VSM classifier
 While the parameters optimization sampler is yet to be coded, the current code version illustrates SAX-VSM-based interpretable classification. 
 
 For this, at the *first step*, a training dataset needs to be discretized and represented as a bag of words list, where each list element represents a training class. The CBF is a standard UCR time series classification dataset that consists of three time series classes of length 128. The data embedded into the `jmotif` library:
@@ -107,9 +110,9 @@ the dataset overview:
 at the *second step*, the three classes of training data are discretized into bags of words using `manyseries_to_wordbag` function:
 
     # set the discretization parameters
-    w <- 60
-    p <- 6
-    a <- 6
+    w <- 60 # the sliding window size
+    p <- 6  # the PAA size
+    a <- 6  # the SAX alphabet size
 
     # convert the data to wordbags (the dataset has three labels: 1, 2, 3)
     bag1 <- manyseries_to_wordbag(CBF[["data_train"]][CBF[["labels_train"]] == 1,], 
