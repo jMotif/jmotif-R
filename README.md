@@ -87,7 +87,7 @@ The figure below illustrates the PAA+SAX procedure: 8 points time series is conv
 ![an application of SAX transform (3 letters word size and 3 letters alphabet size) to an 8 points time series ](https://raw.githubusercontent.com/jMotif/jmotif-R/master/assets/fig_sax83.png)
 
 #### 4.0 SAX-VSM classifier
-While the sampler is yet to be coded, the SAX-VSM-based classification of UCR data can be performed with this li version:
+While the parameters optimization sampler is yet to be coded, the current code version illustrates SAX-VSM-based interpretable classification. For this a number of step 
 
     # load Cylinder-Bell-Funnel data
     data("CBF")
