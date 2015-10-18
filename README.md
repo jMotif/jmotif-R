@@ -150,7 +150,62 @@ this yields a data frame of four variables: the words which are "important" in `
     644 ffdcba 0.0000000 0.000000 0.7615
     645 ffebbb 1.5230000 0.000000 0.0000
 
+which makes it easy to find which exact pattern contributes the most to the class:
 
+    > library(dplyr)
+    > head(arrange(tfidf, desc(cylinder)))
+       words cylinder bell funnel
+    1 aaeeee 2.413898    0      0
+    2 aaceee 2.284500    0      0
+    3 aadeee 2.284500    0      0
+
+    > head(arrange(tfidf, desc(funnel)))
+       words cylinder bell   funnel
+    1 fedcba        0    0 2.975097
+    2 fedbba        0    0 2.284500
+    3 adfecb        0    0 1.968449
+    
+or to visualize those:
+
+    # make up a sample time-series
+    #
+    sample = (CBF[["data_train"]][CBF[["labels_train"]] == 3,])[1,]
+    sample_bag = sax_via_window(sample, w, p, a, "exact", 0.01)
+    df = data.frame(index = as.numeric(names(sample_bag)),
+                   words = unlist(sample_bag))
+    # weight found patterns
+    #
+    weighted_patterns = merge(df, tfidf)
+    specificity = rep(0, length(sample))
+    for(i in 1:length(weighted_patterns$words)){
+      pattern = weighted_patterns[i,]
+      for(j in 1:w){
+        specificity[pattern$index+j] = specificity[pattern$index+j] +
+        pattern$funnel - pattern$bell - pattern$cylinder
+      }
+    }
+
+    # plot weighted patterns
+    #
+    library(ggplot2)
+    library(scales)
+    ggplot(data=data.frame(x=c(1:length(sample)), y=sample, col=rescale(specificity)),
+     aes(x=x,y=y,color=col)) + geom_line(size=1.2) + theme_bw() +
+     ggtitle("The funnel class-characteristic pattern example") +
+     scale_colour_gradientn(name = "Class specificity:  ",limits=c(0,1),
+        colours=c("red","yellow","green","lightblue","darkblue"),
+        breaks=c(0,0.5,1),labels=c("negative","neutral","high"),
+        guide = guide_colorbar(title.theme=element_text(size=14, angle=0),title.vjust=1,
+        barheight=0.6, barwidth=6, label.theme=element_text(size=10, angle=0))) +
+     theme(legend.position="bottom",plot.title=element_text(size=18),
+        axis.title.x=element_blank(), axis.title.y=element_blank(),
+        axis.text.x=element_text(size=12),axis.text.y=element_blank(),
+        panel.grid.major.y = element_blank(), panel.grid.minor.y = element_blank(),
+        axis.ticks.y = element_blank())
+    
+![interpretable time series representation](https://raw.githubusercontent.com/jMotif/jmotif-R/master/assets/fig-weighted_funnel.png)    
+    
+or to classify the test data:
 
     # classify the test data
     labels_predicted = rep(-1, length(CBF[["labels_test"]]))
