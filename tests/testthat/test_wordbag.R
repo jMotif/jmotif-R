@@ -28,7 +28,7 @@ test_that("wordbag #1", {
 
   wb2 <- manyseries_to_wordbag(t(t(rbind(dat,dat))), 6, 3, 3, "none", 0.01)
 
-  expect_equal(wb1[wb1$words == "bbb", ]$counts*2,
+  expect_equal(wb1[wb1$words == "bbb", ]$counts * 2,
                wb2[wb2$words == "bbb", ]$counts)
 
 })

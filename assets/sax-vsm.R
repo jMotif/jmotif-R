@@ -62,8 +62,6 @@ ggplot(data=data.frame(x=c(1:length(sample)), y=sample, col=rescale(specificity)
         axis.ticks.y = element_blank())
 
 
-weighted_patterns$funnel = weighted_patterns$funnel/max(weighted_patterns$funnel)
-
 # classify the test data
 labels_predicted = rep(-1, length(CBF[["labels_test"]]))
 labels_test = CBF[["labels_test"]]
