@@ -1,5 +1,7 @@
+src/.gitignore
+^\.git*
 ^.*\.Rproj$
 ^\.Rproj\.user$
 ^\.travis.yml$
-^assets$
+^inst$
 ^\.lintr$
