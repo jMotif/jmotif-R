@@ -42,7 +42,7 @@ Z-normalization is a time series preprocessing step proposed Goldin&Kannelakis w
     legend(0, -4, c("scaled sine wave","z-normalized wave"),
       lty=c(1,1), lwd=c(1,1), col=c("blue","red"), cex=0.8)
       
-![z-normalization of a scaled sine wave](https://raw.githubusercontent.com/jMotif/jmotif-R/master/assets/fig_znorm.png)
+![z-normalization of a scaled sine wave](https://raw.githubusercontent.com/jMotif/jmotif-R/master/inst/fig_znorm.png)
 
 #### 2.0 Piecewise Aggregate Approximation (i.e., PAA) (`paa(ts, paa_num)`)
 PAA reduces the time series dimensionality by averaging values of equal-sized segments of the original time series. In the following example the time series of dimensionality 8 points is reduced to 3 points.
@@ -66,7 +66,7 @@ PAA reduces the time series dimensionality by averaging values of equal-sized se
     segments(1+7/3*2,y_paa3[3],8,y_paa3[3],lwd=1,col="red")
     points(x=1+7/3*2+7/3/2,y=y_paa3[3],col="red",pch=23,lwd=5)
       
-![PAA transform of an 8-points time series into 3 points](https://raw.githubusercontent.com/jMotif/jmotif-R/master/assets/fig_paa83.png)
+![PAA transform of an 8-points time series into 3 points](https://raw.githubusercontent.com/jMotif/jmotif-R/master/inst/fig_paa83.png)
 
 #### 3.0 SAX transform (`ts2string(ts, a_size)`)
 Transforms each of the input time series points into a letter. Typically, SAX applied to time series of reduced with PAA dimensionality in order to accelerate the time series search by their indexing in the symbolic space. Before processing with PAA and SAX, time series are usually z-Normalized.
@@ -84,7 +84,7 @@ The figure below illustrates the PAA+SAX procedure: 8 points time series is conv
     > ts2string(y_paa3, 3)
     [1] "a" "c" "c"
       
-![an application of SAX transform (3 letters word size and 3 letters alphabet size) to an 8 points time series ](https://raw.githubusercontent.com/jMotif/jmotif-R/master/assets/fig_sax83.png)
+![an application of SAX transform (3 letters word size and 3 letters alphabet size) to an 8 points time series ](https://raw.githubusercontent.com/jMotif/jmotif-R/master/inst/fig_sax83.png)
 
 #### 4.0 Time series SAX transform via sliding window (`sax_via_window(ts, win_size, paa_size, alp_size, nr_strategy, n_threshold)`)
 
@@ -203,7 +203,7 @@ or to visualize those:
         panel.grid.major.y = element_blank(), panel.grid.minor.y = element_blank(),
         axis.ticks.y = element_blank())
     
-![interpretable time series representation](https://raw.githubusercontent.com/jMotif/jmotif-R/master/assets/fig-weighted_funnel.png)    
+![interpretable time series representation](https://raw.githubusercontent.com/jMotif/jmotif-R/master/inst/fig-weighted_funnel.png)    
     
 or to classify the test data:
 
