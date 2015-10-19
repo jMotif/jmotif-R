@@ -86,7 +86,7 @@ The figure below illustrates the PAA+SAX procedure: 8 points time series is conv
 ![an application of SAX transform (3 letters word size and 3 letters alphabet size) to an 8 points time series ](https://raw.githubusercontent.com/jMotif/jmotif-R/master/inst/fig_sax83.png)
 
 #### 4.0 Time series SAX transform via sliding window (`sax_via_window(ts, win_size, paa_size, alp_size, nr_strategy, n_threshold)`)
-An0ther common way to use SAX is to apply the procedure to sliding window-extracted subseries. This technique is used in SAX-VSM, where it unables the conversion of time series into word bags, intended to be used for time series classification.
+Another common way to use SAX is to apply the procedure to sliding window-extracted subseries. This technique is used in SAX-VSM, where it unables the conversion of time series into the word bags.
 
 #### 5.0 SAX-VSM classifier
 While the parameters optimization sampler is yet to be coded, the current code version illustrates SAX-VSM-based interpretable classification. 
