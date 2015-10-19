@@ -3,7 +3,7 @@
 export(alphabet_to_cuts)
 export(bags_to_tfidf)
 export(col_means)
-export(cosineSim)
+export(cosine_dist)
 export(cosine_sim)
 export(idx_to_letter)
 export(is_equal_str)

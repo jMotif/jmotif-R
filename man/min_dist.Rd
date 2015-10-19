@@ -26,4 +26,9 @@ str1 <- c('a', 'b', 'c')
 str2 <- c('c', 'b', 'a')
 min_dist(str1, str2, 3)
 }
+\references{
+Lonardi, S., Lin, J., Keogh, E., Patel, P.,
+Finding motifs in time series.
+In Proc. of the 2nd Workshop on Temporal Data Mining (pp. 53-68).
+}
 

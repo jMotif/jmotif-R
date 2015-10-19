@@ -2,20 +2,27 @@
 % Please edit documentation in R/jmotif.R
 \name{sax_distance_matrix}
 \alias{sax_distance_matrix}
-\title{Translates an alphabet size value into the corresponding minDist distance matrix}
+\title{Translates an alphabet size value into the corresponding MinDist distance matrix,
+whose values can be used to compute MINDIST.}
 \usage{
 sax_distance_matrix(a_size)
 }
 \arguments{
-\item{a_size}{the alphabet size, a value between 2 and 20 (inclusive)}
+\item{a_size}{the desired alphabet size (a value between 2 and 20, inclusive)}
 }
 \value{
 Returns a distance matrix (for SAX minDist) for a given alphabet value
 }
 \description{
-Translates an alphabet size value into the corresponding minDist distance matrix
+Translates an alphabet size value into the corresponding MinDist distance matrix,
+whose values can be used to compute MINDIST.
 }
 \examples{
 sax_distance_matrix(5)
+}
+\references{
+Lonardi, S., Lin, J., Keogh, E., Patel, P.,
+Finding motifs in time series.
+In Proc. of the 2nd Workshop on Temporal Data Mining (pp. 53-68).
 }
 

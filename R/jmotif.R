@@ -2,11 +2,15 @@
 #' @importFrom Rcpp sourceCpp
 NULL
 
-#' Translates an alphabet size value into the corresponding minDist distance matrix
+#' Translates an alphabet size value into the corresponding MinDist distance matrix,
+#' whose values can be used to compute MINDIST.
 #'
-#' @param a_size the alphabet size, a value between 2 and 20 (inclusive)
+#' @param a_size the desired alphabet size (a value between 2 and 20, inclusive)
 #' @return Returns a distance matrix (for SAX minDist) for a given alphabet value
 #' @export
+#' @references Lonardi, S., Lin, J., Keogh, E., Patel, P.,
+#' Finding motifs in time series.
+#' In Proc. of the 2nd Workshop on Temporal Data Mining (pp. 53-68).
 #' @examples
 #' sax_distance_matrix(5)
 sax_distance_matrix <- function(a_size) {
@@ -40,6 +44,9 @@ sax_distance_matrix <- function(a_size) {
 #' @param compression_ratio the distance compression ratio
 #' @return Returns the distance between strings
 #' @export
+#' @references Lonardi, S., Lin, J., Keogh, E., Patel, P.,
+#' Finding motifs in time series.
+#' In Proc. of the 2nd Workshop on Temporal Data Mining (pp. 53-68).
 #' @examples
 #' str1 <- c('a', 'b', 'c')
 #' str2 <- c('c', 'b', 'a')
@@ -64,7 +71,7 @@ min_dist <- function(str1, str2, alphabet_size, compression_ratio = 1) {
   }
 }
 
-#' Compute the cosine similarity
+#' Computes the cosine similarity between numeric vectors
 #'
 #' @param m the data matrix
 #' @return Returns the cosine similarity
@@ -73,6 +80,6 @@ min_dist <- function(str1, str2, alphabet_size, compression_ratio = 1) {
 #' a <- c(2, 1, 0, 2, 0, 1, 1, 1)
 #' b <- c(2, 1, 1, 1, 1, 0, 1, 1)
 #' sim = cosineSim(rbind(a,b))
-cosineSim <- function(m) {
+cosine_dist <- function(m) {
   as.dist(1 - m %*% t(m) / (sqrt(rowSums(m ^ 2) %*% t(rowSums(m ^ 2)))))
 }
