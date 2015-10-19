@@ -196,9 +196,9 @@ NumericVector alphabet_to_cuts(int a_size) {
 //' @examples
 //' y = c(-1, -2, -1, 0, 2, 1, 1, 0)
 //' y_paa3 = paa(y, 3)
-//' ts_2_chars(y_paa3, 3)
+//' series_to_chars(y_paa3, 3)
 // [[Rcpp::export]]
-CharacterVector ts_2_chars(NumericVector ts, int a_size) {
+CharacterVector series_to_chars(NumericVector ts, int a_size) {
   NumericVector cuts = alphabet_to_cuts(a_size);
   int len = ts.length();
   CharacterVector res(len);
@@ -222,9 +222,9 @@ CharacterVector ts_2_chars(NumericVector ts, int a_size) {
 //' @examples
 //' y = c(-1, -2, -1, 0, 2, 1, 1, 0)
 //' y_paa3 = paa(y, 3)
-//' ts_to_string(y_paa3, 3)
+//' series_to_string(y_paa3, 3)
 // [[Rcpp::export]]
-CharacterVector ts_to_string(NumericVector ts, int a_size) {
+CharacterVector series_to_string(NumericVector ts, int a_size) {
   NumericVector cuts = alphabet_to_cuts(a_size);
   int len = ts.length();
   std::string res(len, ' ');
@@ -309,7 +309,7 @@ std::map<int, CharacterVector> sax_via_window(
 
     subSection = paa(subSection, paa_size);
 
-    CharacterVector curr_str = ts_to_string(subSection, a_size);
+    CharacterVector curr_str = series_to_string(subSection, a_size);
 
     // Rcout << curr_str << "\n";
 
@@ -362,7 +362,7 @@ std::map<int, CharacterVector> sax_by_chunking(
 
   vec = paa(vec, paa_size);
 
-  std::string curr_str = Rcpp::as<std::string>(ts_to_string(vec, a_size));
+  std::string curr_str = Rcpp::as<std::string>(series_to_string(vec, a_size));
   // Rcout << curr_str << "\n";
 
   for(int i=0; i<curr_str.length(); i++){
@@ -405,7 +405,7 @@ Rcpp::DataFrame series_to_wordbag(
     subSection = paa(subSection, paa_size);
 
     std::string curr_str = Rcpp::as<std::string>(
-      ts_to_string(subSection, a_size));
+      series_to_string(subSection, a_size));
 
     // Rcout << curr_str << "\n";
 
@@ -481,7 +481,7 @@ Rcpp::DataFrame manyseries_to_wordbag(
       NumericVector subSection = subseries(ts, i, i + w_size);
       subSection = znorm(subSection, n_threshold);
       subSection = paa(subSection, paa_size);
-      std::string curr_str = Rcpp::as<std::string>(ts_to_string(subSection, a_size));
+      std::string curr_str = Rcpp::as<std::string>(series_to_string(subSection, a_size));
 
       if (!(0 == old_str.length())) {
         if ( is_equal_str("exact", nr_strategy)

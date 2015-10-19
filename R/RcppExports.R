@@ -111,9 +111,9 @@ alphabet_to_cuts <- function(a_size) {
 #' @examples
 #' y = c(-1, -2, -1, 0, 2, 1, 1, 0)
 #' y_paa3 = paa(y, 3)
-#' ts_2_chars(y_paa3, 3)
-ts_2_chars <- function(ts, a_size) {
-    .Call('jmotif_ts_2_chars', PACKAGE = 'jmotif', ts, a_size)
+#' series_to_chars(y_paa3, 3)
+series_to_chars <- function(ts, a_size) {
+    .Call('jmotif_series_to_chars', PACKAGE = 'jmotif', ts, a_size)
 }
 
 #' Transforms a time series into a string
@@ -128,9 +128,9 @@ ts_2_chars <- function(ts, a_size) {
 #' @examples
 #' y = c(-1, -2, -1, 0, 2, 1, 1, 0)
 #' y_paa3 = paa(y, 3)
-#' ts_to_string(y_paa3, 3)
-ts_to_string <- function(ts, a_size) {
-    .Call('jmotif_ts_to_string', PACKAGE = 'jmotif', ts, a_size)
+#' series_to_string(y_paa3, 3)
+series_to_string <- function(ts, a_size) {
+    .Call('jmotif_series_to_string', PACKAGE = 'jmotif', ts, a_size)
 }
 
 #' Extracting subseries

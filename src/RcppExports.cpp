@@ -84,27 +84,27 @@ BEGIN_RCPP
     return __result;
 END_RCPP
 }
-// ts_2_chars
-CharacterVector ts_2_chars(NumericVector ts, int a_size);
-RcppExport SEXP jmotif_ts_2_chars(SEXP tsSEXP, SEXP a_sizeSEXP) {
+// series_to_chars
+CharacterVector series_to_chars(NumericVector ts, int a_size);
+RcppExport SEXP jmotif_series_to_chars(SEXP tsSEXP, SEXP a_sizeSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
     Rcpp::traits::input_parameter< NumericVector >::type ts(tsSEXP);
     Rcpp::traits::input_parameter< int >::type a_size(a_sizeSEXP);
-    __result = Rcpp::wrap(ts_2_chars(ts, a_size));
+    __result = Rcpp::wrap(series_to_chars(ts, a_size));
     return __result;
 END_RCPP
 }
-// ts_to_string
-CharacterVector ts_to_string(NumericVector ts, int a_size);
-RcppExport SEXP jmotif_ts_to_string(SEXP tsSEXP, SEXP a_sizeSEXP) {
+// series_to_string
+CharacterVector series_to_string(NumericVector ts, int a_size);
+RcppExport SEXP jmotif_series_to_string(SEXP tsSEXP, SEXP a_sizeSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
     Rcpp::traits::input_parameter< NumericVector >::type ts(tsSEXP);
     Rcpp::traits::input_parameter< int >::type a_size(a_sizeSEXP);
-    __result = Rcpp::wrap(ts_to_string(ts, a_size));
+    __result = Rcpp::wrap(series_to_string(ts, a_size));
     return __result;
 END_RCPP
 }

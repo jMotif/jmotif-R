@@ -1,6 +1,6 @@
 test_that("points to letters, i.e. SAX", {
-  expect_equal(ts_2_chars(c(-1.375, 0.75, 0.625), 3), c('a', 'c', 'c'))
-  expect_equal(strsplit(ts_to_string(c(-1.375, 0.75, 0.625), 3), "")[[1]],
+  expect_equal(series_to_chars(c(-1.375, 0.75, 0.625), 3), c('a', 'c', 'c'))
+  expect_equal(strsplit(series_to_string(c(-1.375, 0.75, 0.625), 3), "")[[1]],
                c("a", "c", "c"))
 })
 
