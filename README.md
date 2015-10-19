@@ -89,41 +89,43 @@ The figure below illustrates the PAA+SAX procedure: 8 points time series is conv
 Another common way to use SAX is to apply the procedure to sliding window-extracted subseries. This technique is used in SAX-VSM, where it unables the conversion of time series into the word bags.
 
 #### 5.0 SAX-VSM classifier
-While the parameters optimization sampler is yet to be coded, the current code version illustrates SAX-VSM-based interpretable classification. 
+While the parameters optimization sampler discussed in our paper is yet to be coded, the current code provides a reference implementation of SAX-VSM classification and a characteristic patterns dicovery framework.
 
-For this, at the *first step*, a training dataset needs to be discretized and represented as a bag of words list, where each list element represents a training class. The CBF is a standard UCR time series classification dataset that consists of three time series classes of length 128. The data embedded into the `jmotif` library:
-
+I use one of [standard UCR time series datasets](http://www.cs.ucr.edu/~eamonn/time_series_data/) to illustrate the code use. The Cylinder-Bell-Funnel dataset (Saito, N: *Local feature extraction and its application using a library of bases.* PhD thesis, Yale University (1994)) consists of three time series classes. The dataset is embedded into the `jmotif` library:  
 
     # load Cylinder-Bell-Funnel data
     data("CBF")
-    str(CBF)
     
-the dataset overview:
-    
+where it is wrapped into a list of four elements: train and test sets and their labels: 
+
+    > str(CBF)
     List of 4
     $ labels_train: num [1:30] 1 1 1 3 2 2 1 3 2 1 ...
     $ data_train  : num [1:30, 1:128] -0.464 -0.897 -0.465 -0.187 -1.136 ...
     $ labels_test : num [1:900] 2 2 1 2 2 3 1 3 2 3 ...
     $ data_test   : num [1:900, 1:128] -1.517 -0.703 -1.412 -0.955 -1.449 ...
 
-at the *second step*, the three classes of training data are discretized into bags of words using `manyseries_to_wordbag` function:
+##### 5.1 Pre-processing and bags of words construction
+At the first step, each class of the training data needs to be transformed into a bag of words using the `manyseries_to_wordbag` function, which z-normalizes each of time series and converts it into a set of words which added to the resulting bag:
 
     # set the discretization parameters
+    #
     w <- 60 # the sliding window size
     p <- 6  # the PAA size
     a <- 6  # the SAX alphabet size
 
-    # convert the data to wordbags (the dataset has three labels: 1, 2, 3)
-    bag1 <- manyseries_to_wordbag(CBF[["data_train"]][CBF[["labels_train"]] == 1,], 
+    # convert the train classes to wordbags (the dataset has three labels: 1, 2, 3)
+    #
+    cylinder <- manyseries_to_wordbag(CBF[["data_train"]][CBF[["labels_train"]] == 1,], 
                                                                 w, p, a, "exact", 0.01)
-    bag2 <- manyseries_to_wordbag(CBF[["data_train"]][CBF[["labels_train"]] == 2,],
+    bell <- manyseries_to_wordbag(CBF[["data_train"]][CBF[["labels_train"]] == 2,],
                                                                 w, p, a, "exact", 0.01)
-    bag3 <- manyseries_to_wordbag(CBF[["data_train"]][CBF[["labels_train"]] == 3,],
+    funnel <- manyseries_to_wordbag(CBF[["data_train"]][CBF[["labels_train"]] == 3,],
                                                                 w, p, a, "exact", 0.01)
 
-each of these bags is a two-column data frame:
+each of these bags is a two-columns data frame:
 
-    > head(bag1)
+    > head(cylinder)
        words counts
     1 aabeee      2
     2 aabeef      1
@@ -132,11 +134,13 @@ each of these bags is a two-column data frame:
     5 aadeee      7
     6 aaedde      1
 
-`TF*IDF` weights are computed at the *third step*, for this a list of _named_ (by class tokens) list of word bags is fed into `bags_to_tfidf` function:
+##### 5.2 `TF*IDF` weighting
+`TF*IDF` weights are computed at the second step with `bags_to_tfidf` function which accepts a single argument -- a list of _named_ (by class label) word bags:
 
-    # compute tf*idf for three bags
+    # compute tf*idf weights for three bags
+    #
     tfidf = bags_to_tfidf(
-          list("cylinder" = bag1, "bell" = bag2, "funnel" = bag3) )
+          list("cylinder" = cylinder, "bell" = bell, "funnel" = funnel) )
 
 this yields a data frame of four variables: the words which are "important" in `TF*IDF` terms (i.e. not presented at least in one of the bags) and their class-corresponding weights:
 
@@ -164,7 +168,7 @@ which makes it easy to find which exact pattern contributes the most to the clas
     2 fedbba        0    0 2.284500
     3 adfecb        0    0 1.968449
     
-or to visualize those:
+and to visualize those on data:
 
     # make up a sample time-series
     #
@@ -204,7 +208,8 @@ or to visualize those:
     
 ![interpretable time series representation](https://raw.githubusercontent.com/jMotif/jmotif-R/master/inst/fig-weighted_funnel.png)    
     
-or to classify the test data:
+##### 5.2 SAX-VSM classification
+Using the weighted patterns obtained at the previous step and the cosine similarity measure it is also easy to classify unlabeled data using the `cosine_sim` function which accepts a list of two elements: the bag-of-words representation of the input time series (constructed with `series_to_wordbag` function) and the `TF*IDF` weights table obtained at the previous step:
 
     # classify the test data
     labels_predicted = rep(-1, length(CBF[["labels_test"]]))
