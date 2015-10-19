@@ -1,7 +1,8 @@
-src/.gitignore
+^src/.gitignore$
+^\.git*$
 ^cran-comments.md$
-^\.git*
 ^.*\.Rproj$
+^\.Rhistory$
 ^\.Rproj\.user$
 ^\.travis.yml$
 ^inst$
