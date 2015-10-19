@@ -2,7 +2,7 @@
 % Please edit documentation in R/RcppExports.R
 \name{bags_to_tfidf}
 \alias{bags_to_tfidf}
-\title{Computing the TFIDF matrix for a list of word bags}
+\title{Computes a TF-IDF weights matrix for a list of word bags}
 \usage{
 bags_to_tfidf(data)
 }
@@ -10,7 +10,7 @@ bags_to_tfidf(data)
 \item{data}{the word bags list}
 }
 \description{
-Computing the TFIDF matrix for a list of word bags
+Computes a TF-IDF weights matrix for a list of word bags
 }
 \examples{
 bag1 = data.frame(
@@ -25,5 +25,13 @@ bag2 = data.frame(
    )
 ll = list("bag1" = bag1, "bag2" = bag2)
 tfidf = bags_to_tfidf(ll)
+}
+\references{
+Senin Pavel and Malinchik Sergey,
+SAX-VSM: Interpretable Time Series Classification Using SAX and Vector Space Model.
+Data Mining (ICDM), 2013 IEEE 13th International Conference on, pp.1175,1180, 7-10 Dec. 2013.
+
+Salton, G., Wong, A., Yang., C.,
+A vector space model for automatic indexing. Commun. ACM 18, 11, 613–620, 1975.
 }
 

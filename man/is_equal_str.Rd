@@ -2,7 +2,7 @@
 % Please edit documentation in R/RcppExports.R
 \name{is_equal_str}
 \alias{is_equal_str}
-\title{Comparing strings}
+\title{Compares two strings using letters natural ordering}
 \usage{
 is_equal_str(a, b)
 }
@@ -12,6 +12,10 @@ is_equal_str(a, b)
 \item{b}{the string b}
 }
 \description{
-Comparing strings
+Compares two strings using letters natural ordering
+}
+\examples{
+is_equal_str("aaa", "bbb")
+is_equal_str("ccc", "ccc")
 }
 

@@ -15,4 +15,9 @@ Translates an alphabet size into the array of corresponding SAX cut-lines using 
 \examples{
 alphabet_to_cuts(5)
 }
+\references{
+Lonardi, S., Lin, J., Keogh, E., Patel, P.,
+Finding motifs in time series.
+In Proc. of the 2nd Workshop on Temporal Data Mining (pp. 53-68). (2002)
+}
 

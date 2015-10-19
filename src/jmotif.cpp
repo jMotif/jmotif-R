@@ -10,12 +10,15 @@ const char LETTERS[] = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h',
                         'q', 'r', 's', 't', 'u',  'v', 'w', 'x',
                         'y', 'z'};
 
-//' z-Normalize a time series
+//' Time series z-normalization
 //'
-//' @param ts A time series to normalize.
-//' @param threshold A z-normalization threshold.
+//' @param ts a time series to normalize
+//' @param threshold a z-normalization threshold value
 //' @useDynLib jmotif
 //' @export
+//' @references Dina Goldin and Paris Kanellakis,
+//' On similarity queries for time-series data: Constraint specification and implementation.
+//' In Principles and Practice of Constraint Programming – CP 1995, pages 137–153. (1995)
 //' @examples
 //' x = seq(0, pi*4, 0.02)
 //' y = sin(x) * 5 + rnorm(length(x))
@@ -30,11 +33,14 @@ NumericVector znorm(NumericVector ts, double threshold = 0.01) {
   return (ts - mean(ts)) / ts_sd;
 }
 
-//' Computes column means for a matrix
+//' Computes the column means for a matrix
 //'
 //' @param a A matrix to process.
 //' @useDynLib jmotif
 //' @export
+//' @examples
+//' x = matrix(rnorm(100), ncol=10)
+//' col_means(x)
 // [[Rcpp::export]]
 NumericVector col_means(NumericMatrix a) {
   NumericVector res(a.ncol());
@@ -44,12 +50,15 @@ NumericVector col_means(NumericMatrix a) {
   return res;
 }
 
-//' Compute PAA for a time series
+//' Computes a Piecewise Aggregate Approximation (PAA) for a time series
 //'
-//' @param ts A timeseries to compute the PAA for.
+//' @param ts a timeseries to compute the PAA for
 //' @param paa_num a desired PAA size.
 //' @useDynLib jmotif
 //' @export
+//' @references Keogh, E., Chakrabarti, K., Pazzani, M., Mehrotra, S.,
+//' Dimensionality reduction for fast similarity search in large time series databases.
+//' Knowledge and information Systems, 3(3), 263-286. (2001)
 //' @examples
 //' x = c(-1, -2, -1, 0, 2, 1, 1, 0)
 //' plot(x, type = "l", main = "8-points time series and it PAA transform into three points")
@@ -96,7 +105,7 @@ NumericVector paa(NumericVector ts, int paa_num) {
 
 }
 
-//' Get a natural ASCII letter by an index
+//' Get an ASCII letter for an index
 //'
 //' @param idx The index.
 //' @useDynLib jmotif
@@ -122,7 +131,7 @@ int letter_to_idx(char letter) {
   return letter - 96;
 }
 
-//' Get an ASCII index sequence for a given string
+//' Get an ASCII indexes sequence for a given string
 //'
 //' @param str The char array.
 //' @useDynLib jmotif
@@ -143,6 +152,9 @@ IntegerVector letters_to_idx(CharacterVector str) {
 //' @param a_size the alphabet size, a value between 2 and 20 (inclusive).
 //' @useDynLib jmotif
 //' @export
+//' @references Lonardi, S., Lin, J., Keogh, E., Patel, P.,
+//' Finding motifs in time series.
+//' In Proc. of the 2nd Workshop on Temporal Data Mining (pp. 53-68). (2002)
 //' @examples
 //' alphabet_to_cuts(5)
 // [[Rcpp::export]]
@@ -172,12 +184,19 @@ NumericVector alphabet_to_cuts(int a_size) {
   return NumericVector::create(0.0);
 }
 
-//' Transforms a time series into a char array
+//' Transforms a time series into a char array using SAX and the normal alphabet
 //'
 //' @param ts the timeseries
 //' @param a_size the alphabet size
 //' @useDynLib jmotif
 //' @export
+//' @references Lonardi, S., Lin, J., Keogh, E., Patel, P.,
+//' Finding motifs in time series.
+//' In Proc. of the 2nd Workshop on Temporal Data Mining (pp. 53-68). (2002)
+//' @examples
+//' y = c(-1, -2, -1, 0, 2, 1, 1, 0)
+//' y_paa3 = paa(y, 3)
+//' ts_2_chars(y_paa3, 3)
 // [[Rcpp::export]]
 CharacterVector ts_2_chars(NumericVector ts, int a_size) {
   NumericVector cuts = alphabet_to_cuts(a_size);
@@ -197,6 +216,9 @@ CharacterVector ts_2_chars(NumericVector ts, int a_size) {
 //' @param a_size the alphabet size
 //' @useDynLib jmotif
 //' @export
+//' @references Lonardi, S., Lin, J., Keogh, E., Patel, P.,
+//' Finding motifs in time series.
+//' In Proc. of the 2nd Workshop on Temporal Data Mining (pp. 53-68). (2002)
 //' @examples
 //' y = c(-1, -2, -1, 0, 2, 1, 1, 0)
 //' y_paa3 = paa(y, 3)
@@ -215,11 +237,14 @@ CharacterVector ts_to_string(NumericVector ts, int a_size) {
 
 //' Extracting subseries
 //'
-//' @param x the timeseries (0-based)
+//' @param x the timeseries (0-based, left inclusive)
 //' @param start the interval start
 //' @param end the interval end
 //' @useDynLib jmotif
 //' @export
+//' @examples
+//' y = c(-1, -2, -1, 0, 2, 1, 1, 0)
+//' subseries(y, 0, 3)
 // [[Rcpp::export]]
 NumericVector subseries(NumericVector x, int start, int end) {
   NumericVector res(end-start);
@@ -229,12 +254,15 @@ NumericVector subseries(NumericVector x, int start, int end) {
   return res;
 }
 
-//' Comparing strings
+//' Compares two strings using letters natural ordering
 //'
 //' @param a the string a
 //' @param b the string b
 //' @useDynLib jmotif
 //' @export
+//' @examples
+//' is_equal_str("aaa", "bbb")
+//' is_equal_str("ccc", "ccc")
 // [[Rcpp::export]]
 bool is_equal_str(CharacterVector a, CharacterVector b) {
   std::string ca = Rcpp::as<std::string>(a);
@@ -243,7 +271,7 @@ bool is_equal_str(CharacterVector a, CharacterVector b) {
   return (ca == cb);
 }
 
-//' SAXifying a timeseries
+//' Discretizes a time series with SAX via sliding window
 //'
 //' @param ts the timeseries
 //' @param w_size the sliding window size
@@ -253,6 +281,9 @@ bool is_equal_str(CharacterVector a, CharacterVector b) {
 //' @param n_threshold the normalization threshold
 //' @useDynLib jmotif
 //' @export
+//' @references Lonardi, S., Lin, J., Keogh, E., Patel, P.,
+//' Finding motifs in time series.
+//' In Proc. of the 2nd Workshop on Temporal Data Mining (pp. 53-68). (2002)
 // [[Rcpp::export]]
 std::map<int, CharacterVector> sax_via_window(
   NumericVector ts, int w_size, int paa_size, int a_size,
@@ -304,7 +335,7 @@ std::map<int, CharacterVector> sax_via_window(
   return idx2word;
 }
 
-//' SAXifying a timeseries
+//' Discretizes a time series with SAX using chunking
 //'
 //' @param ts the timeseries
 //' @param paa_size the PAA size
@@ -312,6 +343,9 @@ std::map<int, CharacterVector> sax_via_window(
 //' @param n_threshold the normalization threshold
 //' @useDynLib jmotif
 //' @export
+//' @references Lonardi, S., Lin, J., Keogh, E., Patel, P.,
+//' Finding motifs in time series.
+//' In Proc. of the 2nd Workshop on Temporal Data Mining (pp. 53-68). (2002)
 // [[Rcpp::export]]
 std::map<int, CharacterVector> sax_by_chunking(
     NumericVector ts, int paa_size, int a_size, double n_threshold) {
@@ -338,7 +372,7 @@ std::map<int, CharacterVector> sax_by_chunking(
   return idx2word;
 }
 
-//' SAXifying a timeseries
+//' Converts a time series into a wordbag
 //'
 //' @param ts the timeseries
 //' @param w_size the sliding window size
@@ -348,6 +382,11 @@ std::map<int, CharacterVector> sax_by_chunking(
 //' @param n_threshold the normalization threshold
 //' @useDynLib jmotif
 //' @export
+//' @references Senin Pavel and Malinchik Sergey,
+//' SAX-VSM: Interpretable Time Series Classification Using SAX and Vector Space Model.
+//' Data Mining (ICDM), 2013 IEEE 13th International Conference on, pp.1175,1180, 7-10 Dec. 2013.
+//' @references Salton, G., Wong, A., Yang., C.,
+//' A vector space model for automatic indexing. Commun. ACM 18, 11, 613–620, 1975.
 // [[Rcpp::export]]
 Rcpp::DataFrame series_to_wordbag(
   NumericVector ts, int w_size, int paa_size, int a_size,
@@ -409,7 +448,7 @@ Rcpp::DataFrame series_to_wordbag(
 
 }
 
-//' SAXifying a bunch of timeseries into a word bag
+//' Converts a set of time-series into a single wordbag
 //'
 //' @param data the timeseries data, row-wise
 //' @param w_size the sliding window size
@@ -419,6 +458,11 @@ Rcpp::DataFrame series_to_wordbag(
 //' @param n_threshold the normalization threshold
 //' @useDynLib jmotif
 //' @export
+//' @references Senin Pavel and Malinchik Sergey,
+//' SAX-VSM: Interpretable Time Series Classification Using SAX and Vector Space Model.
+//' Data Mining (ICDM), 2013 IEEE 13th International Conference on, pp.1175,1180, 7-10 Dec. 2013.
+//' @references Salton, G., Wong, A., Yang., C.,
+//' A vector space model for automatic indexing. Commun. ACM 18, 11, 613–620, 1975.
 // [[Rcpp::export]]
 Rcpp::DataFrame manyseries_to_wordbag(
     NumericMatrix data, int w_size, int paa_size, int a_size,
@@ -475,11 +519,16 @@ Rcpp::DataFrame manyseries_to_wordbag(
 
 }
 
-//' Computing the TFIDF matrix for a list of word bags
+//' Computes a TF-IDF weights matrix for a list of word bags
 //'
-//' @param data the word bags list
+//' @param data the word-bags list
 //' @useDynLib jmotif
 //' @export
+//' @references Senin Pavel and Malinchik Sergey,
+//' SAX-VSM: Interpretable Time Series Classification Using SAX and Vector Space Model.
+//' Data Mining (ICDM), 2013 IEEE 13th International Conference on, pp.1175,1180, 7-10 Dec. 2013.
+//' @references Salton, G., Wong, A., Yang., C.,
+//' A vector space model for automatic indexing. Commun. ACM 18, 11, 613–620, 1975.
 //' @examples
 //' bag1 = data.frame(
 //'    "words" = c("this", "is", "a", "sample"),
@@ -641,11 +690,16 @@ Rcpp::DataFrame bags_to_tfidf(Rcpp::List data) {
   return df;
 }
 
-//' Computing the cosine similarity between a bag of words and the TFIDF matrix columns
+//' Computes a cosine similarity values between a bag of words and the TF-IDF weight vectors
 //'
-//' @param data the list containing "bag" and "tfidf" objects
+//' @param data the list containing a word-bag and TF-IDF objects
 //' @useDynLib jmotif
 //' @export
+//' @references Senin Pavel and Malinchik Sergey,
+//' SAX-VSM: Interpretable Time Series Classification Using SAX and Vector Space Model.
+//' Data Mining (ICDM), 2013 IEEE 13th International Conference on, pp.1175,1180, 7-10 Dec. 2013.
+//' @references Salton, G., Wong, A., Yang., C.,
+//' A vector space model for automatic indexing. Commun. ACM 18, 11, 613–620, 1975.
 // [[Rcpp::export]]
 Rcpp::DataFrame cosine_sim(Rcpp::List data) {
 

@@ -2,7 +2,7 @@
 % Please edit documentation in R/RcppExports.R
 \name{idx_to_letter}
 \alias{idx_to_letter}
-\title{Get a natural ASCII letter by an index}
+\title{Get an ASCII letter for an index}
 \usage{
 idx_to_letter(idx)
 }
@@ -10,7 +10,7 @@ idx_to_letter(idx)
 \item{idx}{The index.}
 }
 \description{
-Get a natural ASCII letter by an index
+Get an ASCII letter for an index
 }
 \examples{
 # letter 'b'

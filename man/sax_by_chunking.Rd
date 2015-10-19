@@ -2,7 +2,7 @@
 % Please edit documentation in R/RcppExports.R
 \name{sax_by_chunking}
 \alias{sax_by_chunking}
-\title{SAXifying a timeseries}
+\title{Discretizes a time series with SAX using chunking}
 \usage{
 sax_by_chunking(ts, paa_size, a_size, n_threshold)
 }
@@ -16,6 +16,11 @@ sax_by_chunking(ts, paa_size, a_size, n_threshold)
 \item{n_threshold}{the normalization threshold}
 }
 \description{
-SAXifying a timeseries
+Discretizes a time series with SAX using chunking
+}
+\references{
+Lonardi, S., Lin, J., Keogh, E., Patel, P.,
+Finding motifs in time series.
+In Proc. of the 2nd Workshop on Temporal Data Mining (pp. 53-68). (2002)
 }
 

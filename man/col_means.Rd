@@ -2,7 +2,7 @@
 % Please edit documentation in R/RcppExports.R
 \name{col_means}
 \alias{col_means}
-\title{Computes column means for a matrix}
+\title{Computes the column means for a matrix}
 \usage{
 col_means(a)
 }
@@ -10,6 +10,10 @@ col_means(a)
 \item{a}{A matrix to process.}
 }
 \description{
-Computes column means for a matrix
+Computes the column means for a matrix
+}
+\examples{
+x = matrix(rnorm(100), ncol=10)
+col_means(x)
 }
 

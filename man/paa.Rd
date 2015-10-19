@@ -2,17 +2,17 @@
 % Please edit documentation in R/RcppExports.R
 \name{paa}
 \alias{paa}
-\title{Compute PAA for a time series}
+\title{Computes a Piecewise Aggregate Approximation (PAA) for a time series}
 \usage{
 paa(ts, paa_num)
 }
 \arguments{
-\item{ts}{A timeseries to compute the PAA for.}
+\item{ts}{a timeseries to compute the PAA for}
 
 \item{paa_num}{a desired PAA size.}
 }
 \description{
-Compute PAA for a time series
+Computes a Piecewise Aggregate Approximation (PAA) for a time series
 }
 \examples{
 x = c(-1, -2, -1, 0, 2, 1, 1, 0)
@@ -20,5 +20,10 @@ plot(x, type = "l", main = "8-points time series and it PAA transform into three
 points(x,pch = 16, lwd = 5)
 # segments
 abline(v = c(1, 1+7/3, 1+7/3 * 2, 8), lty = 3, lwd = 2)
+}
+\references{
+Keogh, E., Chakrabarti, K., Pazzani, M., Mehrotra, S.,
+Dimensionality reduction for fast similarity search in large time series databases.
+Knowledge and information Systems, 3(3), 263-286. (2001)
 }
 

@@ -7,7 +7,7 @@
 subseries(x, start, end)
 }
 \arguments{
-\item{x}{the timeseries (0-based)}
+\item{x}{the timeseries (0-based, left inclusive)}
 
 \item{start}{the interval start}
 
@@ -15,5 +15,9 @@ subseries(x, start, end)
 }
 \description{
 Extracting subseries
+}
+\examples{
+y = c(-1, -2, -1, 0, 2, 1, 1, 0)
+subseries(y, 0, 3)
 }
 

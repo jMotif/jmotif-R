@@ -19,4 +19,9 @@ y = c(-1, -2, -1, 0, 2, 1, 1, 0)
 y_paa3 = paa(y, 3)
 ts_to_string(y_paa3, 3)
 }
+\references{
+Lonardi, S., Lin, J., Keogh, E., Patel, P.,
+Finding motifs in time series.
+In Proc. of the 2nd Workshop on Temporal Data Mining (pp. 53-68). (2002)
+}
 

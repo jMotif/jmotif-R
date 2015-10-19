@@ -2,7 +2,7 @@
 % Please edit documentation in R/RcppExports.R
 \name{sax_via_window}
 \alias{sax_via_window}
-\title{SAXifying a timeseries}
+\title{Discretizes a time series with SAX via sliding window}
 \usage{
 sax_via_window(ts, w_size, paa_size, a_size, nr_strategy, n_threshold)
 }
@@ -20,6 +20,11 @@ sax_via_window(ts, w_size, paa_size, a_size, nr_strategy, n_threshold)
 \item{n_threshold}{the normalization threshold}
 }
 \description{
-SAXifying a timeseries
+Discretizes a time series with SAX via sliding window
+}
+\references{
+Lonardi, S., Lin, J., Keogh, E., Patel, P.,
+Finding motifs in time series.
+In Proc. of the 2nd Workshop on Temporal Data Mining (pp. 53-68). (2002)
 }
 

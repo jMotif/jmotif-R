@@ -2,7 +2,7 @@
 % Please edit documentation in R/RcppExports.R
 \name{ts_2_chars}
 \alias{ts_2_chars}
-\title{Transforms a time series into a char array}
+\title{Transforms a time series into a char array using SAX and the normal alphabet}
 \usage{
 ts_2_chars(ts, a_size)
 }
@@ -12,6 +12,16 @@ ts_2_chars(ts, a_size)
 \item{a_size}{the alphabet size}
 }
 \description{
-Transforms a time series into a char array
+Transforms a time series into a char array using SAX and the normal alphabet
+}
+\examples{
+y = c(-1, -2, -1, 0, 2, 1, 1, 0)
+y_paa3 = paa(y, 3)
+ts_2_chars(y_paa3, 3)
+}
+\references{
+Lonardi, S., Lin, J., Keogh, E., Patel, P.,
+Finding motifs in time series.
+In Proc. of the 2nd Workshop on Temporal Data Mining (pp. 53-68). (2002)
 }
 

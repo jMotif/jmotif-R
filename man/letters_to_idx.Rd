@@ -2,7 +2,7 @@
 % Please edit documentation in R/RcppExports.R
 \name{letters_to_idx}
 \alias{letters_to_idx}
-\title{Get an ASCII index sequence for a given string}
+\title{Get an ASCII indexes sequence for a given string}
 \usage{
 letters_to_idx(str)
 }
@@ -10,7 +10,7 @@ letters_to_idx(str)
 \item{str}{The char array.}
 }
 \description{
-Get an ASCII index sequence for a given string
+Get an ASCII indexes sequence for a given string
 }
 \examples{
 letters_to_idx(c('a','b','c','a'))

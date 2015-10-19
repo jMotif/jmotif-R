@@ -2,22 +2,27 @@
 % Please edit documentation in R/RcppExports.R
 \name{znorm}
 \alias{znorm}
-\title{z-Normalize a time series}
+\title{Time series z-normalization}
 \usage{
 znorm(ts, threshold = 0.01)
 }
 \arguments{
-\item{ts}{A time series to normalize.}
+\item{ts}{a time series to normalize}
 
-\item{threshold}{A z-normalization threshold.}
+\item{threshold}{a z-normalization threshold value}
 }
 \description{
-z-Normalize a time series
+Time series z-normalization
 }
 \examples{
 x = seq(0, pi*4, 0.02)
 y = sin(x) * 5 + rnorm(length(x))
 plot(x, y, type="l", col="blue")
 lines(x, znorm(y, 0.01), type="l", col="red")
+}
+\references{
+Dina Goldin and Paris Kanellakis,
+On similarity queries for time-series data: Constraint specification and implementation.
+In Principles and Practice of Constraint Programming – CP 1995, pages 137–153. (1995)
 }
 
