@@ -1,4 +1,5 @@
 src/.gitignore
+^cran-comments.md$
 ^\.git*
 ^.*\.Rproj$
 ^\.Rproj\.user$
