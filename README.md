@@ -6,21 +6,20 @@
 Implements time series symbolic discretization via z-Normalization [1], PAA [2], and SAX [3] in R. Implements essentials of VSM [4], and SAX-VSM interpretable time-series classification [5].
 
 [1] Dina Goldin and Paris Kanellakis,
-_On similarity queries for time-series data: Constraint specification and implementation._ 
+[*On similarity queries for time-series data: Constraint specification and implementation*](http://dl.acm.org/citation.cfm?id=726176),
 In Principles and Practice of Constraint Programming – CP ’95, pages 137–153. (1995)
 
 [2] Keogh, E., Chakrabarti, K., Pazzani, M., & Mehrotra, S., 
-_Dimensionality reduction for fast similarity search in large time series databases._
+[*Dimensionality reduction for fast similarity search in large time series databases*](https://scholar.google.fr/scholar?cluster=12943037197327240079&hl=en&as_sdt=0,5&as_vis=1),
 Knowledge and information Systems, 3(3), 263-286. (2001)
 
 [3] Lonardi, S., Lin, J., Keogh, E., & Patel, P., 
-_Finding motifs in time series._ 
-In Proc. of the 2nd Workshop on Temporal Data Mining (pp. 53-68). (2002)
+[*Finding motifs in time series*](https://scholar.google.com/scholar?cluster=9053042128452360340&hl=en&as_sdt=0,5), In Proc. of the 2nd Workshop on Temporal Data Mining (pp. 53-68). (2002)
 
-[4] Salton, G., Wong, A., Yang., C., [*A vector space model for automatic indexing*](http://dl.acm.org/citation.cfm?id=361220). Commun. ACM 18, 11, 613–620, 1975.
+[4] Salton, G., Wong, A., Yang., C., [*A vector space model for automatic indexing*](http://dl.acm.org/citation.cfm?id=361220), Commun. ACM 18, 11, 613–620, 1975.
 
 [5] Senin, P.; Malinchik, S., 
-[*SAX-VSM: Interpretable Time Series Classification Using SAX and Vector Space Model.*](https://scholar.google.fr/citations?view_op=view_citation&citation_for_view=pVTcEd8AAAAJ:5nxA0vEk-isC)
+[*SAX-VSM: Interpretable Time Series Classification Using SAX and Vector Space Model.*](https://scholar.google.fr/citations?view_op=view_citation&citation_for_view=pVTcEd8AAAAJ:5nxA0vEk-isC),
 Data Mining (ICDM), 2013 IEEE 13th International Conference on, pp.1175,1180, 7-10 Dec. 2013.
 
 #### 0.0 Installation
