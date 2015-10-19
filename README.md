@@ -75,12 +75,15 @@ The figure below illustrates the PAA+SAX procedure: 8 points time series is conv
     y <- seq(-2,2, length=100)
     x <- dnorm(y, mean=0, sd=1)
     lines(x,y, type="l", lwd=5, col="magenta")
-    abline(h = alphabet2cuts(3)[2:3], lty=2, lwd=2, col="magenta")
+    abline(h = alphabet_to_cuts(3)[2:3], lty=2, lwd=2, col="magenta")
     text(0.7,-1,"a",cex=2,col="magenta")
     text(0.7, 0,"b",cex=2,col="magenta")
     text(0.7, 1,"c",cex=2,col="magenta")
 
-    > ts2string(y_paa3, 3)
+    > series_to_string(y_paa3, 3)
+    [1] "acc"
+    
+    > series_to_chars(y_paa3, 3)
     [1] "a" "c" "c"
       
 ![an application of SAX transform (3 letters word size and 3 letters alphabet size) to an 8 points time series ](https://raw.githubusercontent.com/jMotif/jmotif-R/master/inst/fig_sax83.png)
