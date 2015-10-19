@@ -20,7 +20,7 @@ In Proc. of the 2nd Workshop on Temporal Data Mining (pp. 53-68). (2002)
 [4] Salton, G., Wong, A., Yang., C., [*A vector space model for automatic indexing*](http://dl.acm.org/citation.cfm?id=361220). Commun. ACM 18, 11, 613–620, 1975.
 
 [5] Senin, P.; Malinchik, S., 
-_SAX-VSM: Interpretable Time Series ClassiCfication Using SAX and Vector Space Model._
+[*SAX-VSM: Interpretable Time Series Classification Using SAX and Vector Space Model.*](https://scholar.google.fr/citations?view_op=view_citation&citation_for_view=pVTcEd8AAAAJ:5nxA0vEk-isC)
 Data Mining (ICDM), 2013 IEEE 13th International Conference on, pp.1175,1180, 7-10 Dec. 2013.
 
 #### 0.0 Installation
