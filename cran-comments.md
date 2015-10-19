@@ -13,4 +13,4 @@ There was a note about a Maintainer field
 
 ## Downstream dependencies
 
-None are used
+stats::as.dist
