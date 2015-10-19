@@ -23,6 +23,6 @@ lines(x, znorm(y, 0.01), type="l", col="red")
 \references{
 Dina Goldin and Paris Kanellakis,
 On similarity queries for time-series data: Constraint specification and implementation.
-In Principles and Practice of Constraint Programming – CP 1995, pages 137–153. (1995)
+In Principles and Practice of Constraint Programming (CP 1995), pages 137-153. (1995)
 }
 

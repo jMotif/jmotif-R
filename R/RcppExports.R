@@ -9,7 +9,7 @@
 #' @export
 #' @references Dina Goldin and Paris Kanellakis,
 #' On similarity queries for time-series data: Constraint specification and implementation.
-#' In Principles and Practice of Constraint Programming – CP 1995, pages 137–153. (1995)
+#' In Principles and Practice of Constraint Programming (CP 1995), pages 137-153. (1995)
 #' @examples
 #' x = seq(0, pi*4, 0.02)
 #' y = sin(x) * 5 + rnorm(length(x))
@@ -206,7 +206,7 @@ sax_by_chunking <- function(ts, paa_size, a_size, n_threshold) {
 #' SAX-VSM: Interpretable Time Series Classification Using SAX and Vector Space Model.
 #' Data Mining (ICDM), 2013 IEEE 13th International Conference on, pp.1175,1180, 7-10 Dec. 2013.
 #' @references Salton, G., Wong, A., Yang., C.,
-#' A vector space model for automatic indexing. Commun. ACM 18, 11, 613–620, 1975.
+#' A vector space model for automatic indexing. Commun. ACM 18, 11, 613-620, 1975.
 series_to_wordbag <- function(ts, w_size, paa_size, a_size, nr_strategy, n_threshold) {
     .Call('jmotif_series_to_wordbag', PACKAGE = 'jmotif', ts, w_size, paa_size, a_size, nr_strategy, n_threshold)
 }
@@ -225,21 +225,21 @@ series_to_wordbag <- function(ts, w_size, paa_size, a_size, nr_strategy, n_thres
 #' SAX-VSM: Interpretable Time Series Classification Using SAX and Vector Space Model.
 #' Data Mining (ICDM), 2013 IEEE 13th International Conference on, pp.1175,1180, 7-10 Dec. 2013.
 #' @references Salton, G., Wong, A., Yang., C.,
-#' A vector space model for automatic indexing. Commun. ACM 18, 11, 613–620, 1975.
+#' A vector space model for automatic indexing. Commun. ACM 18, 11, 613-620, 1975.
 manyseries_to_wordbag <- function(data, w_size, paa_size, a_size, nr_strategy, n_threshold) {
     .Call('jmotif_manyseries_to_wordbag', PACKAGE = 'jmotif', data, w_size, paa_size, a_size, nr_strategy, n_threshold)
 }
 
 #' Computes a TF-IDF weights matrix for a list of word bags
 #'
-#' @param data the word bags list
+#' @param data the word-bags list
 #' @useDynLib jmotif
 #' @export
 #' @references Senin Pavel and Malinchik Sergey,
 #' SAX-VSM: Interpretable Time Series Classification Using SAX and Vector Space Model.
 #' Data Mining (ICDM), 2013 IEEE 13th International Conference on, pp.1175,1180, 7-10 Dec. 2013.
 #' @references Salton, G., Wong, A., Yang., C.,
-#' A vector space model for automatic indexing. Commun. ACM 18, 11, 613–620, 1975.
+#' A vector space model for automatic indexing. Commun. ACM 18, 11, 613-620, 1975.
 #' @examples
 #' bag1 = data.frame(
 #'    "words" = c("this", "is", "a", "sample"),
@@ -266,7 +266,7 @@ bags_to_tfidf <- function(data) {
 #' SAX-VSM: Interpretable Time Series Classification Using SAX and Vector Space Model.
 #' Data Mining (ICDM), 2013 IEEE 13th International Conference on, pp.1175,1180, 7-10 Dec. 2013.
 #' @references Salton, G., Wong, A., Yang., C.,
-#' A vector space model for automatic indexing. Commun. ACM 18, 11, 613–620, 1975.
+#' A vector space model for automatic indexing. Commun. ACM 18, 11, 613-620, 1975.
 cosine_sim <- function(data) {
     .Call('jmotif_cosine_sim', PACKAGE = 'jmotif', data)
 }

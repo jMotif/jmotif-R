@@ -18,7 +18,7 @@ const char LETTERS[] = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h',
 //' @export
 //' @references Dina Goldin and Paris Kanellakis,
 //' On similarity queries for time-series data: Constraint specification and implementation.
-//' In Principles and Practice of Constraint Programming – CP 1995, pages 137–153. (1995)
+//' In Principles and Practice of Constraint Programming (CP 1995), pages 137-153. (1995)
 //' @examples
 //' x = seq(0, pi*4, 0.02)
 //' y = sin(x) * 5 + rnorm(length(x))
@@ -386,7 +386,7 @@ std::map<int, CharacterVector> sax_by_chunking(
 //' SAX-VSM: Interpretable Time Series Classification Using SAX and Vector Space Model.
 //' Data Mining (ICDM), 2013 IEEE 13th International Conference on, pp.1175,1180, 7-10 Dec. 2013.
 //' @references Salton, G., Wong, A., Yang., C.,
-//' A vector space model for automatic indexing. Commun. ACM 18, 11, 613–620, 1975.
+//' A vector space model for automatic indexing. Commun. ACM 18, 11, 613-620, 1975.
 // [[Rcpp::export]]
 Rcpp::DataFrame series_to_wordbag(
   NumericVector ts, int w_size, int paa_size, int a_size,
@@ -462,7 +462,7 @@ Rcpp::DataFrame series_to_wordbag(
 //' SAX-VSM: Interpretable Time Series Classification Using SAX and Vector Space Model.
 //' Data Mining (ICDM), 2013 IEEE 13th International Conference on, pp.1175,1180, 7-10 Dec. 2013.
 //' @references Salton, G., Wong, A., Yang., C.,
-//' A vector space model for automatic indexing. Commun. ACM 18, 11, 613–620, 1975.
+//' A vector space model for automatic indexing. Commun. ACM 18, 11, 613-620, 1975.
 // [[Rcpp::export]]
 Rcpp::DataFrame manyseries_to_wordbag(
     NumericMatrix data, int w_size, int paa_size, int a_size,
@@ -528,7 +528,7 @@ Rcpp::DataFrame manyseries_to_wordbag(
 //' SAX-VSM: Interpretable Time Series Classification Using SAX and Vector Space Model.
 //' Data Mining (ICDM), 2013 IEEE 13th International Conference on, pp.1175,1180, 7-10 Dec. 2013.
 //' @references Salton, G., Wong, A., Yang., C.,
-//' A vector space model for automatic indexing. Commun. ACM 18, 11, 613–620, 1975.
+//' A vector space model for automatic indexing. Commun. ACM 18, 11, 613-620, 1975.
 //' @examples
 //' bag1 = data.frame(
 //'    "words" = c("this", "is", "a", "sample"),
@@ -699,7 +699,7 @@ Rcpp::DataFrame bags_to_tfidf(Rcpp::List data) {
 //' SAX-VSM: Interpretable Time Series Classification Using SAX and Vector Space Model.
 //' Data Mining (ICDM), 2013 IEEE 13th International Conference on, pp.1175,1180, 7-10 Dec. 2013.
 //' @references Salton, G., Wong, A., Yang., C.,
-//' A vector space model for automatic indexing. Commun. ACM 18, 11, 613–620, 1975.
+//' A vector space model for automatic indexing. Commun. ACM 18, 11, 613-620, 1975.
 // [[Rcpp::export]]
 Rcpp::DataFrame cosine_sim(Rcpp::List data) {
 

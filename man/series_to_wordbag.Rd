@@ -28,6 +28,6 @@ SAX-VSM: Interpretable Time Series Classification Using SAX and Vector Space Mod
 Data Mining (ICDM), 2013 IEEE 13th International Conference on, pp.1175,1180, 7-10 Dec. 2013.
 
 Salton, G., Wong, A., Yang., C.,
-A vector space model for automatic indexing. Commun. ACM 18, 11, 613–620, 1975.
+A vector space model for automatic indexing. Commun. ACM 18, 11, 613-620, 1975.
 }
 
