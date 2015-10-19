@@ -91,7 +91,7 @@ Another common way to use SAX is to apply the procedure to sliding window-extrac
 #### 5.0 SAX-VSM classifier
 While the parameters optimization sampler discussed in our paper is yet to be coded, the current code provides a reference implementation of SAX-VSM classification and a characteristic patterns dicovery framework.
 
-I use one of [standard UCR time series datasets](http://www.cs.ucr.edu/~eamonn/time_series_data/) to illustrate the code use. The Cylinder-Bell-Funnel dataset (Saito, N: *Local feature extraction and its application using a library of bases.* PhD thesis, Yale University (1994)) consists of three time series classes. The dataset is embedded into the `jmotif` library:  
+I use the one of [standard UCR time series datasets](http://www.cs.ucr.edu/~eamonn/time_series_data/) to illustrate the code use. The Cylinder-Bell-Funnel dataset (Saito, N: *Local feature extraction and its application using a library of bases.* PhD thesis, Yale University (1994)) consists of three time series classes. The dataset is embedded into the `jmotif` library:  
 
     # load Cylinder-Bell-Funnel data
     data("CBF")
