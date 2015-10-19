@@ -208,7 +208,7 @@ and to visualize those on data:
     
 ![interpretable time series representation](https://raw.githubusercontent.com/jMotif/jmotif-R/master/inst/fig-weighted_funnel.png)    
     
-##### 5.2 SAX-VSM classification
+##### 5.3 SAX-VSM classification
 Using the weighted patterns obtained at the previous step and the cosine similarity measure it is also easy to classify unlabeled data using the `cosine_sim` function which accepts a list of two elements: the bag-of-words representation of the input time series (constructed with `series_to_wordbag` function) and the `TF*IDF` weights table obtained at the previous step:
 
     # classify the test data
