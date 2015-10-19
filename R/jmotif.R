@@ -81,5 +81,5 @@ min_dist <- function(str1, str2, alphabet_size, compression_ratio = 1) {
 #' b <- c(2, 1, 1, 1, 1, 0, 1, 1)
 #' sim <- cosine_dist(rbind(a,b))
 cosine_dist <- function(m) {
-  as.dist(1 - m %*% t(m) / (sqrt(rowSums(m ^ 2) %*% t(rowSums(m ^ 2)))))
+  stats::as.dist(1 - m %*% t(m) / (sqrt(rowSums(m ^ 2) %*% t(rowSums(m ^ 2)))))
 }
