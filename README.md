@@ -176,7 +176,8 @@ and to visualize those on data:
     sample_bag = sax_via_window(sample, w, p, a, "exact", 0.01)
     df = data.frame(index = as.numeric(names(sample_bag)),
                    words = unlist(sample_bag))
-    # weight found patterns
+                   
+    # weight the found patterns
     #
     weighted_patterns = merge(df, tfidf)
     specificity = rep(0, length(sample))
@@ -188,7 +189,7 @@ and to visualize those on data:
       }
     }
 
-    # plot weighted patterns
+    # plot the weighted patterns
     #
     library(ggplot2)
     library(scales)
@@ -212,6 +213,7 @@ and to visualize those on data:
 Using the weighted patterns obtained at the previous step and the cosine similarity measure it is also easy to classify unlabeled data using the `cosine_sim` function which accepts a list of two elements: the bag-of-words representation of the input time series (constructed with `series_to_wordbag` function) and the `TF*IDF` weights table obtained at the previous step:
 
     # classify the test data
+    #
     labels_predicted = rep(-1, length(CBF[["labels_test"]]))
     labels_test = CBF[["labels_test"]]
     data_test = CBF[["data_test"]]
@@ -221,7 +223,12 @@ Using the weighted patterns obtained at the previous step and the cosine similar
         cosines = cosine_sim(list("bag"=bag, "tfidf" = tfidf))
         labels_predicted[i] = which(cosines$cosines == max(cosines$cosines))
     }
+    
+    # compute the classification error
+    #
     error = length(which((labels_test != labels_predicted))) / length(labels_test)
     error
 
+    # findout which time series were misclassified
+    #
     which((labels_test != labels_predicted))
