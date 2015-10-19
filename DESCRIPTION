@@ -1,8 +1,8 @@
 Package: jmotif
-Version: 1.0.0
-Title: Tools for time series analysis based on symbolic dicretization
-Description: A set of tools that solves a common set of time series patterns
-             analysis problems based on Symbolic Aggregate approXimation.
+Version: 1.0.1
+Title: Tools for time series analysis based on symbolic aggregate dicretization, i.e. SAX
+Description: A set of functions that solves a common set of time series patterns analysis problems
+  based on the Symbolic Aggregate approXimation. SAX-VSM time-series classification algorithm implementation.
 Authors@R: person("Pavel", "Senin", , "seninp@gmail.com", c("aut", "cre"))
 URL: https://github.com/jMotif/jmotif-R
 BugReports: https://github.com/jMotif/jmotif-R/issues
