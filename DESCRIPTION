@@ -1,5 +1,5 @@
 Package: jmotif
-Version: 1.0.1
+Version: 1.0.2
 Title: Tools for Time Series Analysis Based on Symbolic Aggregate Dicretization
 Description: A set of tools based on time series symbolic discretization and vector space
    model that aids in time series characteristic pattern discovery and facilitates
