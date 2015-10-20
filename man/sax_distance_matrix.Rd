@@ -2,8 +2,7 @@
 % Please edit documentation in R/jmotif.R
 \name{sax_distance_matrix}
 \alias{sax_distance_matrix}
-\title{Translates an alphabet size value into the corresponding MinDist distance matrix,
-whose values can be used to compute MINDIST.}
+\title{Generates a SAX MinDist distance matrix (i.e. the "lookup table") for a given alphabet size.}
 \usage{
 sax_distance_matrix(a_size)
 }
@@ -11,11 +10,10 @@ sax_distance_matrix(a_size)
 \item{a_size}{the desired alphabet size (a value between 2 and 20, inclusive)}
 }
 \value{
-Returns a distance matrix (for SAX minDist) for a given alphabet value
+Returns a distance matrix (for SAX minDist) for a specified alphabet size
 }
 \description{
-Translates an alphabet size value into the corresponding MinDist distance matrix,
-whose values can be used to compute MINDIST.
+Generates a SAX MinDist distance matrix (i.e. the "lookup table") for a given alphabet size.
 }
 \examples{
 sax_distance_matrix(5)

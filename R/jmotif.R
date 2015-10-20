@@ -2,11 +2,10 @@
 #' @importFrom Rcpp sourceCpp
 NULL
 
-#' Translates an alphabet size value into the corresponding MinDist distance matrix,
-#' whose values can be used to compute MINDIST.
+#' Generates a SAX MinDist distance matrix (i.e. the "lookup table") for a given alphabet size.
 #'
 #' @param a_size the desired alphabet size (a value between 2 and 20, inclusive)
-#' @return Returns a distance matrix (for SAX minDist) for a given alphabet value
+#' @return Returns a distance matrix (for SAX minDist) for a specified alphabet size
 #' @export
 #' @references Lonardi, S., Lin, J., Keogh, E., Patel, P.,
 #' Finding motifs in time series.
@@ -36,7 +35,7 @@ sax_distance_matrix <- function(a_size) {
   }
 }
 
-#' Compute the mindist between two strings
+#' Computes the mindist value for two strings
 #'
 #' @param str1 the first string
 #' @param str2 the second string
