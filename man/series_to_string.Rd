@@ -2,17 +2,17 @@
 % Please edit documentation in R/RcppExports.R
 \name{series_to_string}
 \alias{series_to_string}
-\title{Transforms a time series into a string}
+\title{Transforms a time series into the string.}
 \usage{
 series_to_string(ts, a_size)
 }
 \arguments{
-\item{ts}{the timeseries}
+\item{ts}{the timeseries.}
 
-\item{a_size}{the alphabet size}
+\item{a_size}{the alphabet size.}
 }
 \description{
-Transforms a time series into a string
+Transforms a time series into the string.
 }
 \examples{
 y = c(-1, -2, -1, 0, 2, 1, 1, 0)

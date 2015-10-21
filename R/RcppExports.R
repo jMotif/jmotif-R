@@ -86,7 +86,7 @@ letters_to_idx <- function(str) {
     .Call('jmotif_letters_to_idx', PACKAGE = 'jmotif', str)
 }
 
-#' Translates an alphabet size into the array of corresponding SAX cut-lines using the Normal distribution
+#' Translates an alphabet size into the array of corresponding SAX cut-lines built using the Normal distribution.
 #'
 #' @param a_size the alphabet size, a value between 2 and 20 (inclusive).
 #' @useDynLib jmotif
@@ -100,10 +100,10 @@ alphabet_to_cuts <- function(a_size) {
     .Call('jmotif_alphabet_to_cuts', PACKAGE = 'jmotif', a_size)
 }
 
-#' Transforms a time series into a char array using SAX and the normal alphabet
+#' Transforms a time series into the char array using SAX and the normal alphabet.
 #'
-#' @param ts the timeseries
-#' @param a_size the alphabet size
+#' @param ts the timeseries.
+#' @param a_size the alphabet size.
 #' @useDynLib jmotif
 #' @export
 #' @references Lonardi, S., Lin, J., Keogh, E., Patel, P.,
@@ -117,10 +117,10 @@ series_to_chars <- function(ts, a_size) {
     .Call('jmotif_series_to_chars', PACKAGE = 'jmotif', ts, a_size)
 }
 
-#' Transforms a time series into a string
+#' Transforms a time series into the string.
 #'
-#' @param ts the timeseries
-#' @param a_size the alphabet size
+#' @param ts the timeseries.
+#' @param a_size the alphabet size.
 #' @useDynLib jmotif
 #' @export
 #' @references Lonardi, S., Lin, J., Keogh, E., Patel, P.,
@@ -134,24 +134,24 @@ series_to_string <- function(ts, a_size) {
     .Call('jmotif_series_to_string', PACKAGE = 'jmotif', ts, a_size)
 }
 
-#' Extracting subseries
+#' Extracts a subseries.
 #'
-#' @param x the timeseries (0-based, left inclusive)
-#' @param start the interval start
-#' @param end the interval end
+#' @param ts the input timeseries (0-based, left inclusive).
+#' @param start the interval start.
+#' @param end the interval end.
 #' @useDynLib jmotif
 #' @export
 #' @examples
 #' y = c(-1, -2, -1, 0, 2, 1, 1, 0)
 #' subseries(y, 0, 3)
-subseries <- function(x, start, end) {
-    .Call('jmotif_subseries', PACKAGE = 'jmotif', x, start, end)
+subseries <- function(ts, start, end) {
+    .Call('jmotif_subseries', PACKAGE = 'jmotif', ts, start, end)
 }
 
-#' Compares two strings using letters natural ordering
+#' Compares two strings using natural letter ordering.
 #'
-#' @param a the string a
-#' @param b the string b
+#' @param a the string a.
+#' @param b the string b.
 #' @useDynLib jmotif
 #' @export
 #' @examples
@@ -161,14 +161,15 @@ is_equal_str <- function(a, b) {
     .Call('jmotif_is_equal_str', PACKAGE = 'jmotif', a, b)
 }
 
-#' Discretizes a time series with SAX via sliding window
+#' Discretizes a time series with SAX via sliding window.
 #'
-#' @param ts the timeseries
-#' @param w_size the sliding window size
-#' @param paa_size the PAA size
-#' @param a_size the alphabet size
-#' @param nr_strategy the NR strategy
-#' @param n_threshold the normalization threshold
+#' @param ts the input timeseries.
+#' @param w_size the sliding window size.
+#' @param paa_size the PAA size.
+#' @param a_size the alphabet size.
+#' @param nr_strategy the Numerosity Reduction strategy, acceptable values are "exact" and "mindist" --
+#' any pther value triggers no numerosity reduction.
+#' @param n_threshold the normalization threshold.
 #' @useDynLib jmotif
 #' @export
 #' @references Lonardi, S., Lin, J., Keogh, E., Patel, P.,

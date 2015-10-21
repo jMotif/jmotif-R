@@ -2,17 +2,17 @@
 % Please edit documentation in R/RcppExports.R
 \name{series_to_chars}
 \alias{series_to_chars}
-\title{Transforms a time series into a char array using SAX and the normal alphabet}
+\title{Transforms a time series into the char array using SAX and the normal alphabet.}
 \usage{
 series_to_chars(ts, a_size)
 }
 \arguments{
-\item{ts}{the timeseries}
+\item{ts}{the timeseries.}
 
-\item{a_size}{the alphabet size}
+\item{a_size}{the alphabet size.}
 }
 \description{
-Transforms a time series into a char array using SAX and the normal alphabet
+Transforms a time series into the char array using SAX and the normal alphabet.
 }
 \examples{
 y = c(-1, -2, -1, 0, 2, 1, 1, 0)

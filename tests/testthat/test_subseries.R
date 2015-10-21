@@ -9,9 +9,14 @@ dat <- unlist(read.table(textConnection(
 -0.822247322003058 1.06850578033292 -0.678811824405992 0.804225748913681 0.57363964388698
 0.437113583759113 0.437208643628268 0.989892093383503 1.76545983424176 0.119483882364649
 -0.222311941138971 -0.74669456611669 -0.0663660879732063 0 0 0 0 0")
-), as.is=T))
+), as.is = T))
 
 test_that("test subseries", {
   expect_equal(subseries(dat, 0, 10), as.vector(dat[1:10]))
   expect_equal(subseries(dat, 17, 21), as.vector(dat[18:21]))
+
+  expect_error(subseries(dat, -1, 21))
+  expect_error(subseries(dat, 1, 12221))
+  expect_error(subseries(dat, -1, 12221))
+
 })

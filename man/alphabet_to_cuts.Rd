@@ -2,7 +2,7 @@
 % Please edit documentation in R/RcppExports.R
 \name{alphabet_to_cuts}
 \alias{alphabet_to_cuts}
-\title{Translates an alphabet size into the array of corresponding SAX cut-lines using the Normal distribution}
+\title{Translates an alphabet size into the array of corresponding SAX cut-lines built using the Normal distribution.}
 \usage{
 alphabet_to_cuts(a_size)
 }
@@ -10,7 +10,7 @@ alphabet_to_cuts(a_size)
 \item{a_size}{the alphabet size, a value between 2 and 20 (inclusive).}
 }
 \description{
-Translates an alphabet size into the array of corresponding SAX cut-lines using the Normal distribution
+Translates an alphabet size into the array of corresponding SAX cut-lines built using the Normal distribution.
 }
 \examples{
 alphabet_to_cuts(5)

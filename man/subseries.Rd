@@ -2,19 +2,19 @@
 % Please edit documentation in R/RcppExports.R
 \name{subseries}
 \alias{subseries}
-\title{Extracting subseries}
+\title{Extracts a subseries.}
 \usage{
-subseries(x, start, end)
+subseries(ts, start, end)
 }
 \arguments{
-\item{x}{the timeseries (0-based, left inclusive)}
+\item{ts}{the input timeseries (0-based, left inclusive).}
 
-\item{start}{the interval start}
+\item{start}{the interval start.}
 
-\item{end}{the interval end}
+\item{end}{the interval end.}
 }
 \description{
-Extracting subseries
+Extracts a subseries.
 }
 \examples{
 y = c(-1, -2, -1, 0, 2, 1, 1, 0)

@@ -2,25 +2,26 @@
 % Please edit documentation in R/RcppExports.R
 \name{sax_via_window}
 \alias{sax_via_window}
-\title{Discretizes a time series with SAX via sliding window}
+\title{Discretizes a time series with SAX via sliding window.}
 \usage{
 sax_via_window(ts, w_size, paa_size, a_size, nr_strategy, n_threshold)
 }
 \arguments{
-\item{ts}{the timeseries}
+\item{ts}{the input timeseries.}
 
-\item{w_size}{the sliding window size}
+\item{w_size}{the sliding window size.}
 
-\item{paa_size}{the PAA size}
+\item{paa_size}{the PAA size.}
 
-\item{a_size}{the alphabet size}
+\item{a_size}{the alphabet size.}
 
-\item{nr_strategy}{the NR strategy}
+\item{nr_strategy}{the Numerosity Reduction strategy, acceptable values are "exact" and "mindist" --
+any pther value triggers no numerosity reduction.}
 
-\item{n_threshold}{the normalization threshold}
+\item{n_threshold}{the normalization threshold.}
 }
 \description{
-Discretizes a time series with SAX via sliding window
+Discretizes a time series with SAX via sliding window.
 }
 \references{
 Lonardi, S., Lin, J., Keogh, E., Patel, P.,

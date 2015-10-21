@@ -109,15 +109,15 @@ BEGIN_RCPP
 END_RCPP
 }
 // subseries
-NumericVector subseries(NumericVector x, int start, int end);
-RcppExport SEXP jmotif_subseries(SEXP xSEXP, SEXP startSEXP, SEXP endSEXP) {
+NumericVector subseries(NumericVector ts, int start, int end);
+RcppExport SEXP jmotif_subseries(SEXP tsSEXP, SEXP startSEXP, SEXP endSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
-    Rcpp::traits::input_parameter< NumericVector >::type x(xSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type ts(tsSEXP);
     Rcpp::traits::input_parameter< int >::type start(startSEXP);
     Rcpp::traits::input_parameter< int >::type end(endSEXP);
-    __result = Rcpp::wrap(subseries(x, start, end));
+    __result = Rcpp::wrap(subseries(ts, start, end));
     return __result;
 END_RCPP
 }

@@ -2,17 +2,17 @@
 % Please edit documentation in R/RcppExports.R
 \name{is_equal_str}
 \alias{is_equal_str}
-\title{Compares two strings using letters natural ordering}
+\title{Compares two strings using natural letter ordering.}
 \usage{
 is_equal_str(a, b)
 }
 \arguments{
-\item{a}{the string a}
+\item{a}{the string a.}
 
-\item{b}{the string b}
+\item{b}{the string b.}
 }
 \description{
-Compares two strings using letters natural ordering
+Compares two strings using natural letter ordering.
 }
 \examples{
 is_equal_str("aaa", "bbb")

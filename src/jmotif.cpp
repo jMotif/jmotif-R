@@ -148,7 +148,7 @@ IntegerVector letters_to_idx(CharacterVector str) {
   return res;
 }
 
-//' Translates an alphabet size into the array of corresponding SAX cut-lines using the Normal distribution
+//' Translates an alphabet size into the array of corresponding SAX cut-lines built using the Normal distribution.
 //'
 //' @param a_size the alphabet size, a value between 2 and 20 (inclusive).
 //' @useDynLib jmotif
@@ -185,10 +185,10 @@ NumericVector alphabet_to_cuts(int a_size) {
   return NumericVector::create(0.0);
 }
 
-//' Transforms a time series into a char array using SAX and the normal alphabet
+//' Transforms a time series into the char array using SAX and the normal alphabet.
 //'
-//' @param ts the timeseries
-//' @param a_size the alphabet size
+//' @param ts the timeseries.
+//' @param a_size the alphabet size.
 //' @useDynLib jmotif
 //' @export
 //' @references Lonardi, S., Lin, J., Keogh, E., Patel, P.,
@@ -211,10 +211,10 @@ CharacterVector series_to_chars(NumericVector ts, int a_size) {
   return res;
 }
 
-//' Transforms a time series into a string
+//' Transforms a time series into the string.
 //'
-//' @param ts the timeseries
-//' @param a_size the alphabet size
+//' @param ts the timeseries.
+//' @param a_size the alphabet size.
 //' @useDynLib jmotif
 //' @export
 //' @references Lonardi, S., Lin, J., Keogh, E., Patel, P.,
@@ -236,29 +236,32 @@ CharacterVector series_to_string(NumericVector ts, int a_size) {
   return wrap(res);
 }
 
-//' Extracting subseries
+//' Extracts a subseries.
 //'
-//' @param x the timeseries (0-based, left inclusive)
-//' @param start the interval start
-//' @param end the interval end
+//' @param ts the input timeseries (0-based, left inclusive).
+//' @param start the interval start.
+//' @param end the interval end.
 //' @useDynLib jmotif
 //' @export
 //' @examples
 //' y = c(-1, -2, -1, 0, 2, 1, 1, 0)
 //' subseries(y, 0, 3)
 // [[Rcpp::export]]
-NumericVector subseries(NumericVector x, int start, int end) {
+NumericVector subseries(NumericVector ts, int start, int end) {
+  if(start<0 || end>ts.length()){
+    stop("provided start and stop indexes are invalid.");
+  }
   NumericVector res(end-start);
   for (int i=start; i<end; i++) {
-    res[i-start] = x[i];
+    res[i-start] = ts[i];
   }
   return res;
 }
 
-//' Compares two strings using letters natural ordering
+//' Compares two strings using natural letter ordering.
 //'
-//' @param a the string a
-//' @param b the string b
+//' @param a the string a.
+//' @param b the string b.
 //' @useDynLib jmotif
 //' @export
 //' @examples
@@ -272,14 +275,15 @@ bool is_equal_str(CharacterVector a, CharacterVector b) {
   return (ca == cb);
 }
 
-//' Discretizes a time series with SAX via sliding window
+//' Discretizes a time series with SAX via sliding window.
 //'
-//' @param ts the timeseries
-//' @param w_size the sliding window size
-//' @param paa_size the PAA size
-//' @param a_size the alphabet size
-//' @param nr_strategy the NR strategy
-//' @param n_threshold the normalization threshold
+//' @param ts the input timeseries.
+//' @param w_size the sliding window size.
+//' @param paa_size the PAA size.
+//' @param a_size the alphabet size.
+//' @param nr_strategy the Numerosity Reduction strategy, acceptable values are "exact" and "mindist" --
+//' any pther value triggers no numerosity reduction.
+//' @param n_threshold the normalization threshold.
 //' @useDynLib jmotif
 //' @export
 //' @references Lonardi, S., Lin, J., Keogh, E., Patel, P.,
@@ -297,8 +301,7 @@ std::map<int, CharacterVector> sax_via_window(
   // Rcout << ", nr_strategy '" << nr_strategy << "'";
   // Rcout << ", n_th " << n_threshold << "\n";
 
-  typedef std::map<int, CharacterVector> idx2wordMap;
-  idx2wordMap idx2word;
+  std::map<int, CharacterVector> idx2word;
 
   CharacterVector old_str("");
 
@@ -356,8 +359,7 @@ std::map<int, CharacterVector> sax_by_chunking(
   // Rcout << ", a " << a_size;
   // Rcout << ", n_th " << n_threshold << "\n";
 
-  typedef std::map<int, CharacterVector> idx2wordMap;
-  idx2wordMap idx2word;
+  std::map<int, CharacterVector> idx2word;
 
   NumericVector vec = znorm(ts, n_threshold);
 
