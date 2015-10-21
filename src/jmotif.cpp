@@ -10,10 +10,11 @@ const char LETTERS[] = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h',
                         'q', 'r', 's', 't', 'u',  'v', 'w', 'x',
                         'y', 'z'};
 
-//' Time series z-normalization
+//' Z-normalizes a time series by subtracting the mean value and dividing by the standard deviation value.
 //'
-//' @param ts a time series to normalize
-//' @param threshold a z-normalization threshold value
+//' @param ts a time series to process.
+//' @param threshold a z-normalization threshold value, if the input time series' standard deviation is
+//' found less than this value, the procedure is not applied, so the noise would not get overamplified.
 //' @useDynLib jmotif
 //' @export
 //' @references Dina Goldin and Paris Kanellakis,
@@ -33,27 +34,27 @@ NumericVector znorm(NumericVector ts, double threshold = 0.01) {
   return (ts - mean(ts)) / ts_sd;
 }
 
-//' Computes the column means for a matrix
+//' Computes the column means for a matrix.
 //'
-//' @param a A matrix to process.
+//' @param m a matrix to process.
 //' @useDynLib jmotif
 //' @export
 //' @examples
 //' x = matrix(rnorm(100), ncol=10)
 //' col_means(x)
 // [[Rcpp::export]]
-NumericVector col_means(NumericMatrix a) {
-  NumericVector res(a.ncol());
-  for (int j = 0; j < a.ncol(); j++) {
-    res[j] = mean(a(_,j));
+NumericVector col_means(NumericMatrix m) {
+  NumericVector res(m.ncol());
+  for (int j = 0; j < m.ncol(); j++) {
+    res[j] = mean(m(_,j));
   }
   return res;
 }
 
-//' Computes a Piecewise Aggregate Approximation (PAA) for a time series
+//' Computes a Piecewise Aggregate Approximation (PAA) for a time series.
 //'
-//' @param ts a timeseries to compute the PAA for
-//' @param paa_num a desired PAA size.
+//' @param ts a timeseries to compute the PAA for.
+//' @param paa_num the desired PAA size.
 //' @useDynLib jmotif
 //' @export
 //' @references Keogh, E., Chakrabarti, K., Pazzani, M., Mehrotra, S.,
@@ -105,9 +106,9 @@ NumericVector paa(NumericVector ts, int paa_num) {
 
 }
 
-//' Get an ASCII letter for an index
+//' Get the ASCII letter by an index.
 //'
-//' @param idx The index.
+//' @param idx the index.
 //' @useDynLib jmotif
 //' @export
 //' @examples
@@ -118,9 +119,9 @@ char idx_to_letter(int idx) {
   return LETTERS[idx-1];
 }
 
-//' Get an index for an ASCII letter
+//' Get the index for an ASCII letter.
 //'
-//' @param letter The letter.
+//' @param letter the letter.
 //' @useDynLib jmotif
 //' @export
 //' @examples
@@ -131,9 +132,9 @@ int letter_to_idx(char letter) {
   return letter - 96;
 }
 
-//' Get an ASCII indexes sequence for a given string
+//' Get an ASCII indexes sequence for a given character array.
 //'
-//' @param str The char array.
+//' @param str the character array.
 //' @useDynLib jmotif
 //' @export
 //' @examples

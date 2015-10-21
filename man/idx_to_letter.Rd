@@ -2,15 +2,15 @@
 % Please edit documentation in R/RcppExports.R
 \name{idx_to_letter}
 \alias{idx_to_letter}
-\title{Get an ASCII letter for an index}
+\title{Get the ASCII letter by an index.}
 \usage{
 idx_to_letter(idx)
 }
 \arguments{
-\item{idx}{The index.}
+\item{idx}{the index.}
 }
 \description{
-Get an ASCII letter for an index
+Get the ASCII letter by an index.
 }
 \examples{
 # letter 'b'

@@ -2,15 +2,15 @@
 % Please edit documentation in R/RcppExports.R
 \name{letters_to_idx}
 \alias{letters_to_idx}
-\title{Get an ASCII indexes sequence for a given string}
+\title{Get an ASCII indexes sequence for a given character array.}
 \usage{
 letters_to_idx(str)
 }
 \arguments{
-\item{str}{The char array.}
+\item{str}{the character array.}
 }
 \description{
-Get an ASCII indexes sequence for a given string
+Get an ASCII indexes sequence for a given character array.
 }
 \examples{
 letters_to_idx(c('a','b','c','a'))

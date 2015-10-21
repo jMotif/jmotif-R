@@ -2,15 +2,15 @@
 % Please edit documentation in R/RcppExports.R
 \name{col_means}
 \alias{col_means}
-\title{Computes the column means for a matrix}
+\title{Computes the column means for a matrix.}
 \usage{
-col_means(a)
+col_means(m)
 }
 \arguments{
-\item{a}{A matrix to process.}
+\item{m}{a matrix to process.}
 }
 \description{
-Computes the column means for a matrix
+Computes the column means for a matrix.
 }
 \examples{
 x = matrix(rnorm(100), ncol=10)

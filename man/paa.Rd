@@ -2,17 +2,17 @@
 % Please edit documentation in R/RcppExports.R
 \name{paa}
 \alias{paa}
-\title{Computes a Piecewise Aggregate Approximation (PAA) for a time series}
+\title{Computes a Piecewise Aggregate Approximation (PAA) for a time series.}
 \usage{
 paa(ts, paa_num)
 }
 \arguments{
-\item{ts}{a timeseries to compute the PAA for}
+\item{ts}{a timeseries to compute the PAA for.}
 
-\item{paa_num}{a desired PAA size.}
+\item{paa_num}{the desired PAA size.}
 }
 \description{
-Computes a Piecewise Aggregate Approximation (PAA) for a time series
+Computes a Piecewise Aggregate Approximation (PAA) for a time series.
 }
 \examples{
 x = c(-1, -2, -1, 0, 2, 1, 1, 0)

@@ -18,13 +18,13 @@ BEGIN_RCPP
 END_RCPP
 }
 // col_means
-NumericVector col_means(NumericMatrix a);
-RcppExport SEXP jmotif_col_means(SEXP aSEXP) {
+NumericVector col_means(NumericMatrix m);
+RcppExport SEXP jmotif_col_means(SEXP mSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
-    Rcpp::traits::input_parameter< NumericMatrix >::type a(aSEXP);
-    __result = Rcpp::wrap(col_means(a));
+    Rcpp::traits::input_parameter< NumericMatrix >::type m(mSEXP);
+    __result = Rcpp::wrap(col_means(m));
     return __result;
 END_RCPP
 }
