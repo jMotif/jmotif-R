@@ -2,15 +2,17 @@
 % Please edit documentation in R/RcppExports.R
 \name{cosine_sim}
 \alias{cosine_sim}
-\title{Computes a cosine similarity values between a bag of words and the TF-IDF weight vectors}
+\title{Computes a cosine similarity values between a bag of words and a set of
+TF-IDF weight vectors.}
 \usage{
 cosine_sim(data)
 }
 \arguments{
-\item{data}{the list containing a word-bag and TF-IDF objects}
+\item{data}{the list containing a word-bag and the TF-IDF object.}
 }
 \description{
-Computes a cosine similarity values between a bag of words and the TF-IDF weight vectors
+Computes a cosine similarity values between a bag of words and a set of
+TF-IDF weight vectors.
 }
 \references{
 Senin Pavel and Malinchik Sergey,

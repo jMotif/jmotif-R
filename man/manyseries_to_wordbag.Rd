@@ -2,25 +2,25 @@
 % Please edit documentation in R/RcppExports.R
 \name{manyseries_to_wordbag}
 \alias{manyseries_to_wordbag}
-\title{Converts a set of time-series into a single wordbag}
+\title{Converts a set of time-series into a single bag of words.}
 \usage{
 manyseries_to_wordbag(data, w_size, paa_size, a_size, nr_strategy, n_threshold)
 }
 \arguments{
-\item{data}{the timeseries data, row-wise}
+\item{data}{the timeseries data, row-wise.}
 
-\item{w_size}{the sliding window size}
+\item{w_size}{the sliding window size.}
 
-\item{paa_size}{the PAA size}
+\item{paa_size}{the PAA size.}
 
-\item{a_size}{the alphabet size}
+\item{a_size}{the alphabet size.}
 
-\item{nr_strategy}{the NR strategy}
+\item{nr_strategy}{the NR strategy.}
 
-\item{n_threshold}{the normalization threshold}
+\item{n_threshold}{the normalization threshold.}
 }
 \description{
-Converts a set of time-series into a single wordbag
+Converts a set of time-series into a single bag of words.
 }
 \references{
 Senin Pavel and Malinchik Sergey,

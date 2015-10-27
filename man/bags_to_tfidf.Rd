@@ -2,15 +2,15 @@
 % Please edit documentation in R/RcppExports.R
 \name{bags_to_tfidf}
 \alias{bags_to_tfidf}
-\title{Computes a TF-IDF weights matrix for a list of word bags}
+\title{Computes a TF-IDF weight vectors for a set of word bags.}
 \usage{
 bags_to_tfidf(data)
 }
 \arguments{
-\item{data}{the word-bags list}
+\item{data}{the list of word-bags.}
 }
 \description{
-Computes a TF-IDF weights matrix for a list of word bags
+Computes a TF-IDF weight vectors for a set of word bags.
 }
 \examples{
 bag1 = data.frame(

@@ -194,14 +194,14 @@ sax_by_chunking <- function(ts, paa_size, a_size, n_threshold) {
     .Call('jmotif_sax_by_chunking', PACKAGE = 'jmotif', ts, paa_size, a_size, n_threshold)
 }
 
-#' Converts a time series into a wordbag
+#' Converts a single time series into a bag of words.
 #'
-#' @param ts the timeseries
-#' @param w_size the sliding window size
-#' @param paa_size the PAA size
-#' @param a_size the alphabet size
-#' @param nr_strategy the NR strategy
-#' @param n_threshold the normalization threshold
+#' @param ts the timeseries.
+#' @param w_size the sliding window size.
+#' @param paa_size the PAA size.
+#' @param a_size the alphabet size.
+#' @param nr_strategy the NR strategy.
+#' @param n_threshold the normalization threshold.
 #' @useDynLib jmotif
 #' @export
 #' @references Senin Pavel and Malinchik Sergey,
@@ -213,14 +213,14 @@ series_to_wordbag <- function(ts, w_size, paa_size, a_size, nr_strategy, n_thres
     .Call('jmotif_series_to_wordbag', PACKAGE = 'jmotif', ts, w_size, paa_size, a_size, nr_strategy, n_threshold)
 }
 
-#' Converts a set of time-series into a single wordbag
+#' Converts a set of time-series into a single bag of words.
 #'
-#' @param data the timeseries data, row-wise
-#' @param w_size the sliding window size
-#' @param paa_size the PAA size
-#' @param a_size the alphabet size
-#' @param nr_strategy the NR strategy
-#' @param n_threshold the normalization threshold
+#' @param data the timeseries data, row-wise.
+#' @param w_size the sliding window size.
+#' @param paa_size the PAA size.
+#' @param a_size the alphabet size.
+#' @param nr_strategy the NR strategy.
+#' @param n_threshold the normalization threshold.
 #' @useDynLib jmotif
 #' @export
 #' @references Senin Pavel and Malinchik Sergey,
@@ -232,9 +232,9 @@ manyseries_to_wordbag <- function(data, w_size, paa_size, a_size, nr_strategy, n
     .Call('jmotif_manyseries_to_wordbag', PACKAGE = 'jmotif', data, w_size, paa_size, a_size, nr_strategy, n_threshold)
 }
 
-#' Computes a TF-IDF weights matrix for a list of word bags
+#' Computes a TF-IDF weight vectors for a set of word bags.
 #'
-#' @param data the word-bags list
+#' @param data the list of word-bags.
 #' @useDynLib jmotif
 #' @export
 #' @references Senin Pavel and Malinchik Sergey,
@@ -259,9 +259,10 @@ bags_to_tfidf <- function(data) {
     .Call('jmotif_bags_to_tfidf', PACKAGE = 'jmotif', data)
 }
 
-#' Computes a cosine similarity values between a bag of words and the TF-IDF weight vectors
+#' Computes a cosine similarity values between a bag of words and a set of
+#' TF-IDF weight vectors.
 #'
-#' @param data the list containing a word-bag and TF-IDF objects
+#' @param data the list containing a word-bag and the TF-IDF object.
 #' @useDynLib jmotif
 #' @export
 #' @references Senin Pavel and Malinchik Sergey,

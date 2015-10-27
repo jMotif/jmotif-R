@@ -2,25 +2,25 @@
 % Please edit documentation in R/RcppExports.R
 \name{series_to_wordbag}
 \alias{series_to_wordbag}
-\title{Converts a time series into a wordbag}
+\title{Converts a single time series into a bag of words.}
 \usage{
 series_to_wordbag(ts, w_size, paa_size, a_size, nr_strategy, n_threshold)
 }
 \arguments{
-\item{ts}{the timeseries}
+\item{ts}{the timeseries.}
 
-\item{w_size}{the sliding window size}
+\item{w_size}{the sliding window size.}
 
-\item{paa_size}{the PAA size}
+\item{paa_size}{the PAA size.}
 
-\item{a_size}{the alphabet size}
+\item{a_size}{the alphabet size.}
 
-\item{nr_strategy}{the NR strategy}
+\item{nr_strategy}{the NR strategy.}
 
-\item{n_threshold}{the normalization threshold}
+\item{n_threshold}{the normalization threshold.}
 }
 \description{
-Converts a time series into a wordbag
+Converts a single time series into a bag of words.
 }
 \references{
 Senin Pavel and Malinchik Sergey,

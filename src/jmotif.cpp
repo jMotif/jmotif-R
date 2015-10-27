@@ -375,14 +375,14 @@ std::map<int, CharacterVector> sax_by_chunking(
   return idx2word;
 }
 
-//' Converts a time series into a wordbag
+//' Converts a single time series into a bag of words.
 //'
-//' @param ts the timeseries
-//' @param w_size the sliding window size
-//' @param paa_size the PAA size
-//' @param a_size the alphabet size
-//' @param nr_strategy the NR strategy
-//' @param n_threshold the normalization threshold
+//' @param ts the timeseries.
+//' @param w_size the sliding window size.
+//' @param paa_size the PAA size.
+//' @param a_size the alphabet size.
+//' @param nr_strategy the NR strategy.
+//' @param n_threshold the normalization threshold.
 //' @useDynLib jmotif
 //' @export
 //' @references Senin Pavel and Malinchik Sergey,
@@ -451,14 +451,14 @@ Rcpp::DataFrame series_to_wordbag(
 
 }
 
-//' Converts a set of time-series into a single wordbag
+//' Converts a set of time-series into a single bag of words.
 //'
-//' @param data the timeseries data, row-wise
-//' @param w_size the sliding window size
-//' @param paa_size the PAA size
-//' @param a_size the alphabet size
-//' @param nr_strategy the NR strategy
-//' @param n_threshold the normalization threshold
+//' @param data the timeseries data, row-wise.
+//' @param w_size the sliding window size.
+//' @param paa_size the PAA size.
+//' @param a_size the alphabet size.
+//' @param nr_strategy the NR strategy.
+//' @param n_threshold the normalization threshold.
 //' @useDynLib jmotif
 //' @export
 //' @references Senin Pavel and Malinchik Sergey,
@@ -522,9 +522,9 @@ Rcpp::DataFrame manyseries_to_wordbag(
 
 }
 
-//' Computes a TF-IDF weights matrix for a list of word bags
+//' Computes a TF-IDF weight vectors for a set of word bags.
 //'
-//' @param data the word-bags list
+//' @param data the list of word-bags.
 //' @useDynLib jmotif
 //' @export
 //' @references Senin Pavel and Malinchik Sergey,
@@ -693,9 +693,10 @@ Rcpp::DataFrame bags_to_tfidf(Rcpp::List data) {
   return df;
 }
 
-//' Computes a cosine similarity values between a bag of words and the TF-IDF weight vectors
+//' Computes a cosine similarity values between a bag of words and a set of
+//' TF-IDF weight vectors.
 //'
-//' @param data the list containing a word-bag and TF-IDF objects
+//' @param data the list containing a word-bag and the TF-IDF object.
 //' @useDynLib jmotif
 //' @export
 //' @references Senin Pavel and Malinchik Sergey,
