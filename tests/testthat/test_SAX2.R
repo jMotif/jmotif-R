@@ -8,13 +8,13 @@ gsub("\n", " ", "0 0 0 0 0 -0.270340178359072 -0.367828308500142 0.6669805811248
 -0.822247322003058 1.06850578033292 -0.678811824405992 0.804225748913681 0.57363964388698
 0.437113583759113 0.437208643628268 0.989892093383503 1.76545983424176 0.119483882364649
 -0.222311941138971 -0.74669456611669 -0.0663660879732063 0 0 0 0 0")
-), as.is=T)
+), as.is = T)
 
 test_that("SAX test #1", {
 
   sax1 <- sax_via_window(t(dat), 6, 3, 3, "none", 0.01)
 
-  expect_equal(length(sax1), length(t(dat)) - 6)
+  expect_equal(length(sax1), length(t(dat)) - 6 + 1)
 
   expect_equal(sax1$'0', "bba")
   expect_equal(sax1[[0 + 1]], "bba")
@@ -27,7 +27,7 @@ test_that("SAX test #2", {
 
   sax2 <- sax_via_window(t(dat), 6, 3, 3, "exact", 0.01)
 
-  expect_equal(length(sax2), 45)
+  expect_equal(length(sax2), 46)
 
   expect_equal(sax2$'0', "bba")
   expect_equal(sax2[[0 + 1]], "bba")
@@ -38,5 +38,13 @@ test_that("SAX test #2", {
   expect_equal(sax2[['10']], "aac")
   expect_null(sax2[['11']])
   expect_equal(sax2[['12']], "abc")
+
+})
+
+test_that("SAX test #3", {
+
+  sax3 <- sax_via_window(t(dat), 60, 3, 3, "exact", 0.01)
+
+  expect_equal(length(sax3), 1)
 
 })

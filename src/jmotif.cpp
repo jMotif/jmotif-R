@@ -305,7 +305,7 @@ std::map<int, CharacterVector> sax_via_window(
 
   CharacterVector old_str("");
 
-  for (int i = 0; i < ts.length() - w_size; i++) {
+  for (int i = 0; i <= ts.length() - w_size; i++) {
 
     NumericVector subSection = subseries(ts, i, i + w_size);
 
