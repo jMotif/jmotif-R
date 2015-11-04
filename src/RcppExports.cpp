@@ -133,6 +133,18 @@ BEGIN_RCPP
     return __result;
 END_RCPP
 }
+// is_equal_mindist
+bool is_equal_mindist(CharacterVector a, CharacterVector b);
+RcppExport SEXP jmotif_is_equal_mindist(SEXP aSEXP, SEXP bSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< CharacterVector >::type a(aSEXP);
+    Rcpp::traits::input_parameter< CharacterVector >::type b(bSEXP);
+    __result = Rcpp::wrap(is_equal_mindist(a, b));
+    return __result;
+END_RCPP
+}
 // sax_via_window
 std::map<int, CharacterVector> sax_via_window(NumericVector ts, int w_size, int paa_size, int a_size, CharacterVector nr_strategy, double n_threshold);
 RcppExport SEXP jmotif_sax_via_window(SEXP tsSEXP, SEXP w_sizeSEXP, SEXP paa_sizeSEXP, SEXP a_sizeSEXP, SEXP nr_strategySEXP, SEXP n_thresholdSEXP) {

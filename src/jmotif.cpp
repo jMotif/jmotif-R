@@ -275,6 +275,32 @@ bool is_equal_str(CharacterVector a, CharacterVector b) {
   return (ca == cb);
 }
 
+//' Compares two strings using mindist.
+//'
+//' @param a the string a.
+//' @param b the string b.
+//' @useDynLib jmotif
+//' @export
+//' @examples
+//' is_equal_str("aaa", "bbb") # true
+//' is_equal_str("aaa", "ccc") # false
+// [[Rcpp::export]]
+bool is_equal_mindist(CharacterVector a, CharacterVector b) {
+  std::string ca = Rcpp::as<std::string>(a);
+  std::string cb = Rcpp::as<std::string>(b);
+  if(ca.length() != cb.length()){
+    return false;
+  }else{
+    for(int i=0; i<ca.length(); i++){
+      // Rcout << ca[i] << " " << cb[i] << " " << " " << abs(ca[i] - cb[i]) << "\n";
+      if( abs(ca[i] - cb[i]) > 1 ){
+        return false;
+      }
+    }
+  }
+  return true;
+}
+
 //' Discretizes a time series with SAX via sliding window.
 //'
 //' @param ts the input timeseries.

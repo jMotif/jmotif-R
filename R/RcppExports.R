@@ -161,6 +161,19 @@ is_equal_str <- function(a, b) {
     .Call('jmotif_is_equal_str', PACKAGE = 'jmotif', a, b)
 }
 
+#' Compares two strings using mindist.
+#'
+#' @param a the string a.
+#' @param b the string b.
+#' @useDynLib jmotif
+#' @export
+#' @examples
+#' is_equal_str("aaa", "bbb") # true
+#' is_equal_str("aaa", "ccc") # false
+is_equal_mindist <- function(a, b) {
+    .Call('jmotif_is_equal_mindist', PACKAGE = 'jmotif', a, b)
+}
+
 #' Discretizes a time series with SAX via sliding window.
 #'
 #' @param ts the input timeseries.
