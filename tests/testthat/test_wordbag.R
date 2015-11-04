@@ -32,3 +32,27 @@ test_that("wordbag #1", {
                wb2[wb2$words == "bbb", ]$counts)
 
 })
+
+
+test_that("test wordbag with mindist strategy", {
+
+  sax1 <- sax_via_window(t(dat), 6, 3, 3, "mindist", 0.01)
+  words <- table(matrix(unlist(sax1), ncol = 1, byrow = T)[,1])
+
+  wb1 <- series_to_wordbag(t(dat), 6, 3, 3, "mindist", 0.01)
+
+  expect_equal(as.numeric(words[names(words) == "bca"]),
+               wb1[wb1$words == "bca",]$counts)
+
+  expect_equal(as.numeric(words[names(words) == "abc"]),
+               wb1[wb1$words == "abc", ]$counts)
+
+  expect_equal(as.numeric(words[names(words) == "bbb"]),
+               wb1[wb1$words == "bbb", ]$counts)
+
+  wb2 <- manyseries_to_wordbag(t(t(rbind(dat,dat))), 6, 3, 3, "mindist", 0.01)
+
+  expect_equal(wb1[wb1$words == "bbb", ]$counts * 2,
+               wb2[wb2$words == "bbb", ]$counts)
+
+})

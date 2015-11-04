@@ -341,8 +341,6 @@ std::map<int, CharacterVector> sax_via_window(
 
     CharacterVector curr_str = series_to_string(subSection, a_size);
 
-    // Rcout << curr_str << "\n";
-
     if (!(0 == old_str.length())) {
 
       if ( is_equal_str("exact", nr_strategy)
