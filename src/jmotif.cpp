@@ -180,9 +180,8 @@ NumericVector alphabet_to_cuts(int a_size) {
     case 18: {return NumericVector::create(R_NegInf, -1.59, -1.22, -0.97, -0.76, -0.59, -0.43, -0.28, -0.14,  0.00, 0.14, 0.28, 0.43, 0.59, 0.76, 0.97, 1.22, 1.59);}
     case 19: {return NumericVector::create(R_NegInf, -1.62, -1.25, -1.00, -0.80, -0.63, -0.48, -0.34, -0.20, -0.07, 0.07, 0.20, 0.34, 0.48, 0.63, 0.80, 1.00, 1.25, 1.62);}
     case 20: {return NumericVector::create(R_NegInf, -1.64, -1.28, -1.04, -0.84, -0.67, -0.52, -0.39, -0.25, -0.13, 0.00, 0.13, 0.25, 0.39, 0.52, 0.67, 0.84, 1.04, 1.28, 1.64);}
-    default: {  stop("'a_size' is invalid"); }
+    default: { stop("'a_size' is invalid"); return NumericVector::create(0.0); }
   }
-  return NumericVector::create(0.0);
 }
 
 //' Transforms a time series into the char array using SAX and the normal alphabet.
