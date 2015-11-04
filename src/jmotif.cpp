@@ -350,7 +350,7 @@ std::map<int, CharacterVector> sax_via_window(
         continue;
       }
       else if (is_equal_str("mindist", nr_strategy)
-                 && is_equal_str(old_str, curr_str) ) {
+                 && is_equal_mindist(old_str, curr_str) ) {
         continue;
       }
 
@@ -444,7 +444,7 @@ Rcpp::DataFrame series_to_wordbag(
         continue;
       }
       else if (is_equal_str("mindist", nr_strategy)
-                 && is_equal_str(old_str, curr_str) ) {
+                 && is_equal_mindist(old_str, curr_str) ) {
         continue;
       }
     }
@@ -518,7 +518,7 @@ Rcpp::DataFrame manyseries_to_wordbag(
           continue;
         }
         else if (is_equal_str("mindist", nr_strategy)
-            && is_equal_str(old_str, curr_str) ) {
+            && is_equal_mindist(old_str, curr_str) ) {
           continue;
         }
       }
