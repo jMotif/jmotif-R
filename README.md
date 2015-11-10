@@ -27,8 +27,8 @@ Data Mining (ICDM), 2013 IEEE 13th International Conference on, pp.1175,1180, 7-
     library(devtools)
     install_github('jMotif/jmotif-R')
 
-#### 1.0 z-Normalization (`znorm(ts, threshold)`)
-Z-normalization is a typical time series data preprocessing step proposed by Goldin & Kannelakis whose goal is to enable the downstream analyses to focus on the time series structural similarities/differences instead of their amplitude.
+#### 1.0 z-Normalization
+Z-normalization (`znorm(ts, threshold)`) is a typical time series preprocessing step proposed by Goldin & Kannelakis whose goal is to allow the downstream analyses to focus on the time series structural similarities/differences instead of the signal amplitude.
 
     x = seq(0, pi*4, 0.02)
     y = sin(x) * 5 + rnorm(length(x))
@@ -36,15 +36,15 @@ Z-normalization is a typical time series data preprocessing step proposed by Gol
     plot(x, y, type="l", col="blue", 
       main="A scaled sine wave with a random noise and its z-normalization")
 
-    lines(x, *znorm(y, 0.01)*, type="l", col="red")
+    lines(x, znorm(y, 0.01), type="l", col="red")
     abline(h=c(1,-1), lty=2, col="gray50")
     legend(0, -4, c("scaled sine wave","z-normalized wave"),
       lty=c(1,1), lwd=c(1,1), col=c("blue","red"), cex=0.8)
       
 ![z-normalization of a scaled sine wave](https://raw.githubusercontent.com/jMotif/jmotif-R/master/inst/fig_znorm.png)
 
-#### 2.0 Piecewise Aggregate Approximation (i.e., PAA) (`paa(ts, paa_num)`)
-PAA is designed to reduces the time series dimensionality by averaging values of equal-sized segments of the original time series. In the following example the time series of dimensionality 8 points is reduced to 3 points.
+#### 2.0 Piecewise Aggregate Approximation (i.e., PAA)
+PAA (`paa(ts, paa_num)`) is designed to reduces the time series dimensionality by averaging values of equal-sized segments of the original time series. In the following example the time series of dimensionality 8 points is reduced to 3 points.
 
     y = c(-1, -2, -1, 0, 2, 1, 1, 0)
     plot(y, type="l", col="blue",
@@ -67,8 +67,8 @@ PAA is designed to reduces the time series dimensionality by averaging values of
       
 ![PAA transform of an 8-points time series into 3 points](https://raw.githubusercontent.com/jMotif/jmotif-R/master/inst/fig_paa83.png)
 
-#### 3.0 SAX transform (`ts2string(ts, a_size)`)
-SAX transform facilitates the symbolic discretization of time series data enabling the application of numerous algorithms for discrete data analysis to continuous time series data. In a nutshell, SAX transforms each of the input time series points into a letter. Typically, SAX applied to time series of reduced with PAA dimensionality in order to accelerate the time series search by their indexing in the symbolic space. Before processing with PAA and SAX, time series are usually z-Normalized.
+#### 3.0 SAX transform
+SAX transform (`series_to_string(ts, alphabet_size)`) facilitates the symbolic discretization of time series data enabling the application of numerous algorithms for discrete data analysis to continuous time series data. In a nutshell, SAX transforms each of the input time series points into a letter. Typically, SAX applied to time series of reduced with PAA dimensionality in order to accelerate the time series search by their indexing in the symbolic space. Before processing with PAA and SAX, time series are usually z-Normalized.
 
 The figure below illustrates the PAA+SAX procedure: 8 points time series is converted into 3-points PAA representation at the first step, PAA values are converted into letters by using 3 letters alphabet at the second step.
 
@@ -88,8 +88,8 @@ The figure below illustrates the PAA+SAX procedure: 8 points time series is conv
       
 ![an application of SAX transform (3 letters word size and 3 letters alphabet size) to an 8 points time series ](https://raw.githubusercontent.com/jMotif/jmotif-R/master/inst/fig_sax83.png)
 
-#### 4.0 Time series SAX transform via sliding window (`sax_via_window(ts, win_size, paa_size, alp_size, nr_strategy, n_threshold)`)
-Another common way to use SAX is to apply the procedure to sliding window-extracted subseries. This technique is used in SAX-VSM, where it unables the conversion of time series into the word bags.
+#### 4.0 Time series SAX transform via sliding window 
+Another common way to use SAX is to apply the procedure to sliding window-extracted subseries (`sax_via_window(ts, win_size, paa_size, alp_size, nr_strategy, n_threshold)`). This technique is used in SAX-VSM, where it unables the conversion of a time series into the word bags. Note, the use of a numerosity reduction strategy.
 
 #### 5.0 SAX-VSM classifier
 While the parameters optimization sampler discussed in our paper is yet to be coded, the current code provides a reference implementation of SAX-VSM classification and a characteristic patterns dicovery framework.
