@@ -811,11 +811,3 @@ Rcpp::DataFrame cosine_sim(Rcpp::List data) {
     );
 
 }
-
-// [[Rcpp::export]]
-NumericVector transformEx2(NumericVector x, NumericVector y) {
-  NumericVector z(x.size());
-  std::transform(x.begin(), x.end(), y.begin(), z.begin(),
-                 [](double x, double y) { return sqrt(x*x + y*y); } );
-  return z;
-}
