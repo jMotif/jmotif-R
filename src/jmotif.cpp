@@ -362,12 +362,12 @@ std::map<int, CharacterVector> sax_via_window(
   return idx2word;
 }
 
-//' Discretizes a time series with SAX using chunking
+//' Discretize a time series with SAX using chunking (no sliding window).
 //'
-//' @param ts the timeseries
-//' @param paa_size the PAA size
-//' @param a_size the alphabet size
-//' @param n_threshold the normalization threshold
+//' @param ts the input time series.
+//' @param paa_size the PAA size.
+//' @param a_size the alphabet size.
+//' @param n_threshold the normalization threshold.
 //' @useDynLib jmotif
 //' @export
 //' @references Lonardi, S., Lin, J., Keogh, E., Patel, P.,
@@ -547,7 +547,7 @@ Rcpp::DataFrame manyseries_to_wordbag(
 
 //' Computes a TF-IDF weight vectors for a set of word bags.
 //'
-//' @param data the list of word-bags.
+//' @param data the list containing the input word bags.
 //' @useDynLib jmotif
 //' @export
 //' @references Senin Pavel and Malinchik Sergey,
