@@ -16,7 +16,7 @@ sax_via_window(ts, w_size, paa_size, a_size, nr_strategy, n_threshold)
 \item{a_size}{the alphabet size.}
 
 \item{nr_strategy}{the Numerosity Reduction strategy, acceptable values are "exact" and "mindist" --
-any pther value triggers no numerosity reduction.}
+any other value triggers no numerosity reduction.}
 
 \item{n_threshold}{the normalization threshold.}
 }

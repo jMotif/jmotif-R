@@ -1,4 +1,5 @@
 #include <Rcpp.h>
+#include <ctime>
 //#include <numeric>
 //#include <math>
 using namespace Rcpp;
@@ -307,7 +308,7 @@ bool is_equal_mindist(CharacterVector a, CharacterVector b) {
 //' @param paa_size the PAA size.
 //' @param a_size the alphabet size.
 //' @param nr_strategy the Numerosity Reduction strategy, acceptable values are "exact" and "mindist" --
-//' any pther value triggers no numerosity reduction.
+//' any other value triggers no numerosity reduction.
 //' @param n_threshold the normalization threshold.
 //' @useDynLib jmotif
 //' @export
@@ -810,4 +811,66 @@ Rcpp::DataFrame cosine_sim(Rcpp::List data) {
     Named("stringsAsFactors") = false
     );
 
+}
+
+class VisitRegistry {
+public:
+  bool* registry;
+  int unvisited_count;
+
+  VisitRegistry( int capacity ) {
+    registry = new bool[capacity];
+    for( int i = 0; i < capacity; i++ ) {
+      registry[i] = false;
+    }
+    unvisited_count = capacity;
+    std::srand(std::time(0)); // use current time as seed for random generator
+  }
+
+  ~VisitRegistry() {
+    delete[] registry;
+  }
+
+  int getNextUnvisited(){
+    if(0 == unvisited_count){
+      return -1;
+    } else {
+      int random_index = -1;
+      do{
+        random_index = std::rand();
+      } while ( !(registry[random_index]) );
+      return random_index;
+    }
+  }
+
+  void markVisited(int start, int end){
+    for(int i=start; i<end; i++){
+      if(registry[i]){
+        continue;
+      }else{
+        --unvisited_count;
+        registry[i] = true;
+      }
+    }
+  }
+};
+
+//' Finds a discord using brute force algorithm.
+//'
+//' @param ts the input timeseries.
+//' @param w_size the sliding window size.
+//' @param discords_num the number of discords to report.
+//' @useDynLib jmotif
+//' @export
+// [[Rcpp::export]]
+std::map<int, double> get_discords_brute_force(
+    NumericVector ts, int w_size, int discords_num) {
+
+  std::map<int, double> res;
+
+  VisitRegistry registry(ts.length());
+
+
+
+  return res;
 }

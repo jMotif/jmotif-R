@@ -181,7 +181,7 @@ is_equal_mindist <- function(a, b) {
 #' @param paa_size the PAA size.
 #' @param a_size the alphabet size.
 #' @param nr_strategy the Numerosity Reduction strategy, acceptable values are "exact" and "mindist" --
-#' any pther value triggers no numerosity reduction.
+#' any other value triggers no numerosity reduction.
 #' @param n_threshold the normalization threshold.
 #' @useDynLib jmotif
 #' @export
@@ -192,12 +192,12 @@ sax_via_window <- function(ts, w_size, paa_size, a_size, nr_strategy, n_threshol
     .Call('jmotif_sax_via_window', PACKAGE = 'jmotif', ts, w_size, paa_size, a_size, nr_strategy, n_threshold)
 }
 
-#' Discretizes a time series with SAX using chunking
+#' Discretize a time series with SAX using chunking (no sliding window).
 #'
-#' @param ts the timeseries
-#' @param paa_size the PAA size
-#' @param a_size the alphabet size
-#' @param n_threshold the normalization threshold
+#' @param ts the input time series.
+#' @param paa_size the PAA size.
+#' @param a_size the alphabet size.
+#' @param n_threshold the normalization threshold.
 #' @useDynLib jmotif
 #' @export
 #' @references Lonardi, S., Lin, J., Keogh, E., Patel, P.,
@@ -247,7 +247,7 @@ manyseries_to_wordbag <- function(data, w_size, paa_size, a_size, nr_strategy, n
 
 #' Computes a TF-IDF weight vectors for a set of word bags.
 #'
-#' @param data the list of word-bags.
+#' @param data the list containing the input word bags.
 #' @useDynLib jmotif
 #' @export
 #' @references Senin Pavel and Malinchik Sergey,
@@ -285,5 +285,16 @@ bags_to_tfidf <- function(data) {
 #' A vector space model for automatic indexing. Commun. ACM 18, 11, 613-620, 1975.
 cosine_sim <- function(data) {
     .Call('jmotif_cosine_sim', PACKAGE = 'jmotif', data)
+}
+
+#' Finds a discord using brute force algorithm.
+#'
+#' @param ts the input timeseries.
+#' @param w_size the sliding window size.
+#' @param discords_num the number of discords to report.
+#' @useDynLib jmotif
+#' @export
+get_discords_brute_force <- function(ts, w_size, discords_num) {
+    .Call('jmotif_get_discords_brute_force', PACKAGE = 'jmotif', ts, w_size, discords_num)
 }
 

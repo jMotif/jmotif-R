@@ -7,7 +7,7 @@
 bags_to_tfidf(data)
 }
 \arguments{
-\item{data}{the list of word-bags.}
+\item{data}{the list containing the input word bags.}
 }
 \description{
 Computes a TF-IDF weight vectors for a set of word bags.

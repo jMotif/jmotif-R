@@ -2,21 +2,21 @@
 % Please edit documentation in R/RcppExports.R
 \name{sax_by_chunking}
 \alias{sax_by_chunking}
-\title{Discretizes a time series with SAX using chunking}
+\title{Discretize a time series with SAX using chunking (no sliding window).}
 \usage{
 sax_by_chunking(ts, paa_size, a_size, n_threshold)
 }
 \arguments{
-\item{ts}{the timeseries}
+\item{ts}{the input time series.}
 
-\item{paa_size}{the PAA size}
+\item{paa_size}{the PAA size.}
 
-\item{a_size}{the alphabet size}
+\item{a_size}{the alphabet size.}
 
-\item{n_threshold}{the normalization threshold}
+\item{n_threshold}{the normalization threshold.}
 }
 \description{
-Discretizes a time series with SAX using chunking
+Discretize a time series with SAX using chunking (no sliding window).
 }
 \references{
 Lonardi, S., Lin, J., Keogh, E., Patel, P.,
