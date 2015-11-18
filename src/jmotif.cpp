@@ -1,7 +1,8 @@
 #include <Rcpp.h>
+#include <limits>
+#include <cmath>
+#include <cstdlib>
 #include <ctime>
-//#include <numeric>
-//#include <math>
 using namespace Rcpp;
 // Enable C++11 via this plugin (Rcpp 0.10.3 or later)
 // [[Rcpp::plugins("cpp11")]]
@@ -813,6 +814,32 @@ Rcpp::DataFrame cosine_sim(Rcpp::List data) {
 
 }
 
+//' Finds a euclidean distance between points, if distance is above the threshold, abandons the computation
+//' and returns NAN.
+//'
+//' @param seq1 the array 1.
+//' @param seq2 the array 2.
+//' @param upper_limit the max value after reaching which the distance computation
+//' stops and the NAN is returned.
+//' @useDynLib jmotif
+//' @export
+// [[Rcpp::export]]
+double early_abandoned_dist(NumericVector seq1, NumericVector seq2, double upper_limit) {
+  if(seq1.length() == seq2.length()){
+    double limit = upper_limit * upper_limit;
+    double res = 0.0;
+    for(int i=0; i<seq1.length(); i++){
+      res = res + (seq1[i]-seq2[i])*(seq1[i]-seq2[i]);
+      if(res > limit){
+        return std::numeric_limits<double>::quiet_NaN();
+      }
+    }
+    return sqrt(res);
+  }
+  stop("arrays length are not equal");
+  return std::numeric_limits<double>::quiet_NaN();
+}
+
 class VisitRegistry {
 public:
   bool* registry;
@@ -853,7 +880,84 @@ public:
       }
     }
   }
+
+  void markVisited(int idx){
+      if(registry[idx]){
+        return;
+      }else{
+        --unvisited_count;
+        registry[idx] = true;
+      }
+  }
+
+  bool isVisited(int idx){
+    return(registry[idx]);
+  }
 };
+
+struct discord_record {
+  int index;
+  double nn_distance;
+};
+
+NumericVector subseries(NumericVector* ts, int start, int end) {
+  if(start<0 || end>ts->length()){
+    stop("provided start and stop indexes are invalid.");
+  }
+  NumericVector res(end-start);
+  for (int i=start; i<end; i++) {
+    res[i-start] = ts->at(i);
+  }
+  return res;
+}
+
+discord_record find_best_discord_brute_force(NumericVector* series, int w_size, VisitRegistry* globalRegistry) {
+
+  double best_so_far_distance = -1.0;
+  int best_so_far_index = -1;
+
+  VisitRegistry outerRegistry(series->size() - w_size);
+
+  int outer_idx = outerRegistry.getNextUnvisited();
+  while(!(-1==outer_idx)){
+
+    outerRegistry.markVisited(outer_idx);
+    if(globalRegistry->isVisited(outer_idx)){
+      continue;
+    }
+
+    NumericVector candidate_seq = subseries(series, outer_idx, outer_idx + w_size);
+    double nnDistance = std::numeric_limits<double>::max();
+    VisitRegistry innerRegistry(series->size() - w_size);
+
+    int inner_idx = innerRegistry.getNextUnvisited();
+    while(!(-1==outer_idx)){
+      innerRegistry.markVisited(inner_idx);
+      if(std::abs(inner_idx - outer_idx) > w_size) {
+
+        NumericVector curr_seq = subseries(series, inner_idx, inner_idx + w_size);
+        double dist = early_abandoned_dist(candidate_seq, curr_seq, nnDistance);
+
+        if ( (!R_IsNaN(dist)) && dist < nnDistance) {
+          nnDistance = dist;
+        }
+
+      }
+    }
+
+    if (!(std::numeric_limits<double>::max() == nnDistance)
+          && nnDistance > best_so_far_distance) {
+      best_so_far_distance = nnDistance;
+      best_so_far_index = outer_idx;
+    }
+
+  }
+
+  struct discord_record res;
+  res.index = best_so_far_index;
+  res.nn_distance = best_so_far_distance;
+  return res;
+}
 
 //' Finds a discord using brute force algorithm.
 //'
@@ -869,7 +973,29 @@ std::map<int, double> get_discords_brute_force(
   std::map<int, double> res;
 
   VisitRegistry registry(ts.length());
+  registry.markVisited(ts.length() - w_size, ts.length());
 
+  int discord_counter = 0;
+  while(discord_counter < discords_num){
+    discord_record rec = find_best_discord_brute_force(&ts, w_size, &registry);
+
+    if(rec.nn_distance == 0 || rec.index == -1){
+      break;
+    }
+
+    res.insert(std::make_pair(rec.index, rec.nn_distance));
+
+    int start = rec.index - w_size;
+    if(start<0){
+      start = 0;
+    }
+    int end = rec.index + w_size;
+    if(start>=ts.length()){
+      end = ts.length();
+    }
+    registry.markVisited(start, end);
+
+  }
 
 
   return res;

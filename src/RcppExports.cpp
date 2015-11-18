@@ -229,6 +229,19 @@ BEGIN_RCPP
     return __result;
 END_RCPP
 }
+// early_abandoned_dist
+double early_abandoned_dist(NumericVector seq1, NumericVector seq2, double upper_limit);
+RcppExport SEXP jmotif_early_abandoned_dist(SEXP seq1SEXP, SEXP seq2SEXP, SEXP upper_limitSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< NumericVector >::type seq1(seq1SEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type seq2(seq2SEXP);
+    Rcpp::traits::input_parameter< double >::type upper_limit(upper_limitSEXP);
+    __result = Rcpp::wrap(early_abandoned_dist(seq1, seq2, upper_limit));
+    return __result;
+END_RCPP
+}
 // get_discords_brute_force
 std::map<int, double> get_discords_brute_force(NumericVector ts, int w_size, int discords_num);
 RcppExport SEXP jmotif_get_discords_brute_force(SEXP tsSEXP, SEXP w_sizeSEXP, SEXP discords_numSEXP) {

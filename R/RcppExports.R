@@ -287,6 +287,19 @@ cosine_sim <- function(data) {
     .Call('jmotif_cosine_sim', PACKAGE = 'jmotif', data)
 }
 
+#' Finds a euclidean distance between points, if distance is above the threshold, abandons the computation
+#' and returns NAN.
+#'
+#' @param seq1 the array 1.
+#' @param seq2 the array 2.
+#' @param upper_limit the max value after reaching which the distance computation
+#' stops and the NAN is returned.
+#' @useDynLib jmotif
+#' @export
+early_abandoned_dist <- function(seq1, seq2, upper_limit) {
+    .Call('jmotif_early_abandoned_dist', PACKAGE = 'jmotif', seq1, seq2, upper_limit)
+}
+
 #' Finds a discord using brute force algorithm.
 #'
 #' @param ts the input timeseries.
