@@ -1003,6 +1003,9 @@ std::map<int, double> get_discords_brute_force(
 
     discord_record rec = find_best_discord_brute_force(ts, w_size, &registry);
 
+    Rcout << "found a discord " << discord_counter << " at " << rec.index;
+    Rcout << ", NN distance: " << rec.nn_distance << "\n";
+
     if(rec.nn_distance == 0 || rec.index == -1){ break; }
 
     res.insert(std::make_pair(rec.index, rec.nn_distance));
@@ -1015,8 +1018,9 @@ std::map<int, double> get_discords_brute_force(
     if(start>=ts.length()){
       end = ts.length();
     }
-    registry.markVisited(start, end);
 
+    registry.markVisited(start, end);
+    discord_counter = discord_counter + 1;
   }
 
   return res;
