@@ -998,30 +998,26 @@ std::map<int, double> get_discords_brute_force(
 
   Rcout << "starting search of " << discords_num << " discords..." << "\n";
 
-//   int discord_counter = 0;
-//   while(discord_counter < discords_num){
+  int discord_counter = 0;
+  while(discord_counter < discords_num){
+
     discord_record rec = find_best_discord_brute_force(ts, w_size, &registry);
-//
-//     if(rec.nn_distance == 0 || rec.index == -1){
-//       break;
-//     }
-//
-//     res.insert(std::make_pair(rec.index, rec.nn_distance));
-//
-//     int start = rec.index - w_size;
-//     if(start<0){
-//       start = 0;
-//     }
-//     int end = rec.index + w_size;
-//     if(start>=ts.length()){
-//       end = ts.length();
-//     }
-//     registry.markVisited(start, end);
-//
-//   }
-//
-//
-//   return res;
-res.insert(std::make_pair(rec.index, rec.nn_distance));
-return res;
+
+    if(rec.nn_distance == 0 || rec.index == -1){ break; }
+
+    res.insert(std::make_pair(rec.index, rec.nn_distance));
+
+    int start = rec.index - w_size;
+    if(start<0){
+      start = 0;
+    }
+    int end = rec.index + w_size;
+    if(start>=ts.length()){
+      end = ts.length();
+    }
+    registry.markVisited(start, end);
+
+  }
+
+  return res;
 }
