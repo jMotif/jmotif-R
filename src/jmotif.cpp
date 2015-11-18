@@ -826,10 +826,15 @@ Rcpp::DataFrame cosine_sim(Rcpp::List data) {
 // [[Rcpp::export]]
 double early_abandoned_dist(NumericVector seq1, NumericVector seq2, double upper_limit) {
   if(seq1.length() == seq2.length()){
-    double limit = upper_limit * upper_limit;
+
+    double limit = upper_limit;
+    if(limit != std::numeric_limits<double>::max()){
+      limit = upper_limit * upper_limit;
+    }
     double res = 0.0;
     for(int i=0; i<seq1.length(); i++){
       res = res + (seq1[i]-seq2[i])*(seq1[i]-seq2[i]);
+      //Rcout << "res: " <<res <<" limit: " << limit <<"\n";
       if(res > limit){
         return std::numeric_limits<double>::quiet_NaN();
       }
@@ -842,6 +847,7 @@ double early_abandoned_dist(NumericVector seq1, NumericVector seq2, double upper
 
 class VisitRegistry {
 public:
+  int size;
   bool* registry;
   int unvisited_count;
 
@@ -851,6 +857,7 @@ public:
       registry[i] = false;
     }
     unvisited_count = capacity;
+    size = capacity;
     std::srand(std::time(0)); // use current time as seed for random generator
   }
 
@@ -864,8 +871,8 @@ public:
     } else {
       int random_index = -1;
       do{
-        random_index = std::rand();
-      } while ( !(registry[random_index]) );
+        random_index = std::rand() % size;
+      } while ( registry[random_index] );
       return random_index;
     }
   }
@@ -875,7 +882,7 @@ public:
       if(registry[i]){
         continue;
       }else{
-        --unvisited_count;
+        unvisited_count = unvisited_count - 1;
         registry[i] = true;
       }
     }
@@ -885,7 +892,7 @@ public:
       if(registry[idx]){
         return;
       }else{
-        --unvisited_count;
+        unvisited_count = unvisited_count - 1;
         registry[idx] = true;
       }
   }
@@ -900,57 +907,71 @@ struct discord_record {
   double nn_distance;
 };
 
-NumericVector subseries(NumericVector* ts, int start, int end) {
-  if(start<0 || end>ts->length()){
-    stop("provided start and stop indexes are invalid.");
-  }
-  NumericVector res(end-start);
-  for (int i=start; i<end; i++) {
-    res[i-start] = ts->at(i);
-  }
-  return res;
-}
+// NumericVector subseries(const NumericVector& ts, int start, int end) {
+//   if(start < 0 || end > ts.length()){
+//     stop("provided start and stop indexes are invalid.");
+//   }
+//   NumericVector res(end-start);
+//   for (int i=start; i<end; i++) {
+//     res[i-start] = ts[i];
+//   }
+//   return res;
+// }
 
-discord_record find_best_discord_brute_force(NumericVector* series, int w_size, VisitRegistry* globalRegistry) {
+discord_record find_best_discord_brute_force(const NumericVector& series, int w_size, VisitRegistry* globalRegistry) {
+
+  Rcout << "looking for the best discord, series length " << series.size() << "\n";
 
   double best_so_far_distance = -1.0;
   int best_so_far_index = -1;
 
-  VisitRegistry outerRegistry(series->size() - w_size);
+  VisitRegistry outerRegistry(series.size() - w_size);
 
   int outer_idx = outerRegistry.getNextUnvisited();
+
   while(!(-1==outer_idx)){
 
     outerRegistry.markVisited(outer_idx);
     if(globalRegistry->isVisited(outer_idx)){
+      // Rcout << " skipping " << outer_idx << ", marked as visited in global\n";
       continue;
     }
+    Rcout << " outer unvisited candidate at " << outer_idx << "\n";
+
 
     NumericVector candidate_seq = subseries(series, outer_idx, outer_idx + w_size);
+
     double nnDistance = std::numeric_limits<double>::max();
-    VisitRegistry innerRegistry(series->size() - w_size);
+    VisitRegistry innerRegistry(series.size() - w_size);
 
     int inner_idx = innerRegistry.getNextUnvisited();
-    while(!(-1==outer_idx)){
+    while(!(-1==inner_idx)){
       innerRegistry.markVisited(inner_idx);
+      // Rcout << "examining the subsequences starting at outer " << outer_idx << " and inner " << inner_idx << "\n";
+
       if(std::abs(inner_idx - outer_idx) > w_size) {
 
         NumericVector curr_seq = subseries(series, inner_idx, inner_idx + w_size);
         double dist = early_abandoned_dist(candidate_seq, curr_seq, nnDistance);
+        // Rcout << "  .. dist:  " << dist << " best dist " << nnDistance << "\n";
 
-        if ( (!R_IsNaN(dist)) && dist < nnDistance) {
+        if ( (!isnan(dist)) && dist < nnDistance) {
           nnDistance = dist;
         }
 
       }
+
+      inner_idx = innerRegistry.getNextUnvisited();
     }
 
     if (!(std::numeric_limits<double>::max() == nnDistance)
           && nnDistance > best_so_far_distance) {
+      Rcout << "** updating discord " << nnDistance << " at " << outer_idx << "\n";
       best_so_far_distance = nnDistance;
       best_so_far_index = outer_idx;
     }
 
+    outer_idx = outerRegistry.getNextUnvisited();
   }
 
   struct discord_record res;
@@ -975,28 +996,32 @@ std::map<int, double> get_discords_brute_force(
   VisitRegistry registry(ts.length());
   registry.markVisited(ts.length() - w_size, ts.length());
 
-  int discord_counter = 0;
-  while(discord_counter < discords_num){
-    discord_record rec = find_best_discord_brute_force(&ts, w_size, &registry);
+  Rcout << "starting search of " << discords_num << " discords..." << "\n";
 
-    if(rec.nn_distance == 0 || rec.index == -1){
-      break;
-    }
-
-    res.insert(std::make_pair(rec.index, rec.nn_distance));
-
-    int start = rec.index - w_size;
-    if(start<0){
-      start = 0;
-    }
-    int end = rec.index + w_size;
-    if(start>=ts.length()){
-      end = ts.length();
-    }
-    registry.markVisited(start, end);
-
-  }
-
-
-  return res;
+//   int discord_counter = 0;
+//   while(discord_counter < discords_num){
+    discord_record rec = find_best_discord_brute_force(ts, w_size, &registry);
+//
+//     if(rec.nn_distance == 0 || rec.index == -1){
+//       break;
+//     }
+//
+//     res.insert(std::make_pair(rec.index, rec.nn_distance));
+//
+//     int start = rec.index - w_size;
+//     if(start<0){
+//       start = 0;
+//     }
+//     int end = rec.index + w_size;
+//     if(start>=ts.length()){
+//       end = ts.length();
+//     }
+//     registry.markVisited(start, end);
+//
+//   }
+//
+//
+//   return res;
+res.insert(std::make_pair(rec.index, rec.nn_distance));
+return res;
 }
