@@ -933,7 +933,8 @@ discord_record find_best_discord_brute_force(const NumericVector& series, int w_
 
     outerRegistry.markVisited(outer_idx);
     if(globalRegistry->isVisited(outer_idx)){
-      // Rcout << " skipping " << outer_idx << ", marked as visited in global\n";
+      Rcout << " skipping " << outer_idx << ", marked as visited in global\n";
+      outer_idx = outerRegistry.getNextUnvisited();
       continue;
     }
     Rcout << " outer unvisited candidate at " << outer_idx << "\n";
@@ -1019,6 +1020,7 @@ std::map<int, double> get_discords_brute_force(
       end = ts.length();
     }
 
+    Rcout << "marking as visited from " << start << " to " << end << "\n";
     registry.markVisited(start, end);
     discord_counter = discord_counter + 1;
   }
