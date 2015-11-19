@@ -16,4 +16,15 @@ find_discords_brute_force(ts, w_size, discords_num)
 \description{
 Finds a discord using brute force algorithm.
 }
+\examples{
+discords = find_discords_brute_force(ecg0606, 100, 1)
+plot(ecg0606, type = "l", col = "cornflowerblue", main = "ECG 0606")
+lines(x=c(discords[1,2]:(discords[1,2]+100)),
+   y=ecg0606[discords[1,2]:(discords[1,2]+100)], col="red")
+}
+\references{
+Keogh, E., Lin, J., Fu, A.,
+HOT SAX: Efficiently finding the most unusual time series subsequence.
+Proceeding ICDM '05 Proceedings of the Fifth IEEE International Conference on Data Mining
+}
 

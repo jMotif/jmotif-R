@@ -307,6 +307,14 @@ early_abandoned_dist <- function(seq1, seq2, upper_limit) {
 #' @param discords_num the number of discords to report.
 #' @useDynLib jmotif
 #' @export
+#' @references Keogh, E., Lin, J., Fu, A.,
+#' HOT SAX: Efficiently finding the most unusual time series subsequence.
+#' Proceeding ICDM '05 Proceedings of the Fifth IEEE International Conference on Data Mining
+#' @examples
+#' discords = find_discords_brute_force(ecg0606, 100, 1)
+#' plot(ecg0606, type = "l", col = "cornflowerblue", main = "ECG 0606")
+#' lines(x=c(discords[1,2]:(discords[1,2]+100)),
+#'    y=ecg0606[discords[1,2]:(discords[1,2]+100)], col="red")
 find_discords_brute_force <- function(ts, w_size, discords_num) {
     .Call('jmotif_find_discords_brute_force', PACKAGE = 'jmotif', ts, w_size, discords_num)
 }

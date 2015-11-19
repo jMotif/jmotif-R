@@ -989,6 +989,14 @@ discord_record find_best_discord_brute_force(const NumericVector& series, int w_
 //' @param discords_num the number of discords to report.
 //' @useDynLib jmotif
 //' @export
+//' @references Keogh, E., Lin, J., Fu, A.,
+//' HOT SAX: Efficiently finding the most unusual time series subsequence.
+//' Proceeding ICDM '05 Proceedings of the Fifth IEEE International Conference on Data Mining
+//' @examples
+//' discords = find_discords_brute_force(ecg0606, 100, 1)
+//' plot(ecg0606, type = "l", col = "cornflowerblue", main = "ECG 0606")
+//' lines(x=c(discords[1,2]:(discords[1,2]+100)),
+//'    y=ecg0606[discords[1,2]:(discords[1,2]+100)], col="red")
 // [[Rcpp::export]]
 Rcpp::DataFrame find_discords_brute_force(
     NumericVector ts, int w_size, int discords_num) {
