@@ -22,6 +22,10 @@ Knowledge and information Systems, 3(3), 263-286. (2001)
 [*SAX-VSM: Interpretable Time Series Classification Using SAX and Vector Space Model.*](https://scholar.google.fr/citations?view_op=view_citation&citation_for_view=pVTcEd8AAAAJ:5nxA0vEk-isC),
 Data Mining (ICDM), 2013 IEEE 13th International Conference on, pp.1175,1180, 7-10 Dec. 2013.
 
+[6] Keogh, E., Lin, J., Fu, A.,
+[*HOT SAX: Efficiently finding the most unusual time series subsequence*](http://www.cs.ucr.edu/~eamonn/HOT%20SAX%20%20long-ver.pdf),
+In Proc. ICDM (2005)
+
 #### 0.0 Installation
     install.packages("devtools")
     library(devtools)
