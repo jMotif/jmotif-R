@@ -19,3 +19,8 @@
 #'   \item data_test: the test data matrix, each row is a time series instance
 #' }
 "CBF"
+
+#' A PHYSIONET dataset
+#'
+#' @format A vector of numeric values
+"ecg0606"

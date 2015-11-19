@@ -29,3 +29,9 @@ CBF = list("labels_train" = labels_train, "data_train" = data_train,
                  "labels_test" = labels_test, "data_test" = data_test)
 
 save(CBF, file = "data/CBF.rda")
+
+## makes ECG0606
+#
+ecg0606 <- read.table("inst/test_data/ecg0606_1.csv", as.is = T, header=F)$V1
+
+save(ecg0606, file = "data/ECG0606.rda")

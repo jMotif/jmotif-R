@@ -242,16 +242,16 @@ BEGIN_RCPP
     return __result;
 END_RCPP
 }
-// get_discords_brute_force
-std::map<int, double> get_discords_brute_force(NumericVector ts, int w_size, int discords_num);
-RcppExport SEXP jmotif_get_discords_brute_force(SEXP tsSEXP, SEXP w_sizeSEXP, SEXP discords_numSEXP) {
+// find_discords_brute_force
+Rcpp::DataFrame find_discords_brute_force(NumericVector ts, int w_size, int discords_num);
+RcppExport SEXP jmotif_find_discords_brute_force(SEXP tsSEXP, SEXP w_sizeSEXP, SEXP discords_numSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
     Rcpp::traits::input_parameter< NumericVector >::type ts(tsSEXP);
     Rcpp::traits::input_parameter< int >::type w_size(w_sizeSEXP);
     Rcpp::traits::input_parameter< int >::type discords_num(discords_numSEXP);
-    __result = Rcpp::wrap(get_discords_brute_force(ts, w_size, discords_num));
+    __result = Rcpp::wrap(find_discords_brute_force(ts, w_size, discords_num));
     return __result;
 END_RCPP
 }

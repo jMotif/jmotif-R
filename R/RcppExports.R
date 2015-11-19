@@ -307,7 +307,7 @@ early_abandoned_dist <- function(seq1, seq2, upper_limit) {
 #' @param discords_num the number of discords to report.
 #' @useDynLib jmotif
 #' @export
-get_discords_brute_force <- function(ts, w_size, discords_num) {
-    .Call('jmotif_get_discords_brute_force', PACKAGE = 'jmotif', ts, w_size, discords_num)
+find_discords_brute_force <- function(ts, w_size, discords_num) {
+    .Call('jmotif_find_discords_brute_force', PACKAGE = 'jmotif', ts, w_size, discords_num)
 }
 
