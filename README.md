@@ -37,13 +37,11 @@ Z-normalization (`znorm(ts, threshold)`) is a typical time series preprocessing 
     x = seq(0, pi*4, 0.02)
     y = sin(x) * 5 + rnorm(length(x))
 
-    plot(x, y, type="l", col="blue", 
-      main="A scaled sine wave with a random noise and its z-normalization")
+    plot(x, y, type="l", col="blue", main="A scaled sine wave with a random noise and its z-normalization")
 
     lines(x, znorm(y, 0.01), type="l", col="red")
     abline(h=c(1,-1), lty=2, col="gray50")
-    legend(0, -4, c("scaled sine wave","z-normalized wave"),
-      lty=c(1,1), lwd=c(1,1), col=c("blue","red"), cex=0.8)
+    legend(0, -4, c("scaled sine wave","z-normalized wave"), lty=c(1,1), lwd=c(1,1), col=c("blue","red"), cex=0.8)
       
 ![z-normalization of a scaled sine wave](https://raw.githubusercontent.com/jMotif/jmotif-R/master/inst/fig_znorm.png)
 
@@ -51,8 +49,7 @@ Z-normalization (`znorm(ts, threshold)`) is a typical time series preprocessing 
 PAA (`paa(ts, paa_num)`) is designed to reduces the time series dimensionality by averaging values of equal-sized segments of the original time series. In the following example the time series of dimensionality 8 points is reduced to 3 points.
 
     y = c(-1, -2, -1, 0, 2, 1, 1, 0)
-    plot(y, type="l", col="blue",
-        main="8-points time series and it PAA transform into 3 points")
+    plot(y, type="l", col="blue", main="8-points time series and it PAA transform into 3 points")
 
     points(y, pch=16, lwd=5, col="blue")
 
@@ -98,7 +95,7 @@ Another common way to use SAX is to apply the procedure to sliding window-extrac
 #### 5.0 SAX-VSM classifier
 While the parameters optimization sampler discussed in our paper is yet to be coded, the current code provides a reference implementation of SAX-VSM classification and a characteristic patterns dicovery framework.
 
-I use the one of [standard UCR time series datasets](http://www.cs.ucr.edu/~eamonn/time_series_data/) to illustrate the code use. The Cylinder-Bell-Funnel dataset (Saito, N: *Local feature extraction and its application using a library of bases.* PhD thesis, Yale University (1994)) consists of three time series classes. The dataset is embedded into the `jmotif` library:  
+I use the one of [standard UCR time series datasets](http://www.cs.ucr.edu/~eamonn/time_series_data/) to illustrate the implemented approach. The Cylinder-Bell-Funnel dataset (Saito, N: *Local feature extraction and its application using a library of bases.* PhD thesis, Yale University (1994)) consists of three time series classes. The dataset is embedded into the `jmotif` library:  
 
     # load Cylinder-Bell-Funnel data
     data("CBF")
@@ -123,12 +120,9 @@ At the first step, each class of the training data needs to be transformed into 
 
     # convert the train classes to wordbags (the dataset has three labels: 1, 2, 3)
     #
-    cylinder <- manyseries_to_wordbag(CBF[["data_train"]][CBF[["labels_train"]] == 1,], 
-                                                                w, p, a, "exact", 0.01)
-    bell <- manyseries_to_wordbag(CBF[["data_train"]][CBF[["labels_train"]] == 2,],
-                                                                w, p, a, "exact", 0.01)
-    funnel <- manyseries_to_wordbag(CBF[["data_train"]][CBF[["labels_train"]] == 3,],
-                                                                w, p, a, "exact", 0.01)
+    cylinder <- manyseries_to_wordbag(CBF[["data_train"]][CBF[["labels_train"]] == 1,], w, p, a, "exact", 0.01)
+    bell <- manyseries_to_wordbag(CBF[["data_train"]][CBF[["labels_train"]] == 2,], w, p, a, "exact", 0.01)
+    funnel <- manyseries_to_wordbag(CBF[["data_train"]][CBF[["labels_train"]] == 3,], w, p, a, "exact", 0.01)
 
 each of these bags is a two-columns data frame:
 
@@ -146,8 +140,7 @@ each of these bags is a two-columns data frame:
 
     # compute tf*idf weights for three bags
     #
-    tfidf = bags_to_tfidf(
-          list("cylinder" = cylinder, "bell" = bell, "funnel" = funnel) )
+    tfidf = bags_to_tfidf( list("cylinder" = cylinder, "bell" = bell, "funnel" = funnel) )
 
 this yields a data frame of four variables: the words which are "important" in `TF*IDF` terms (i.e. not presented at least in one of the bags) and their class-corresponding weights:
 
@@ -181,8 +174,7 @@ and to visualize those on data:
     #
     sample = (CBF[["data_train"]][CBF[["labels_train"]] == 3,])[1,]
     sample_bag = sax_via_window(sample, w, p, a, "exact", 0.01)
-    df = data.frame(index = as.numeric(names(sample_bag)),
-                   words = unlist(sample_bag))
+    df = data.frame(index = as.numeric(names(sample_bag)), words = unlist(sample_bag))
                    
     # weight the found patterns
     #
@@ -192,7 +184,7 @@ and to visualize those on data:
       pattern = weighted_patterns[i,]
       for(j in 1:w){
         specificity[pattern$index+j] = specificity[pattern$index+j] +
-        pattern$funnel - pattern$bell - pattern$cylinder
+                                            pattern$funnel - pattern$bell - pattern$cylinder
       }
     }
 
