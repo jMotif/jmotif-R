@@ -957,7 +957,7 @@ discord_record find_best_discord_brute_force(const NumericVector& series, int w_
         double dist = early_abandoned_dist(candidate_seq, curr_seq, nnDistance);
         // Rcout << "  .. dist:  " << dist << " best dist " << nnDistance << "\n";
 
-        if ( (!isnan(dist)) && dist < nnDistance) {
+        if ( (!std::isnan(dist)) && dist < nnDistance) {
           nnDistance = dist;
         }
 
