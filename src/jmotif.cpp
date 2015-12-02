@@ -292,7 +292,7 @@ bool is_equal_mindist(CharacterVector a, CharacterVector b) {
   if(ca.length() != cb.length()){
     return false;
   }else{
-    for(int i=0; i<ca.length(); i++){
+    for(unsigned i=0; i<ca.length(); i++){
       // Rcout << ca[i] << " " << cb[i] << " " << " " << abs(ca[i] - cb[i]) << "\n";
       if( abs(ca[i] - cb[i]) > 1 ){
         return false;
@@ -393,7 +393,7 @@ std::map<int, CharacterVector> sax_by_chunking(
   std::string curr_str = Rcpp::as<std::string>(series_to_string(vec, a_size));
   // Rcout << curr_str << "\n";
 
-  for(int i=0; i<curr_str.length(); i++){
+  for(unsigned i=0; i<curr_str.length(); i++){
     idx2word.insert(std::make_pair(i,curr_str.substr(i,1)));
   }
 
@@ -580,7 +580,7 @@ Rcpp::DataFrame bags_to_tfidf(Rcpp::List data) {
   // iterate over the list elements building the global word entry count matrix
   //
   std::map<std::string, std::vector<int> > counts;
-  for(int i = 0; i< class_names.size(); i++) {
+  for(unsigned i = 0; i< class_names.size(); i++) {
 
     // get a current class' wordbag
     std::string current_class_name = class_names[i];
@@ -591,7 +591,7 @@ Rcpp::DataFrame bags_to_tfidf(Rcpp::List data) {
     std::vector<int> bag_counts = Rcpp::as< std::vector<int> > (df["counts"]);
 
     // iterate over words
-    for(int j=0; j<bag_words.size(); j++) {
+    for(unsigned j=0; j<bag_words.size(); j++) {
 
       // cirrent word and its count
       std::string curr_word = bag_words[j];
@@ -623,8 +623,8 @@ Rcpp::DataFrame bags_to_tfidf(Rcpp::List data) {
                                                         it != counts.end(); ++it) {
     std::string e_key = it->first;
     std::vector<int> e_counts = it->second;
-    int docs_with_word = 0;
-    for(int k=0; k<e_counts.size(); k++){
+    unsigned docs_with_word = 0;
+    for(unsigned k=0; k<e_counts.size(); k++){
       if(e_counts[k] > 0){
         docs_with_word++;
       }
@@ -643,7 +643,7 @@ Rcpp::DataFrame bags_to_tfidf(Rcpp::List data) {
   // RESULT: the tfidf coefficients data structure
   //
   std::map<std::string, NumericVector > tfidf;
-  for(int k=0;k<class_names.size();k++){
+  for(unsigned k=0;k<class_names.size();k++){
     char * class_name_copy = new char [class_names[k].size()+1];
     std::copy(class_names[k].begin(), class_names[k].end(), class_name_copy);
     class_name_copy[class_names[k].size()] = '\0';
@@ -659,8 +659,8 @@ Rcpp::DataFrame bags_to_tfidf(Rcpp::List data) {
     std::vector<int> e_counts = it->second;
 
     // count docs which contain that word
-    int docs_with_word = 0;
-    for(int k=0; k<e_counts.size(); k++){
+    unsigned docs_with_word = 0;
+    for(unsigned k=0; k<e_counts.size(); k++){
       if(e_counts[k] > 0){
         docs_with_word++;
       }
@@ -676,7 +676,7 @@ Rcpp::DataFrame bags_to_tfidf(Rcpp::List data) {
     res_words[counter] = word;
 
     // compute the tfidf for each of the elements
-    for(int k=0; k<e_counts.size(); k++){
+    for(unsigned k=0; k<e_counts.size(); k++){
       if(e_counts[k] != 0){
         double tf = log(1.0 + (double) e_counts[k]);
         double idf = log( (double) e_counts.size() / (double) docs_with_word);
@@ -696,14 +696,14 @@ Rcpp::DataFrame bags_to_tfidf(Rcpp::List data) {
   pre_res[0] = res_words;
 
   // second, all the counts
-  for(int k=0;k<class_names.size();k++){
+  for(unsigned k=0;k<class_names.size();k++){
     pre_res[1+k] = tfidf[class_names[k]];
   }
 
   // attach names to the resulting data structure
   CharacterVector df_names(class_names.size() + 1);
   df_names[0] = "words";
-  for(int k=0;k<class_names.size();k++){
+  for(unsigned k=0;k<class_names.size();k++){
     char * class_name_copy = new char [class_names[k].size()+1];
     std::copy(class_names[k].begin(), class_names[k].end(), class_name_copy);
     class_name_copy[class_names[k].size()] = '\0';
@@ -739,7 +739,7 @@ Rcpp::DataFrame cosine_sim(Rcpp::List data) {
   // .. Rcout << bag_words.size() << ": " << bag_counts.size() << "\n";
 
   std::map< std::string, int > bag;
-   for(int i=0;i<bag_words.size();i++){
+   for(unsigned i=0;i<bag_words.size();i++){
 
      // Rcout << i << ": " << bag_words[i] << "\n";
 
@@ -763,7 +763,7 @@ Rcpp::DataFrame cosine_sim(Rcpp::List data) {
 
   // align the wordbag vector to tfidf one
   NumericVector wordbag_counts(tfidf_words.size());
-  for(int i=0; i<tfidf_words.size(); i++){
+  for(unsigned i=0; i<tfidf_words.size(); i++){
 
     std::string curr_word = tfidf_words[i];
 
@@ -779,7 +779,7 @@ Rcpp::DataFrame cosine_sim(Rcpp::List data) {
   // computing cosines
   NumericVector cosines(tfidf_classes.size()-1);
   std::vector<std::string> class_names(tfidf_classes.size()-1);
-  for(int i=1; i<tfidf_classes.size(); i++){
+  for(unsigned i=1; i<tfidf_classes.size(); i++){
 
     //class_names[i] = tfidf_classes[i];
     std::string e_key = tfidf_classes[i];
