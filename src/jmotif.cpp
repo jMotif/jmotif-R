@@ -903,6 +903,7 @@ public:
   }
 };
 
+// Defines the discord record which consists of its index and the distance to NN 
 struct discord_record {
   int index;
   double nn_distance;
@@ -1025,7 +1026,7 @@ Rcpp::DataFrame find_discords_brute_force(
       start = 0;
     }
     int end = rec.index + w_size;
-    if(start>=ts.length()){
+    if(end>=ts.length()){
       end = ts.length();
     }
 
