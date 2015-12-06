@@ -1,9 +1,9 @@
-### An R implementation of SAX, VSM, and SAX-VSM
+### An R implementation of SAX, HOT-SAX, VSM, and SAX-VSM
 
 [![Build Status](https://travis-ci.org/jMotif/jmotif-R.svg?branch=master)](https://travis-ci.org/jMotif/jmotif-R) [![codecov.io](http://codecov.io/github/jMotif/jmotif-R/coverage.svg?branch=master)](http://codecov.io/github/jMotif/jmotif-R?branch=master)
 [![License](http://img.shields.io/:license-gpl2-green.svg)](http://www.gnu.org/licenses/gpl-2.0.html)
 
-Implements a set of R functions for time series mining based on Symbolic Aggregate approXimation, i.e. SAX. Specifically, this library implements the full stack of tools needed for SAX-VSM [5] -- an algorithm for interpretable time series classification and characteristic patterns discovery, among which are the time series z-Normalization [1], PAA [2], SAX [3], and VSM [4].
+Implements a set of R functions for time series mining based on Symbolic Aggregate approXimation, i.e. SAX. Specifically, this library implements the full stack of tools needed for SAX-VSM [5] -- an algorithm for interpretable time series classification and characteristic patterns discovery, among which are the time series z-Normalization [1], PAA [2], SAX [3], and VSM [4]. In addition, implements HOT-SAX -- the time series discord (time series anomaly) discovery algorithm.
 
 [1] Dina Goldin and Paris Kanellakis,
 [*On similarity queries for time-series data: Constraint specification and implementation*](http://dl.acm.org/citation.cfm?id=726176),
@@ -235,3 +235,59 @@ Using the weighted patterns obtained at the previous step and the cosine similar
     # findout which time series were misclassified
     #
     which((labels_test != labels_predicted))
+
+#### 3.0 HOT-SAX algorithm for time series discord discovery
+Given a time series _T_, its subsequence _C_  is called *discord* if it has the largest Euclidean distance to its nearest non-self match. Thus, time series discord is a subsequence within a time series that is _maximally different_ to all the rest of subsequences in the time series, and therefore naturaly captures the most unusual subsequence within the time series.
+
+The library embeds the ECG0606 dataset taken from [PHYSIONET FTP](http://physionet.org/physiobank/database/qtdb/). The raw data was transformed with their `rdsamp` utility 
+
+    rdsamp -r sele0606 -f 120.000 -l 60.000 -p -c | sed -n '701,3000p' >0606.csv
+
+and conists of 15 heartbeats:
+
+![ECG0606 data](https://raw.githubusercontent.com/jMotif/jmotif-R/master/inst/ecg0606.png)
+
+We know, that the third heartbeat of this dataset contains the true anomaly as it was discussed in HOTSAX paper by Eamonn Keogh, Jessica Lin, and Ada Fu. Note, that the authors were specifically interested in finding anomalies which are shorter than a regular heartbeat following a suggestion given by the domain expert: ''_We conferred with cardiologist, Dr. Helga Van Herle M.D., who informed us that heart irregularities can sometimes manifest themselves at scales significantly shorter than a single heartbeat_.'' Figure 13 of the paper further explains the nature of this true anomaly:
+
+![ECG0606 clusters](https://raw.githubusercontent.com/jMotif/jmotif-R/master/inst/demo-ecg0606_cluster.png)
+
+Two implementation of discord discovery provided within the code: the brute-force didcord discovery and HOT-SAX. 
+
+The brute-force takes 14 seonds to discover 5 discords in the data (with early-abandoning distance):
+
+    > lineprof( find_discords_brute_force(ecg0606, 100, 5) )
+    Reducing depth to 2 (from 18)
+        time    alloc  release dups                    ref            src
+    1 13.951 6211.306 6209.214    2                ".Call" .Call         
+    2  0.001    0.000    0.000   44 c(".Call", "tryCatch") .Call/tryCatch
+
+whereas HOT-SAX finishes under a second:
+
+    > lineprof( find_discords_hot_sax(ecg0606, 100, 4, 4, 0.01, 5) )
+       time   alloc release dups     ref   src
+    1 0.637 249.577 245.077   55 ".Call" .Call
+
+The discords returned as a data frame sorted by the position:
+
+    > discords = find_discords_hot_sax(ecg0606, 100, 4, 4, 0.01, 5)
+    > discords
+      nn_distance position
+    1   0.4787745       37
+    2   0.4177020      188
+    3   1.5045847      411
+    4   0.4437060      539
+    5   0.4437060     1566
+    
+The best discord is the third one at 411:
+
+![ECG0606 clusters](https://raw.githubusercontent.com/jMotif/jmotif-R/master/inst/ecg0606_discord.png)
+
+    > library(dplyr)
+    > arrange(discords,desc(nn_distance))
+      nn_distance position
+    1   1.5045847      411
+    2   0.4787745       37
+    3   0.4437060      539
+    4   0.4437060     1566
+    5   0.4177020      188
+
