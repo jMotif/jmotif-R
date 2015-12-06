@@ -253,7 +253,7 @@ We know, that the third heartbeat of this dataset contains the true anomaly as i
 
 Two implementation of discord discovery provided within the code: the brute-force didcord discovery and HOT-SAX. 
 
-The brute-force takes 14 seonds to discover 5 discords in the data (with early-abandoning distance):
+The brute-force takes 14 seconds to discover 5 discords in the data (with early-abandoning distance):
 
     > lineprof( find_discords_brute_force(ecg0606, 100, 5) )
     Reducing depth to 2 (from 18)
@@ -279,6 +279,11 @@ The discords returned as a data frame sorted by the position:
     5   0.4437060     1566
     
 The best discord is the third one at 411:
+
+ discords = find_discords_hot_sax(ecg0606, 100, 4, 4, 0.01, 5)
+    plot(ecg0606, type = "l", col = "cornflowerblue", main = "ECG 0606")
+    lines(x=c(discords[3,2]:(discords[3,2]+100)),
+        y=ecg0606[discords[3,2]:(discords[3,2]+100)], col="red")
 
 ![ECG0606 clusters](https://raw.githubusercontent.com/jMotif/jmotif-R/master/inst/ecg0606_discord.png)
 
