@@ -287,7 +287,18 @@ cosine_sim <- function(data) {
     .Call('jmotif_cosine_sim', PACKAGE = 'jmotif', data)
 }
 
-#' Finds a euclidean distance between points, if distance is above the threshold, abandons the computation
+#' Finds the Euclidean distance between points.
+#'
+#' @param seq1 the array 1.
+#' @param seq2 the array 2.
+#' stops and the NAN is returned.
+#' @useDynLib jmotif
+#' @export
+euclidean_dist <- function(seq1, seq2) {
+    .Call('jmotif_euclidean_dist', PACKAGE = 'jmotif', seq1, seq2)
+}
+
+#' Finds the Euclidean distance between points, if distance is above the threshold, abandons the computation
 #' and returns NAN.
 #'
 #' @param seq1 the array 1.
@@ -311,11 +322,32 @@ early_abandoned_dist <- function(seq1, seq2, upper_limit) {
 #' HOT SAX: Efficiently finding the most unusual time series subsequence.
 #' Proceeding ICDM '05 Proceedings of the Fifth IEEE International Conference on Data Mining
 #' @examples
-#' discords = find_discords_brute_force(ecg0606, 100, 1)
-#' plot(ecg0606, type = "l", col = "cornflowerblue", main = "ECG 0606")
+#' discords = find_discords_brute_force(ecg0606[1:600], 100, 1)
+#' plot(ecg0606[1:600], type = "l", col = "cornflowerblue", main = "ECG 0606")
 #' lines(x=c(discords[1,2]:(discords[1,2]+100)),
 #'    y=ecg0606[discords[1,2]:(discords[1,2]+100)], col="red")
 find_discords_brute_force <- function(ts, w_size, discords_num) {
     .Call('jmotif_find_discords_brute_force', PACKAGE = 'jmotif', ts, w_size, discords_num)
+}
+
+#' Finds a discord with HOT-SAX.
+#'
+#' @param ts the input timeseries.
+#' @param w_size the sliding window size.
+#' @param paa_size the PAA size.
+#' @param a_size the alphabet size.
+#' @param n_threshold the normalization threshold.
+#' @useDynLib jmotif
+#' @export
+#' @references Keogh, E., Lin, J., Fu, A.,
+#' HOT SAX: Efficiently finding the most unusual time series subsequence.
+#' Proceeding ICDM '05 Proceedings of the Fifth IEEE International Conference on Data Mining
+#' @examples
+#' discords = find_discords_hot_sax(ecg0606, 100, 4, 4, 0.01, 1)
+#' plot(ecg0606, type = "l", col = "cornflowerblue", main = "ECG 0606")
+#' lines(x=c(discords[1,2]:(discords[1,2]+100)),
+#'    y=ecg0606[discords[1,2]:(discords[1,2]+100)], col="red")
+find_discords_hot_sax <- function(ts, w_size, paa_size, a_size, n_threshold, discords_num) {
+    .Call('jmotif_find_discords_hot_sax', PACKAGE = 'jmotif', ts, w_size, paa_size, a_size, n_threshold, discords_num)
 }
 

@@ -229,6 +229,18 @@ BEGIN_RCPP
     return __result;
 END_RCPP
 }
+// euclidean_dist
+double euclidean_dist(NumericVector seq1, NumericVector seq2);
+RcppExport SEXP jmotif_euclidean_dist(SEXP seq1SEXP, SEXP seq2SEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< NumericVector >::type seq1(seq1SEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type seq2(seq2SEXP);
+    __result = Rcpp::wrap(euclidean_dist(seq1, seq2));
+    return __result;
+END_RCPP
+}
 // early_abandoned_dist
 double early_abandoned_dist(NumericVector seq1, NumericVector seq2, double upper_limit);
 RcppExport SEXP jmotif_early_abandoned_dist(SEXP seq1SEXP, SEXP seq2SEXP, SEXP upper_limitSEXP) {
@@ -252,6 +264,22 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< int >::type w_size(w_sizeSEXP);
     Rcpp::traits::input_parameter< int >::type discords_num(discords_numSEXP);
     __result = Rcpp::wrap(find_discords_brute_force(ts, w_size, discords_num));
+    return __result;
+END_RCPP
+}
+// find_discords_hot_sax
+Rcpp::DataFrame find_discords_hot_sax(NumericVector ts, int w_size, int paa_size, int a_size, double n_threshold, int discords_num);
+RcppExport SEXP jmotif_find_discords_hot_sax(SEXP tsSEXP, SEXP w_sizeSEXP, SEXP paa_sizeSEXP, SEXP a_sizeSEXP, SEXP n_thresholdSEXP, SEXP discords_numSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< NumericVector >::type ts(tsSEXP);
+    Rcpp::traits::input_parameter< int >::type w_size(w_sizeSEXP);
+    Rcpp::traits::input_parameter< int >::type paa_size(paa_sizeSEXP);
+    Rcpp::traits::input_parameter< int >::type a_size(a_sizeSEXP);
+    Rcpp::traits::input_parameter< double >::type n_threshold(n_thresholdSEXP);
+    Rcpp::traits::input_parameter< int >::type discords_num(discords_numSEXP);
+    __result = Rcpp::wrap(find_discords_hot_sax(ts, w_size, paa_size, a_size, n_threshold, discords_num));
     return __result;
 END_RCPP
 }

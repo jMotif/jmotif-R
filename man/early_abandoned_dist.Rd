@@ -2,7 +2,7 @@
 % Please edit documentation in R/RcppExports.R
 \name{early_abandoned_dist}
 \alias{early_abandoned_dist}
-\title{Finds a euclidean distance between points, if distance is above the threshold, abandons the computation
+\title{Finds the Euclidean distance between points, if distance is above the threshold, abandons the computation
 and returns NAN.}
 \usage{
 early_abandoned_dist(seq1, seq2, upper_limit)
@@ -16,7 +16,7 @@ early_abandoned_dist(seq1, seq2, upper_limit)
 stops and the NAN is returned.}
 }
 \description{
-Finds a euclidean distance between points, if distance is above the threshold, abandons the computation
+Finds the Euclidean distance between points, if distance is above the threshold, abandons the computation
 and returns NAN.
 }
 
