@@ -16,6 +16,8 @@ find_discords_hot_sax(ts, w_size, paa_size, a_size, n_threshold, discords_num)
 \item{a_size}{the alphabet size.}
 
 \item{n_threshold}{the normalization threshold.}
+
+\item{discords_num}{the number of discords to report.}
 }
 \description{
 Finds a discord with HOT-SAX.

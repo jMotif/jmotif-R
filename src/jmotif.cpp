@@ -1195,6 +1195,7 @@ discord_record find_best_discord_hot_sax(NumericVector ts, int w_size,
 //' @param paa_size the PAA size.
 //' @param a_size the alphabet size.
 //' @param n_threshold the normalization threshold.
+//' @param discords_num the number of discords to report.
 //' @useDynLib jmotif
 //' @export
 //' @references Keogh, E., Lin, J., Fu, A.,
