@@ -280,7 +280,7 @@ The discords returned as a data frame sorted by the position:
     
 The best discord is the third one at 411:
 
- discords = find_discords_hot_sax(ecg0606, 100, 4, 4, 0.01, 5)
+    discords = find_discords_hot_sax(ecg0606, 100, 4, 4, 0.01, 5)
     plot(ecg0606, type = "l", col = "cornflowerblue", main = "ECG 0606")
     lines(x=c(discords[3,2]:(discords[3,2]+100)),
         y=ecg0606[discords[3,2]:(discords[3,2]+100)], col="red")
