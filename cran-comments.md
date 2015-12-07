@@ -10,7 +10,7 @@ This is a new submission. In this version I have:
 
 ## Changes
 
-Second release with bug fixes and new functionality added (HOT-SAX algorithm)
+Second release with bug fixes and new functionality added (HOT-SAX algorithm).
 
 ## Test environments
 
