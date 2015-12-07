@@ -1,7 +1,7 @@
 Package: jmotif
 Version: 1.0.2
 Title: Tools for Time Series Analysis Based on Symbolic Aggregate Dicretization
-Description: Implements z-normalization, SAX, HOT-SAX, VSM, and SAX-VSM algorithms, facilitating
+Description: Implements z-normalization, SAX, HOT-SAX, VSM, and SAX-VSM algorithms facilitating
     time series motif, discord, and characteristic pattern discovery along with interpretable time
     series classification.
 Authors@R: person("Pavel", "Senin", , "seninp@gmail.com", c("aut", "cre"))
