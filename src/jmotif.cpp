@@ -1108,7 +1108,7 @@ discord_record find_best_discord_hot_sax(NumericVector ts, int w_size,
     // Rcout << " examining " << it->second << " seen " << it->first << " times\n";
     // current word occurences
     std::vector<int> word_occurrences = word2indexes[it->second];
-    for(int i=0; i< word_occurrences.size(); i++){
+    for(unsigned i=0; i<word_occurrences.size(); i++){
 
       int candidate_idx = word_occurrences[i];
       if(globalRegistry->isVisited(candidate_idx)){
@@ -1121,7 +1121,7 @@ discord_record find_best_discord_hot_sax(NumericVector ts, int w_size,
       double nnDistance = std::numeric_limits<double>::max();
 
       // short loop over the similar sequencing finding the best distance
-      for(int j=0; j<word_occurrences.size(); j++){
+      for(unsigned j=0; j<word_occurrences.size(); j++){
 
         int inner_idx = word_occurrences[j];
         innerRegistry.markVisited(inner_idx);
