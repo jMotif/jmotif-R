@@ -1,9 +1,10 @@
 ### R (Rcpp) implementation of SAX, HOT-SAX, VSM, and SAX-VSM
 
-[![Build Status](https://travis-ci.org/jMotif/jmotif-R.svg?branch=master)](https://travis-ci.org/jMotif/jmotif-R) [![codecov.io](http://codecov.io/github/jMotif/jmotif-R/coverage.svg?branch=master)](http://codecov.io/github/jMotif/jmotif-R?branch=master)
-[![License](http://img.shields.io/:license-gpl2-green.svg)](http://www.gnu.org/licenses/gpl-2.0.html)
+[![Build Status](https://travis-ci.org/jMotif/jmotif-R.svg?branch=master)](https://travis-ci.org/jMotif/jmotif-R) [![codecov.io](http://codecov.io/github/jMotif/jmotif-R/coverage.svg?branch=master)](http://codecov.io/github/jMotif/jmotif-R?branch=master) [![License](http://img.shields.io/:license-gpl2-green.svg)](http://www.gnu.org/licenses/gpl-2.0.html) [![Downloads](http://cranlogs.r-pkg.org/badges/jmotif?color=brightgreen)](https://github.com/jMotif/jmotif-R)
 
-Implements a set of R functions for time series mining based on Symbolic Aggregate approXimation, i.e. SAX. Specifically, this library implements the full stack of tools needed for SAX-VSM [5] -- an algorithm for interpretable time series classification and characteristic patterns discovery, among which are the time series z-Normalization [1], PAA [2], SAX [3], and VSM [4]. In addition, implements HOT-SAX -- the time series discord (time series anomaly) discovery algorithm [6].
+Implements a set of R functions for time series pattern mining based on Symbolic Aggregate approXimation, i.e. SAX. 
+
+Specifically, this library implements the full stack of tools needed for SAX-VSM [5] -- an algorithm for interpretable time series classification and characteristic patterns discovery, among which are the time series z-Normalization [1], PAA [2], SAX [3], and VSM [4]. In addition, implements HOT-SAX -- the time series discord (time series anomaly) discovery algorithm [6].
 
 [1] Dina Goldin and Paris Kanellakis,
 [*On similarity queries for time-series data: Constraint specification and implementation*](http://dl.acm.org/citation.cfm?id=726176),
