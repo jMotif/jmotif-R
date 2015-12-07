@@ -1,9 +1,9 @@
 Package: jmotif
 Version: 1.0.2
 Title: Tools for Time Series Analysis Based on Symbolic Aggregate Dicretization
-Description: A set of tools based on time series symbolic discretization and
-    vector space model that aids in time series characteristic pattern discovery and
-    facilitates interpretable time series classification.
+Description: Implements z-normalization, SAX, HOT-SAX, VSM, and SAX-VSM algorithms, facilitating
+    time series motif, discord, and characteristic pattern discovery along with interpretable time
+    series classification.
 Authors@R: person("Pavel", "Senin", , "seninp@gmail.com", c("aut", "cre"))
 URL: https://github.com/jMotif/jmotif-R
 BugReports: https://github.com/jMotif/jmotif-R/issues
