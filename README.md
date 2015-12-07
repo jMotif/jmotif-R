@@ -32,7 +32,7 @@ In Proc. ICDM (2005)
     install_github('jMotif/jmotif-R')
 
 #### 1.0 z-Normalization
-Z-normalization (`znorm(ts, threshold)`) is a typical time series preprocessing step proposed by Goldin & Kannelakis whose goal is to allow the downstream analyses to focus on the time series structural similarities/differences instead of the signal amplitude.
+Z-normalization (`znorm(ts, threshold)`) is a common in time series pattern mining preprocessing step proposed by Goldin & Kannelakis whose goal is to allow the downstream analyses to focus on the time series structural similarities/differences instead of the signal amplitude.
 
     x = seq(0, pi*4, 0.02)
     y = sin(x) * 5 + rnorm(length(x))
@@ -41,12 +41,13 @@ Z-normalization (`znorm(ts, threshold)`) is a typical time series preprocessing 
 
     lines(x, znorm(y, 0.01), type="l", col="red")
     abline(h=c(1,-1), lty=2, col="gray50")
-    legend(0, -4, c("scaled sine wave","z-normalized wave"), lty=c(1,1), lwd=c(1,1), col=c("blue","red"), cex=0.8)
+    legend(0, -4, c("scaled sine wave","z-normalized wave"), lty=c(1,1), lwd=c(1,1), 
+                                                                    col=c("blue","red"), cex=0.8)
       
 ![z-normalization of a scaled sine wave](https://raw.githubusercontent.com/jMotif/jmotif-R/master/inst/fig_znorm.png)
 
 #### 2.0 Piecewise Aggregate Approximation (i.e., PAA)
-PAA (`paa(ts, paa_num)`) is designed to reduces the time series dimensionality by averaging values of equal-sized segments of the original time series. In the following example the time series of dimensionality 8 points is reduced to 3 points.
+PAA (`paa(ts, paa_num)`) is designed to reduce the input time series dimensionality by splitting it into equally-sized segments (PAA size) and averaging values of points within each segment. Typically, PAA is applied to z-Normalized time series. In the following example the time series of dimensionality 8 points is reduced to 3 points.
 
     y = c(-1, -2, -1, 0, 2, 1, 1, 0)
     plot(y, type="l", col="blue", main="8-points time series and it PAA transform into 3 points")
@@ -69,7 +70,9 @@ PAA (`paa(ts, paa_num)`) is designed to reduces the time series dimensionality b
 ![PAA transform of an 8-points time series into 3 points](https://raw.githubusercontent.com/jMotif/jmotif-R/master/inst/fig_paa83.png)
 
 #### 3.0 SAX transform
-SAX transform (`series_to_string(ts, alphabet_size)`) facilitates the symbolic discretization of time series data enabling the application of numerous algorithms for discrete data analysis to continuous time series data. In a nutshell, SAX transforms each of the input time series points into a letter. Typically, SAX applied to time series of reduced with PAA dimensionality in order to accelerate the time series search by their indexing in the symbolic space. Before processing with PAA and SAX, time series are usually z-Normalized.
+SAX transform (`series_to_string(ts, alphabet_size)`) is a discretization algorithm which transforms a sequence of rational values (time series points) into a sequence of discrete values - symbols taken from a finite alphabet. This procedure enables the application of numerous algorithms for discrete data analysis to continuous time series data. 
+
+Typically, SAX applied to time series of reduced with PAA dimensionality, which effectively yields a low-dimensional, discrete representation of the input time series which preserves (to some extent) its structural characteristics. By employing this representation it is possible to design efficient algorithms for common time series pattern mining tasks as one can rely on the indexing of data in symbolic space. Note, that before processing with PAA and SAX, time series are z-Normalized.
 
 The figure below illustrates the PAA+SAX procedure: 8 points time series is converted into 3-points PAA representation at the first step, PAA values are converted into letters by using 3 letters alphabet at the second step.
 
