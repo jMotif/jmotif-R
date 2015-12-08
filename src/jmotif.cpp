@@ -87,7 +87,7 @@ NumericVector paa(NumericVector ts, int paa_num) {
       int inc = len / paa_num;
       for (int i = 0; i < len; i++) {
         int idx = i / inc; // the spot
-        res[idx] += ts[i];
+        res[idx] = res[idx] + ts[i];
       }
       double dl = (double) (inc);
       for (int i = 0; i < paa_num; i++) {
