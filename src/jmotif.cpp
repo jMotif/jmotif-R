@@ -5,10 +5,10 @@
 #include <ctime>
 #include <map>
 #include <RcppArmadillo.h>
+// [[Rcpp::depends(RcppArmadillo)]]
 using namespace Rcpp;
 // Enable C++11 via this plugin (Rcpp 0.10.3 or later)
 // [[Rcpp::plugins("cpp11")]]
-// [[Rcpp::depends(RcppArmadillo)]]
 
 const char LETTERS[] = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h',
                         'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p',
