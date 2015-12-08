@@ -1,4 +1,3 @@
-#include <Rcpp.h>
 #include <limits>
 #include <cmath>
 #include <cstdlib>
@@ -870,10 +869,11 @@ double early_abandoned_dist(NumericVector seq1, NumericVector seq2, double upper
   }
 }
 
-int armaRand(const int N) {
-  int x = arma::randi(N);
-  return x;
+int armaRand() {
+  arma::ivec x = arma::randi(1);
+  return x(0);
 }
+
 
 class VisitRegistry {
 public:
@@ -902,7 +902,7 @@ public:
       int random_index = -1;
       do{
         // random_index = std::rand() % size;
-        random_index = armaRand(1) % size;
+        random_index = armaRand() % size;
       } while ( registry[random_index] );
       return random_index;
     }
