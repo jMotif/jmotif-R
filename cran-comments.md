@@ -1,6 +1,10 @@
 ## Resubmission
 
-This is a re-submission of yesterday's rejected submission. In this version I have:
+This is a re-submission of todays's rejected submission. In this version I have:
+
+* cleaned "RcppArmadillo" reference in the DESCRIPTION "Depends"
+
+This also fixes a previous submission error:
 
 * switched from system's RNG to the Armadillo's implementation.
 
