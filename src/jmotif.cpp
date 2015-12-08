@@ -4,10 +4,11 @@
 #include <cstdlib>
 #include <ctime>
 #include <map>
-
+#include <RcppArmadillo.h>
 using namespace Rcpp;
 // Enable C++11 via this plugin (Rcpp 0.10.3 or later)
 // [[Rcpp::plugins("cpp11")]]
+// [[Rcpp::depends(RcppArmadillo)]]
 
 const char LETTERS[] = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h',
                         'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p',
@@ -869,6 +870,11 @@ double early_abandoned_dist(NumericVector seq1, NumericVector seq2, double upper
   }
 }
 
+int armaRand(const int N) {
+  int x = arma::randi(N);
+  return x;
+}
+
 class VisitRegistry {
 public:
   int size;
@@ -882,7 +888,7 @@ public:
     }
     unvisited_count = capacity;
     size = capacity;
-    std::srand(std::time(0)); // use current time as seed for random generator
+   // std::srand(std::time(0)); // use current time as seed for random generator
   }
 
   ~VisitRegistry() {
@@ -895,7 +901,8 @@ public:
     } else {
       int random_index = -1;
       do{
-        random_index = std::rand() % size;
+        // random_index = std::rand() % size;
+        random_index = armaRand(1) % size;
       } while ( registry[random_index] );
       return random_index;
     }
