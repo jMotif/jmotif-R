@@ -49,7 +49,7 @@ Z-normalization (`znorm(ts, threshold)`) is a common in time series pattern mini
     legend(0, -4, c("scaled sine wave","z-normalized wave"), lty=c(1,1), lwd=c(1,1), 
                                                                     col=c("blue","red"), cex=0.8)
       
-![z-normalization of a scaled sine wave](https://raw.githubusercontent.com/jMotif/jmotif-R/master/inst/fig_znorm.png)
+![z-normalization of a scaled sine wave](https://raw.githubusercontent.com/jMotif/jmotif-R/master/inst/site/fig_znorm.png)
 
 #### 2.0 Piecewise Aggregate Approximation (i.e., PAA)
 PAA (`paa(ts, paa_num)`) is designed to reduce the input time series dimensionality by splitting it into equally-sized segments (PAA size) and averaging values of points within each segment. Typically, PAA is applied to z-Normalized time series. In the following example the time series of dimensionality 8 points is reduced to 3 points.
@@ -72,7 +72,7 @@ PAA (`paa(ts, paa_num)`) is designed to reduce the input time series dimensional
     segments(1+7/3*2,y_paa3[3],8,y_paa3[3],lwd=1,col="red")
     points(x=1+7/3*2+7/3/2,y=y_paa3[3],col="red",pch=23,lwd=5)
       
-![PAA transform of an 8-points time series into 3 points](https://raw.githubusercontent.com/jMotif/jmotif-R/master/inst/fig_paa83.png)
+![PAA transform of an 8-points time series into 3 points](https://raw.githubusercontent.com/jMotif/jmotif-R/master/inst/site/fig_paa83.png)
 
 #### 3.0 SAX transform
 SAX transform (`series_to_string(ts, alphabet_size)`) is a discretization algorithm which transforms a sequence of rational values (time series points) into a sequence of discrete values - symbols taken from a finite alphabet. This procedure enables the application of numerous algorithms for discrete data analysis to continuous time series data. 
@@ -95,7 +95,7 @@ The figure below illustrates the PAA+SAX procedure: 8 points time series is conv
     > series_to_chars(y_paa3, 3)
     [1] "a" "c" "c"
       
-![an application of SAX transform (3 letters word size and 3 letters alphabet size) to an 8 points time series ](https://raw.githubusercontent.com/jMotif/jmotif-R/master/inst/fig_sax83.png)
+![an application of SAX transform (3 letters word size and 3 letters alphabet size) to an 8 points time series ](https://raw.githubusercontent.com/jMotif/jmotif-R/master/inst/site/fig_sax83.png)
 
 #### 4.0 Time series SAX transform via sliding window 
 Another common way to use SAX is to apply the procedure to sliding window-extracted subseries (`sax_via_window(ts, win_size, paa_size, alp_size, nr_strategy, n_threshold)`). This technique is used in SAX-VSM, where it unables the conversion of a time series into the word bags. Note, the use of a numerosity reduction strategy.
@@ -214,11 +214,11 @@ and to visualize those on data:
         panel.grid.major.y = element_blank(), panel.grid.minor.y = element_blank(),
         axis.ticks.y = element_blank())
     
-![interpretable time series representation](https://raw.githubusercontent.com/jMotif/jmotif-R/master/inst/fig-weighted_funnel.png)    
+![interpretable time series representation](https://raw.githubusercontent.com/jMotif/jmotif-R/master/inst/site/fig-weighted_funnel.png)    
 
-![interpretable time series representation](https://raw.githubusercontent.com/jMotif/jmotif-R/master/inst/fig-weighted_bell.png)
+![interpretable time series representation](https://raw.githubusercontent.com/jMotif/jmotif-R/master/inst/site/fig-weighted_bell.png)
 
-![interpretable time series representation](https://raw.githubusercontent.com/jMotif/jmotif-R/master/inst/fig-weighted_cylinder.png)    
+![interpretable time series representation](https://raw.githubusercontent.com/jMotif/jmotif-R/master/inst/site/fig-weighted_cylinder.png)    
     
 ##### 5.3 SAX-VSM classification
 Using the weighted patterns obtained at the previous step and the cosine similarity measure it is also easy to classify unlabeled data using the `cosine_sim` function which accepts a list of two elements: the bag-of-words representation of the input time series (constructed with `series_to_wordbag` function) and the `TF*IDF` weights table obtained at the previous step:
@@ -253,11 +253,11 @@ The library embeds the ECG0606 dataset taken from [PHYSIONET FTP](http://physion
 
 and conists of 15 heartbeats:
 
-![ECG0606 data](https://raw.githubusercontent.com/jMotif/jmotif-R/master/inst/ecg0606.png)
+![ECG0606 data](https://raw.githubusercontent.com/jMotif/jmotif-R/master/inst/site/ecg0606.png)
 
 We know, that the third heartbeat of this dataset contains the true anomaly as it was discussed in HOTSAX paper by Eamonn Keogh, Jessica Lin, and Ada Fu. Note, that the authors were specifically interested in finding anomalies which are shorter than a regular heartbeat following a suggestion given by the domain expert: ''_We conferred with cardiologist, Dr. Helga Van Herle M.D., who informed us that heart irregularities can sometimes manifest themselves at scales significantly shorter than a single heartbeat_.'' Figure 13 of the paper further explains the nature of this true anomaly:
 
-![ECG0606 clusters](https://raw.githubusercontent.com/jMotif/jmotif-R/master/inst/demo-ecg0606_cluster.png)
+![ECG0606 clusters](https://raw.githubusercontent.com/jMotif/jmotif-R/master/inst/site/demo-ecg0606_cluster.png)
 
 Two implementation of discord discovery provided within the code: the brute-force didcord discovery and HOT-SAX. 
 
@@ -293,7 +293,10 @@ The best discord is the third one at 411:
     lines(x=c(discords[3,2]:(discords[3,2]+100)),
         y=ecg0606[discords[3,2]:(discords[3,2]+100)], col="red")
 
-![ECG0606 clusters](https://raw.githubusercontent.com/jMotif/jmotif-R/master/inst/ecg0606_discord.png)
+![ECG0606 clusters](https://raw.githubusercontent.com/jMotif/jmotif-R/master/inst/site/ecg0606_discord.png)
+
+
+It is easy to sort discord by the nearest neighbor distance:
 
     > library(dplyr)
     > arrange(discords,desc(nn_distance))
