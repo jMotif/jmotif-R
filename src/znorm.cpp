@@ -1,7 +1,7 @@
 #include <RcppArmadillo.h>
 using namespace Rcpp ;
 //
-#include "jmotif.h"
+#include <jmotif.h>
 //
 //' Z-normalizes a time series by subtracting the mean value and dividing by the standard deviation value.
 //'
@@ -19,7 +19,7 @@ using namespace Rcpp ;
 //' plot(x, y, type="l", col="blue")
 //' lines(x, znorm(y, 0.01), type="l", col="red")
 // [[Rcpp::export]]
-NumericVector znorm(NumericVector ts, double threshold = 0.01) {
+NumericVector znorm(NumericVector ts, double threshold  = 0.01) {
   double ts_sd = sd(ts);
   if (ts_sd < threshold){
     return clone(ts);

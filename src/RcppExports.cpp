@@ -18,18 +18,6 @@ BEGIN_RCPP
     return __result;
 END_RCPP
 }
-// paa
-NumericVector paa(NumericVector ts, int paa_num);
-RcppExport SEXP jmotif_paa(SEXP tsSEXP, SEXP paa_numSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject __result;
-    Rcpp::RNGScope __rngScope;
-    Rcpp::traits::input_parameter< NumericVector >::type ts(tsSEXP);
-    Rcpp::traits::input_parameter< int >::type paa_num(paa_numSEXP);
-    __result = Rcpp::wrap(paa(ts, paa_num));
-    return __result;
-END_RCPP
-}
 // idx_to_letter
 char idx_to_letter(int idx);
 RcppExport SEXP jmotif_idx_to_letter(SEXP idxSEXP) {
@@ -270,6 +258,18 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type n_threshold(n_thresholdSEXP);
     Rcpp::traits::input_parameter< int >::type discords_num(discords_numSEXP);
     __result = Rcpp::wrap(find_discords_hot_sax(ts, w_size, paa_size, a_size, n_threshold, discords_num));
+    return __result;
+END_RCPP
+}
+// paa
+NumericVector paa(NumericVector ts, int paa_num);
+RcppExport SEXP jmotif_paa(SEXP tsSEXP, SEXP paa_numSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< NumericVector >::type ts(tsSEXP);
+    Rcpp::traits::input_parameter< int >::type paa_num(paa_numSEXP);
+    __result = Rcpp::wrap(paa(ts, paa_num));
     return __result;
 END_RCPP
 }

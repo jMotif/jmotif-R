@@ -1,11 +1,10 @@
-^src/.gitignore$
-^\.git*$
 ^.*\.Rproj$
-^\.Rhistory$
 ^\.Rproj\.user$
-^\.travis.yml$
-^inst/site$
-^inst/test_data$
+^\.travis\.yml$
+^\.Rhistory$
+.Rprofile
+inst/site
+inst/test_data
+NEWS\.md
 ^\.lintr$
 ^cran-comments.md$
-NEWS\.md
