@@ -1,46 +1,85 @@
+library(plyr)
+library(dplyr)
+
 library(cvTools)
+library(nloptr)
 
+cverror <- function(x) {
 
-w=60
-p=6
-a=6
+  w = round(x[1], digits = 0)
+  p = round(x[2], digits = 0)
+  a = round(x[3], digits = 0)
 
-cverror = function( w, p, a ) {
+  m <- length(train_labels)
+  c <- length(unique(train_labels))
 
-  n_folds = 15
-  folds = cvFolds(30, K = n_folds, type = "random")
+  folds <- cvFolds(m, K = nfolds, type = "random")
 
-  for(i in c(1:n_folds)){
+  errors <- list()
+  for (i in c(1:nfolds)) {
 
-    set_test = which(folds$which==i)
-    set_train = setdiff(1:30, set_test)
+    set_test <- which(folds$which == i)
+    set_train <- setdiff(1:m, set_test)
 
-    CBF[["labels_train"]]
-
-    cyl_idx = which(dtrain[,1]==1)
-    bel_idx = which(CBF[["labels_train"]][set_train]==2)
-    fun_idx = which(CBF[["labels_train"]][set_train]==3)
-
-    cylinder <- manyseries_to_wordbag(CBF[["data_train"]][cyl_idx,], w, p, a, "exact", 0.01)
-    bell <- manyseries_to_wordbag(CBF[["data_train"]][bel_idx,], w, p, a, "exact", 0.01)
-    funnel <- manyseries_to_wordbag(CBF[["data_train"]][fun_idx,], w, p, a, "exact", 0.01)
-
-    tfidf = bags_to_tfidf( list("cylinder" = cylinder, "bell" = bell, "funnel" = funnel) )
+    bags <- alply(unique(train_labels),1,function(x){x})
+    for (j in 1:c) {
+      ll <- which(train_labels[set_train] == unique(train_labels)[j])
+      bags[[unique(train_labels)[j]]] <-
+                  manyseries_to_wordbag( (train_data[set_train, ])[ll,], w, p, a, "exact", 0.01)
+    }
+    tfidf = bags_to_tfidf( bags )
 
     labels_predicted = rep(-1, length(set_test))
-    labels_test = CBF[["labels_train"]][set_test]
-    data_test = CBF[["data_train"]][set_test,]
-    for (i in c(1:length(data_test[,1]))) {
-      series = data_test[i,]
+    labels_test = train_labels[set_test]
+    data_test = train_data[set_test,]
+
+    for (j in c(1:length(data_test[,1]))) {
+      series = data_test[j,]
       bag = series_to_wordbag(series, w, p, a, "exact", 0.01)
-      cosines = cosine_sim(list("bag"=bag, "tfidf" = tfidf))
-      labels_predicted[i] = which(cosines$cosines == max(cosines$cosines))
+      cosines = cosine_sim(list("bag" = bag, "tfidf" = tfidf))
+      if (!any(is.na(cosines$cosines))) {
+       labels_predicted[j] = which(cosines$cosines == max(cosines$cosines))
+      }
     }
 
     # compute the classification error
     #
     error = length(which((labels_test != labels_predicted))) / length(labels_test)
-    error
+    errors[i] <- error
 
+  }
+
+  err = mean(laply(errors,function(x){x}))
+
+  print(paste(w,p,a, " -> ", err))
+
+  err
 
 }
+
+train_data <- CBF[["data_train"]]
+train_labels <- CBF[["labels_train"]]
+nfolds = 5
+S <- directL(cverror, rep(c(10,2,2)), rep(c(120,60,12)),
+             nl.info = TRUE, control=list(xtol_rel=1e-8, maxeval=100))
+
+
+
+cverror( S$par)
+
+train_data <- Gun_Point[["data_train"]]
+train_labels <- Gun_Point[["labels_train"]]
+nfolds = 10
+
+S <- directL(cverror, rep(c(10,2,2)), rep(c(140,50,12)),
+             nl.info = TRUE, control=list(xtol_rel=1e-8, maxeval=6))
+cverror( S$par)
+
+data = read.table("../../sax-vsm_classic.git/src/resources/data/Beef/Beef_TRAIN")
+train_labels = unlist(data[,1])
+train_data = matrix(unlist(data[,-1]), nrow = length(train_labels))
+nfolds=15
+
+S <- directL(cverror, rep(c(10,2,2)), rep(c(470,100,16)),
+             nl.info = TRUE, control=list(xtol_rel=1e-8, maxeval=60))
+cverror( S$par)
