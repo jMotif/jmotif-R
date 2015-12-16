@@ -3,7 +3,7 @@
 [![Build Status](https://travis-ci.org/jMotif/jmotif-R.svg?branch=master)](https://travis-ci.org/jMotif/jmotif-R)
 [![codecov.io](http://codecov.io/github/jMotif/jmotif-R/coverage.svg?branch=master)](http://codecov.io/github/jMotif/jmotif-R?branch=master)
 [![CRAN](http://www.r-pkg.org/badges/version/jmotif)](http://cran.rstudio.com/package=jmotif)
-[![License](http://img.shields.io/:license-gpl2-green.svg)](http://www.gnu.org/licenses/gpl-2.0.html)
+[![License](http://img.shields.io/:license-gpl2-green.svg)](http://dplwww.gnu.org/licenses/gpl-2.0.html)
 [![Downloads](http://cranlogs.r-pkg.org/badges/jmotif?color=brightgreen)](https://github.com/jMotif/jmotif-R)
 
 Implements a set of R functions for time series pattern mining based on Symbolic Aggregate approXimation (i.e., SAX) and Vector Space Model (i.e., VSM) -- which makes SAX-VSM! 
@@ -246,7 +246,6 @@ Using the weighted patterns obtained at the previous step and the cosine similar
 Her Ishow how the parameters optimization can be done with third-party libraries, specifically [nloptr](https://cran.r-project.org/web/packages/nloptr/) which implements DIRECT and [cvTools](https://cran.r-project.org/web/packages/cvTools/) which facilitates CV process. But not forget the magic of [plyr](https://github.com/hadley/plyr)!!! So here is the code:
 
     library(plyr)
-    library(dplyr)
     library(cvTools)
     library(nloptr)
 
