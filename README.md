@@ -6,7 +6,7 @@
 [![License](http://img.shields.io/:license-gpl2-green.svg)](http://www.gnu.org/licenses/gpl-2.0.html)
 [![Downloads](http://cranlogs.r-pkg.org/badges/jmotif?color=brightgreen)](https://github.com/jMotif/jmotif-R)
 
-Implements a set of R functions for time series pattern mining based on Symbolic Aggregate approXimation, i.e. SAX. 
+Implements a set of R functions for time series pattern mining based on Symbolic Aggregate approXimation (i.e., SAX) and Vector Space Model (i.e., VSM) -- which makes SAX-VSM! 
 
 Specifically, this library implements the full stack of tools needed for SAX-VSM [5] -- an algorithm for interpretable time series classification and characteristic patterns discovery -- among which are the time series z-Normalization [1], PAA [2], SAX [3], and VSM [4]. In addition, implements HOT-SAX -- the time series discord (time series anomaly) discovery algorithm [6].
 
@@ -101,8 +101,6 @@ The figure below illustrates the PAA+SAX procedure: 8 points time series is conv
 Another common way to use SAX is to apply the procedure to sliding window-extracted subseries (`sax_via_window(ts, win_size, paa_size, alp_size, nr_strategy, n_threshold)`). This technique is used in SAX-VSM, where it unables the conversion of a time series into the word bags. Note, the use of a numerosity reduction strategy.
 
 #### 5.0 SAX-VSM classifier
-While the parameters optimization sampler discussed in our paper is yet to be coded, the current code provides a reference implementation of SAX-VSM classification and a characteristic patterns dicovery framework.
-
 I use the one of [standard UCR time series datasets](http://www.cs.ucr.edu/~eamonn/time_series_data/) to illustrate the implemented approach. The Cylinder-Bell-Funnel dataset (Saito, N: *Local feature extraction and its application using a library of bases.* PhD thesis, Yale University (1994)) consists of three time series classes. The dataset is embedded into the `jmotif` library:  
 
     # load Cylinder-Bell-Funnel data
@@ -243,6 +241,93 @@ Using the weighted patterns obtained at the previous step and the cosine similar
     # findout which time series were misclassified
     #
     which((labels_test != labels_predicted))
+
+#### 6.0 SAX-VSM discretization parameters optimization
+Her Ishow how the parameters optimization can be done with third-party libraries, specifically [nloptr](https://cran.r-project.org/web/packages/nloptr/) which implements DIRECT and [cvTools](https://cran.r-project.org/web/packages/cvTools/) which facilitates CV process. But not forget the magic of [plyr](https://github.com/hadley/plyr)!!! So here is the code:
+
+        library(plyr)
+        library(dplyr)
+        library(cvTools)
+        library(nloptr)
+
+        # the cross-validation error function
+        # uses the following global variables
+        #   1) nfolds -- specifies folds for the cross-validation
+        #                if equal to the number of instances, then it is
+        #                LOOCV
+        #
+        cverror <- function(x) {
+
+          # the vector x suppos to contain reational values for the
+          # discretization parameters
+          #
+          w = round(x[1], digits = 0)
+          p = round(x[2], digits = 0)
+          a = round(x[3], digits = 0)
+
+          # few local vars to simplify the process
+          m <- length(train_labels)
+          c <- length(unique(train_labels))
+          folds <- cvFolds(m, K = nfolds, type = "random")
+
+          # saving the error for each folds in this array
+          errors <- list()
+
+          # cross-valiadtion business
+          for (i in c(1:nfolds)) {
+
+            # define data sets
+            set_test <- which(folds$which == i)
+            set_train <- setdiff(1:m, set_test)
+
+            # compute the TF-IDF vectors
+            bags <- alply(unique(train_labels),1,function(x){x})
+            for (j in 1:c) {
+              ll <- which(train_labels[set_train] == unique(train_labels)[j])
+              bags[[unique(train_labels)[j]]] <-
+                manyseries_to_wordbag( (train_data[set_train, ])[ll,], w, p, a, "exact", 0.01)
+            }
+            tfidf = bags_to_tfidf(bags)
+
+            # compute the eror
+            labels_predicted <- rep(-1, length(set_test))
+            labels_test <- train_labels[set_test]
+            data_test <- train_data[set_test,]
+
+            for (j in c(1:length(labels_predicted))) {
+              bag=NA
+              if (length(labels_predicted)>1) {
+                bag = series_to_wordbag(data_test[j,], w, p, a, "exact", 0.01)
+              } else {
+                bag = series_to_wordbag(data_test, w, p, a, "exact", 0.01)
+              }
+              cosines = cosine_sim(list("bag" = bag, "tfidf" = tfidf))
+              if (!any(is.na(cosines$cosines))) {
+                labels_predicted[j] = which(cosines$cosines == max(cosines$cosines))
+              }
+            }
+
+            # the actual error value
+            error = length(which((labels_test != labels_predicted))) / length(labels_test)
+            errors[i] <- error
+          }
+
+          # output the mean cross-validation error as the result
+          err = mean(laply(errors,function(x){x}))
+          print(paste(w,p,a, " -> ", err))
+          err
+        }
+
+        # define the data for CV
+        train_data <- CBF[["data_train"]]
+        train_labels <- CBF[["labels_train"]]
+        nfolds = 15
+
+        # perform the parameters optimization
+        S <- directL(cverror, c(10,2,2), c(120,60,12),
+                     nl.info = TRUE, control = list(xtol_rel = 1e-8, maxeval = 30))
+
+
 
 #### 6.0 HOT-SAX algorithm for time series discord discovery
 Given a time series _T_, its subsequence _C_  is called *discord* if it has the largest Euclidean distance to its nearest non-self match. Thus, time series discord is a subsequence within a time series that is _maximally different_ to all the rest of subsequences in the time series, and therefore naturaly captures the most unusual subsequence within the time series.
