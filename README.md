@@ -1,4 +1,4 @@
-### R (Rcpp) implementation of SAX, HOT-SAX, VSM, and SAX-VSM
+### R (Rcpp) implementation of SAX, HOT-SAX, VSM, and SAX-VSM (with parameters optimization)
 
 [![Build Status](https://travis-ci.org/jMotif/jmotif-R.svg?branch=master)](https://travis-ci.org/jMotif/jmotif-R)
 [![codecov.io](http://codecov.io/github/jMotif/jmotif-R/coverage.svg?branch=master)](http://codecov.io/github/jMotif/jmotif-R?branch=master)
