@@ -245,89 +245,134 @@ Using the weighted patterns obtained at the previous step and the cosine similar
 #### 6.0 SAX-VSM discretization parameters optimization
 Her Ishow how the parameters optimization can be done with third-party libraries, specifically [nloptr](https://cran.r-project.org/web/packages/nloptr/) which implements DIRECT and [cvTools](https://cran.r-project.org/web/packages/cvTools/) which facilitates CV process. But not forget the magic of [plyr](https://github.com/hadley/plyr)!!! So here is the code:
 
-        library(plyr)
-        library(dplyr)
-        library(cvTools)
-        library(nloptr)
+    library(plyr)
+    library(dplyr)
+    library(cvTools)
+    library(nloptr)
 
-        # the cross-validation error function
-        # uses the following global variables
-        #   1) nfolds -- specifies folds for the cross-validation
-        #                if equal to the number of instances, then it is
-        #                LOOCV
-        #
-        cverror <- function(x) {
+    # the cross-validation error function
+    # uses the following global variables
+    #   1) nfolds -- specifies folds for the cross-validation
+    #                if equal to the number of instances, then it is
+    #                LOOCV
+    #
+    cverror <- function(x) {
 
-          # the vector x suppos to contain reational values for the
-          # discretization parameters
-          #
-          w = round(x[1], digits = 0)
-          p = round(x[2], digits = 0)
-          a = round(x[3], digits = 0)
+      # the vector x suppos to contain reational values for the
+      # discretization parameters
+      #
+      w = round(x[1], digits = 0)
+      p = round(x[2], digits = 0)
+      a = round(x[3], digits = 0)
 
-          # few local vars to simplify the process
-          m <- length(train_labels)
-          c <- length(unique(train_labels))
-          folds <- cvFolds(m, K = nfolds, type = "random")
+      # few local vars to simplify the process
+      m <- length(train_labels)
+      c <- length(unique(train_labels))
+      folds <- cvFolds(m, K = nfolds, type = "random")
 
-          # saving the error for each folds in this array
-          errors <- list()
+      # saving the error for each folds in this array
+      errors <- list()
 
-          # cross-valiadtion business
-          for (i in c(1:nfolds)) {
+      # cross-valiadtion business
+      for (i in c(1:nfolds)) {
 
-            # define data sets
-            set_test <- which(folds$which == i)
-            set_train <- setdiff(1:m, set_test)
+        # define data sets
+        set_test <- which(folds$which == i)
+        set_train <- setdiff(1:m, set_test)
 
-            # compute the TF-IDF vectors
-            bags <- alply(unique(train_labels),1,function(x){x})
-            for (j in 1:c) {
-              ll <- which(train_labels[set_train] == unique(train_labels)[j])
-              bags[[unique(train_labels)[j]]] <-
-                manyseries_to_wordbag( (train_data[set_train, ])[ll,], w, p, a, "exact", 0.01)
-            }
-            tfidf = bags_to_tfidf(bags)
+        # compute the TF-IDF vectors
+        bags <- alply(unique(train_labels),1,function(x){x})
+        for (j in 1:c) {
+          ll <- which(train_labels[set_train] == unique(train_labels)[j])
+          bags[[unique(train_labels)[j]]] <-
+            manyseries_to_wordbag( (train_data[set_train, ])[ll,], w, p, a, "exact", 0.01)
+        }
+        tfidf = bags_to_tfidf(bags)
 
-            # compute the eror
-            labels_predicted <- rep(-1, length(set_test))
-            labels_test <- train_labels[set_test]
-            data_test <- train_data[set_test,]
+        # compute the eror
+        labels_predicted <- rep(-1, length(set_test))
+        labels_test <- train_labels[set_test]
+        data_test <- train_data[set_test,]
 
-            for (j in c(1:length(labels_predicted))) {
-              bag=NA
-              if (length(labels_predicted)>1) {
-                bag = series_to_wordbag(data_test[j,], w, p, a, "exact", 0.01)
-              } else {
-                bag = series_to_wordbag(data_test, w, p, a, "exact", 0.01)
-              }
-              cosines = cosine_sim(list("bag" = bag, "tfidf" = tfidf))
-              if (!any(is.na(cosines$cosines))) {
-                labels_predicted[j] = which(cosines$cosines == max(cosines$cosines))
-              }
-            }
-
-            # the actual error value
-            error = length(which((labels_test != labels_predicted))) / length(labels_test)
-            errors[i] <- error
+        for (j in c(1:length(labels_predicted))) {
+          bag=NA
+          if (length(labels_predicted)>1) {
+            bag = series_to_wordbag(data_test[j,], w, p, a, "exact", 0.01)
+          } else {
+            bag = series_to_wordbag(data_test, w, p, a, "exact", 0.01)
           }
-
-          # output the mean cross-validation error as the result
-          err = mean(laply(errors,function(x){x}))
-          print(paste(w,p,a, " -> ", err))
-          err
+          cosines = cosine_sim(list("bag" = bag, "tfidf" = tfidf))
+          if (!any(is.na(cosines$cosines))) {
+            labels_predicted[j] = which(cosines$cosines == max(cosines$cosines))
+          }
         }
 
-        # define the data for CV
-        train_data <- CBF[["data_train"]]
-        train_labels <- CBF[["labels_train"]]
-        nfolds = 15
+        # the actual error value
+        error = length(which((labels_test != labels_predicted))) / length(labels_test)
+        errors[i] <- error
+      }
 
-        # perform the parameters optimization
-        S <- directL(cverror, c(10,2,2), c(120,60,12),
-                     nl.info = TRUE, control = list(xtol_rel = 1e-8, maxeval = 30))
+      # output the mean cross-validation error as the result
+      err = mean(laply(errors,function(x){x}))
+      print(paste(w,p,a, " -> ", err))
+      err
+    }
+
+    # define the data for CV
+    train_data <- CBF[["data_train"]]
+    train_labels <- CBF[["labels_train"]]
+    nfolds = 15
+
+    # perform the parameters optimization
+    S <- directL(cverror, c(10,2,2), c(120,60,12),
+                 nl.info = TRUE, control = list(xtol_rel = 1e-8, maxeval = 30))
 
 
+At this point S contains the best SAX parameters which were found using 10 DIRECT iterations, which we can use for the classification of the test data:
+
+    w = round(S$par[1], digits = 0)
+    p = round(S$par[2], digits = 0)
+    a = round(S$par[3], digits = 0)
+
+    # compute the TF-IDF vectors
+    #
+    bags <- alply(unique(train_labels),1,function(x){x})
+    for (j in 1:length(unique(train_labels))) {
+      ll <- which(train_labels == unique(train_labels)[j])
+      bags[[unique(train_labels)[j]]] <-
+        manyseries_to_wordbag( train_data[ll,], w, p, a, "exact", 0.01)
+    }
+    tfidf = bags_to_tfidf(bags)
+
+    # classify the test data
+    #
+    labels_predicted = rep(-1, length(CBF[["labels_test"]]))
+    labels_test = CBF[["labels_test"]]
+    data_test = CBF[["data_test"]]
+    for (i in c(1:length(data_test[,1]))) {
+      print(paste(i))
+      series = data_test[i,]
+      bag = series_to_wordbag(series, w, p, a, "exact", 0.01)
+      cosines = cosine_sim(list("bag"=bag, "tfidf" = tfidf))
+      if (!any(is.na(cosines$cosines))) {
+        labels_predicted[i] = which(cosines$cosines == max(cosines$cosines))
+      }
+    }
+
+    # compute the classification error
+    #
+    error = length(which((labels_test != labels_predicted))) / length(labels_test)
+    error
+
+    # findout which time series were misclassified
+    #
+    which((labels_test != labels_predicted))
+    par(mfrow=c(3,1))
+    plot(data_test[316,], type="l")
+    plot(data_test[589,], type="l")
+    plot(data_test[860,], type="l")
+    
+which shows us that one instance of each of the classes was misclassified....
 
 #### 6.0 HOT-SAX algorithm for time series discord discovery
 Given a time series _T_, its subsequence _C_  is called *discord* if it has the largest Euclidean distance to its nearest non-self match. Thus, time series discord is a subsequence within a time series that is _maximally different_ to all the rest of subsequences in the time series, and therefore naturaly captures the most unusual subsequence within the time series.
