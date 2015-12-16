@@ -81,3 +81,7 @@ nfolds=30
 S <- directL(cverror, rep(c(10,2,2)), rep(c(470,100,16)),
              nl.info = TRUE, control = list(xtol_rel = 1e-8, maxeval = 1000))
 cverror( S$par)
+# 19 40 14
+# nloptr.print.options()
+ls()
+memory.profile()
