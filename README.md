@@ -373,7 +373,7 @@ At this point S contains the best SAX parameters which were found using 10 DIREC
     
 which shows us that one instance of each of the classes was misclassified....
 
-#### 6.0 HOT-SAX algorithm for time series discord discovery
+#### 7.0 HOT-SAX algorithm for time series discord discovery
 Given a time series _T_, its subsequence _C_  is called *discord* if it has the largest Euclidean distance to its nearest non-self match. Thus, time series discord is a subsequence within a time series that is _maximally different_ to all the rest of subsequences in the time series, and therefore naturaly captures the most unusual subsequence within the time series.
 
 The library embeds the ECG0606 dataset taken from [PHYSIONET FTP](http://physionet.org/physiobank/database/qtdb/). The raw data was transformed with their `rdsamp` utility 
