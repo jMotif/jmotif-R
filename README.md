@@ -243,7 +243,7 @@ Using the weighted patterns obtained at the previous step and the cosine similar
     which((labels_test != labels_predicted))
 
 #### 6.0 SAX-VSM discretization parameters optimization
-Her I shall show how the classification task discretization parameters optimization can be done with third-party libraries, specifically [nloptr](https://cran.r-project.org/web/packages/nloptr/) which implements DIRECT and [cvTools](https://cran.r-project.org/web/packages/cvTools/) which facilitates CV process. But not forget the magic of [plyr](https://github.com/hadley/plyr)!!! So here is the code:
+Here I shall show how the classification task discretization parameters optimization can be done with third-party libraries, specifically [nloptr](https://cran.r-project.org/web/packages/nloptr/) which implements DIRECT and [cvTools](https://cran.r-project.org/web/packages/cvTools/) which facilitates CV process. But not forget the magic of [plyr](https://github.com/hadley/plyr)!!! So here is the code:
 
     library(plyr)
     library(cvTools)
