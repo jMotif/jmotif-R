@@ -324,8 +324,36 @@ Her I shall show how the classification task discretization parameters optimizat
 
     # perform the parameters optimization
     S <- directL(cverror, c(10,2,2), c(120,60,12),
-                 nl.info = TRUE, control = list(xtol_rel = 1e-8, maxeval = 30))
+                 nl.info = TRUE, control = list(xtol_rel = 1e-8, maxeval = 10))
 
+The optimization process goes as follows:
+
+    [1] "65 31 7  ->  1"
+    [1] "65 31 7  ->  1"
+    [1] "65 31 7  ->  1"
+    [1] "28 31 7  ->  1"
+    [1] "102 31 7  ->  1"
+    [1] "65 12 7  ->  0.366666666666667"
+    [1] "65 50 7  ->  1"
+    [1] "65 31 4  ->  1"
+    [1] "65 31 10  ->  1"
+    [1] "28 12 7  ->  0.833333333333333"
+    [1] "102 12 7  ->  0.666666666666667"
+    [1] "65 12 4  ->  0"
+
+    Call:
+    nloptr(x0 = x0, eval_f = fn, lb = lower, ub = upper, opts = opts)
+    Minimization using NLopt version 2.4.2 
+
+    NLopt solver status: 5 ( NLOPT_MAXEVAL_REACHED: Optimization stopped because maxeval (above) was 
+    reached. )
+
+    Number of Iterations....: 10 
+    Termination conditions:  stopval: -Inf xtol_rel: 1e-08 maxeval: 10 ftol_rel: 0 ftol_abs: 0 
+    Number of inequality constraints:  0 
+    Number of equality constraints:    0 
+    Current value of objective function:  0 
+    Current value of controls: 65 11.66667 3.666667
 
 At this point S contains the best SAX parameters which were found using 10 DIRECT iterations, which we can use for the classification of the test data:
 
