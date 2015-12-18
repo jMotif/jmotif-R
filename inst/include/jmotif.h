@@ -102,4 +102,6 @@ NumericVector col_means(NumericMatrix m);
 //
 NumericVector subseries(NumericVector ts, int start, int end);
 
+CharacterVector str_to_repair_grammar(CharacterVector str);
+
 #endif
