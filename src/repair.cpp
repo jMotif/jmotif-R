@@ -9,7 +9,6 @@ public:
   int str_idx;
   std::string payload;
   Token(){
-    payload = "\0";
     str_idx = -1;
   };
   Token(std::string s, int idx){
@@ -31,6 +30,9 @@ public:
     first = p;
     second = n;
   };
+  std::string getPayload(){
+    return first->payload + " " + second->payload;
+  }
 };
 std::ostream& operator<<(std::ostream &strm, const Digram &d) {
   return strm << "D(" << d.first->payload << " "
@@ -75,19 +77,33 @@ CharacterVector str_to_repair_grammar(CharacterVector str){
   size_t pos = 0; // the tokenizer var
   while ((pos = s.find(delimiter)) != std::string::npos) {
     token = s.substr(0, pos);
-    std::cout << token << std::endl;
+    std::cout << "current token: " << token << std::endl;
 
     if (!old_token.empty()) {
       Token p(old_token, token_counter - 1);
       Token n(token, token_counter);
       Digram d(&p, &n);
-      std::cout << d << std::endl;
+      std::cout << "new digram: " << d << std::endl;
+      if (digrams.find(d.getPayload()) == digrams.end()){
+        std::vector<size_t> vec;
+        vec.push_back(p.str_idx);
+        digrams.insert(std::make_pair(d.getPayload(), vec));
+      }else{
+        digrams[d.getPayload()].push_back(p.str_idx);
+      }
+
     }
     s.erase(0, pos + delimiter.length());
     old_token = token;
     token_counter++;
   }
-  std::cout << s << std::endl;
+
+
+  std::cout << "the digrams table\n=================\n" << std::endl;
+  for(std::map<std::string, std::vector<size_t> >::iterator it = digrams.begin();
+      it != digrams.end(); ++it) {
+    std::cout << it->first << " " << (it->second).size() << std::endl;
+  }
 
   return str;
 }
