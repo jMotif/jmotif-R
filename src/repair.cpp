@@ -170,8 +170,8 @@ CharacterVector str_to_repair_grammar(CharacterVector str){
 
         // update the first digram's token with the rule
         R0[cp-1] = Token(rule_str, cp-1);
+        // and remove its second token
 
-        // remove its second token
         R0.erase(R0.begin() + cp); // ********************************
         Rcout << "R0 -> ";
         for (std::vector<Token>::iterator it = R0.begin();
@@ -225,6 +225,9 @@ CharacterVector str_to_repair_grammar(CharacterVector str){
           } else {
             digrams_vec[i].second = im->second;
           }
+        }
+        for (int i = elements_to_delete.size(); i>=0; --i){
+          digrams_vec.erase(digrams_vec.begin()+elements_to_delete[i]);
         }
 
         // if this was the last instance
