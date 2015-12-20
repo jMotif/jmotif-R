@@ -85,6 +85,9 @@ paa <- function(ts, paa_num) {
     .Call('jmotif_paa', PACKAGE = 'jmotif', ts, paa_num)
 }
 
+#' Runs the repair.
+#'
+#' @param str the input string.
 #' @useDynLib jmotif
 #' @export
 str_to_repair_grammar <- function(str) {
