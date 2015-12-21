@@ -178,7 +178,9 @@ CharacterVector str_to_repair_grammar(CharacterVector str){
         end = end - 1;
 
         // update digrams vec
+        Rcout << "  decr. freq of " << digram_str << " : " << digrams_count[digram_str] << " to ";
         digrams_count[digram_str]--;
+        Rcout << digrams_count[digram_str] << std::endl;
 
         // add or update other elements in digram vector
         if(cp-1 > 0) {
@@ -208,7 +210,7 @@ CharacterVector str_to_repair_grammar(CharacterVector str){
         Rcout << "  decr count for a digram:" << old_left << ", " << digrams_count[old_left] << std::endl;
         if(0 == digrams_count[old_left]){
           digrams_count.erase(old_left);
-          Rcout << "  removed a digram:" << old_left << std::endl;
+          Rcout << "    removed a digram:" << old_left << std::endl;
         }
 
         std::string old_right =  n + " " + R0[cp].payload;
@@ -216,7 +218,7 @@ CharacterVector str_to_repair_grammar(CharacterVector str){
         Rcout << "  decr count for a digram:" << old_right << ", " << digrams_count[old_right] << std::endl;
         if(0 == digrams_count[old_right]){
           digrams_count.erase(old_right);
-          Rcout << "  removed a digram:" << old_right << std::endl;
+          Rcout << "    removed a digram:" << old_right << std::endl;
         }
 
         // need to reshuffle frequencies
