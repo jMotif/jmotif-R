@@ -476,3 +476,70 @@ It is easy to sort discord by the nearest neighbor distance:
     4   0.4437060     1566
     5   0.4177020      188
 
+#### 7.0 Rule density curve
+As we have discuss in our paper [8], SAX opens a door for many high-level string algorithms aplication to the problem of patterns minin in time series. Specifically, we have shown the useful properties of grammatical inference. Jmotif-R implements RePair [7] algoithm for grammar inference, which can be used to build a rule density curve which enables approximate time series anomaly discovery.
+
+Iuse the same ECG0606 dataset in this example:
+
+    ecg <- ecg0606
+    
+    require(ggplot2)
+    df=data.frame(time=c(1:length(ecg)),value=ecg)
+    p1 <- ggplot(df, aes(time, value)) + geom_line(lwd=1.1,color="blue1") + theme_classic() +
+      ggtitle("Dataset ECG qtdb 0606 [701-3000]") +
+      theme(plot.title = element_text(size = rel(1.5)), 
+        axis.title.x = element_blank(),axis.title.y=element_blank(),
+        axis.ticks.y=element_blank(),axis.text.y=element_blank())
+    p1
+    
+and use RePar implementation to build the gramar curve:
+
+    # discretization parameters
+    w=100
+    p=8
+    a=8
+
+    # discretize the data 
+    ecg_sax <- sax_via_window(ecg, w, p, a, "none", 0.01)
+    
+    # get the string representation of time series
+    ecg_str <- paste(ecg_sax, collapse=" ")
+    
+    # infer the grammar
+    ecg_grammar <- str_to_repair_grammar(ecg_str)   
+
+    # initialize the density curve
+    density_curve = rep(0,length(ecg))
+    
+    # account for all the rule intervals
+    for(i in 2:length(ecg_grammar)){
+        rule = ecg_grammar[[i]]
+        for(j in 1:length(rule$rule_interval_starts)){
+            xs = rule$rule_interval_starts[j]
+            xe = rule$rule_interval_ends[j] + w
+            density_curve[xs:xe] <- density_curve[xs:xe] + 1;
+        }
+    }
+    
+    # see global minimas
+    which(density_curve==min(density_curve))
+    [1]   1   2   3   4   5   6   7   8   9  10  11  12  13  14  15  16  17  18  19  20  21  22  23  24
+    [25]  25  26  27  28  29  30 444 445 446 447 448 449 450 451 452 453 454 455 456 457 458 459 460 461
+    [49] 462 463 464 465 466 467 468 469 470 471 472 473 474 475 476
+    
+    # plot the curve
+    density_df=data.frame(time=c(1:length(density_curve)),value=density_curve)
+    shade <- rbind(c(0,0), density_df, c(2229,0))
+    names(shade)<-c("x","y")
+    p2 <- ggplot(density_df, aes(x=time,y=value)) +
+        geom_line(col="cyan2") + theme_classic() +
+        geom_polygon(data = shade, aes(x, y), fill="cyan", alpha=0.5) +
+        ggtitle("RePair rules density for (w=100,p=8,a=8)") +
+        theme(plot.title = element_text(size = rel(1.5)), axis.title.x = element_blank(),axis.title.y=element_blank(),
+        axis.ticks.y=element_blank(),axis.text.y=element_blank())
+    p2
+    
+    grid.arrange(p1, p2, ncol=1)
+    
+
+![RePair rules density](https://raw.githubusercontent.com/jMotif/jmotif-R/master/inst/site/ecg_0606_repair_density.png)
