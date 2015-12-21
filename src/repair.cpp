@@ -2,6 +2,7 @@
 using namespace Rcpp ;
 //
 #include <jmotif.h>
+#include <stdlib.h>
 
 // Tokens are used in the R0
 //
@@ -18,7 +19,7 @@ public:
   };
 };
   std::ostream& operator<<(std::ostream &strm, const Token &t) {
-    return strm << "T(" << t.payload << "@" << t.str_idx << ")";
+    return strm << "T(" << t.payload << " @ " << t.str_idx << ")";
 };
 
 // Rules build up the rules table, i.e. the grammar
@@ -308,15 +309,52 @@ CharacterVector str_to_repair_grammar(CharacterVector str){
 
   // re-populate R0 according to the rules table
   std::string new_r0 = "";
-  for (std::vector<Token>::iterator it = R0.begin();
-       it != R0.end(); ++it) new_r0.append(it->payload + " ");
+  for (std::vector<Token>::iterator it = R0.begin(); it != R0.end(); ++it) new_r0.append(it->payload + " ");
   new_r0.erase(new_r0.length()-1, new_r0.length());
   rules[0].rule_string = new_r0;
 
   // print the grammar
-  Rcout << "\n\nInput: " << str << "\n\nGrammar:\n";
-  for(std::map<int, Rule>::iterator it = rules.begin();
-      it != rules.end(); ++it) {
+  Rcout << "\n\nInput: " << str << "\n\nInferred Grammar:\n";
+  for(std::map<int, Rule>::iterator it = rules.begin(); it != rules.end(); ++it) {
+    Rcout << it->second << std::endl;
+  }
+  Rcout << std::endl;
+
+  // trying to expand the rules
+  //
+  for(std::map<int, Rule>::iterator it = rules.begin(); it != rules.end(); ++it) {
+    it->second.expanded_rule_string = it->second.rule_string;
+  }
+  bool seen_r = true;
+  while(seen_r){
+    seen_r = false;
+    for(std::map<int, Rule>::iterator it = rules.begin(); it != rules.end(); ++it) {
+      std::string pre_exanded = it->second.expanded_rule_string;
+      int pos = 0;
+      // Rcout << "pre-expanded: " << pre_exanded << "\n";
+      while ((pos = pre_exanded.find("R", pos)) != std::string::npos) {
+        int space_pos = pre_exanded.find(" ", pos);
+        if(space_pos == std::string::npos){
+          space_pos = pre_exanded.length();
+        }
+        int rule_id = atoi(pre_exanded.substr(pos+1, space_pos-pos-1).c_str());
+        // Rcout << pre_exanded.substr(pos, space_pos-pos) << " @ " << pos << ", rule " << rule_id << "\n";
+        pre_exanded.erase(pos, space_pos-pos);
+        std::string replacement = rules[rule_id].expanded_rule_string;
+        pre_exanded.insert(pos, replacement);
+        pos = pos + replacement.length();
+      }
+      // Rcout << "post-expanded " << pre_exanded << "\n";
+      it->second.expanded_rule_string = pre_exanded;
+      if(pre_exanded.find("R") != std::string::npos) {
+        seen_r = true;
+      }
+    }
+  }
+
+  // print the grammar with expansion
+  Rcout << "\n\nFull Grammar:\n";
+  for(std::map<int, Rule>::iterator it = rules.begin(); it != rules.end(); ++it) {
     Rcout << it->second << std::endl;
   }
   Rcout << std::endl;
