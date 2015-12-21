@@ -73,6 +73,17 @@ BEGIN_RCPP
     return __result;
 END_RCPP
 }
+// str_to_repair_grammar
+Rcpp::DataFrame str_to_repair_grammar(CharacterVector str);
+RcppExport SEXP jmotif_str_to_repair_grammar(SEXP strSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< CharacterVector >::type str(strSEXP);
+    __result = Rcpp::wrap(str_to_repair_grammar(str));
+    return __result;
+END_RCPP
+}
 // alphabet_to_cuts
 NumericVector alphabet_to_cuts(int a_size);
 RcppExport SEXP jmotif_alphabet_to_cuts(SEXP a_sizeSEXP) {

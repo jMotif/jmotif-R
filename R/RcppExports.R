@@ -85,6 +85,15 @@ paa <- function(ts, paa_num) {
     .Call('jmotif_paa', PACKAGE = 'jmotif', ts, paa_num)
 }
 
+#' Runs the repair.
+#'
+#' @param str the input string.
+#' @useDynLib jmotif
+#' @export
+str_to_repair_grammar <- function(str) {
+    .Call('jmotif_str_to_repair_grammar', PACKAGE = 'jmotif', str)
+}
+
 #' Translates an alphabet size into the array of corresponding SAX cut-lines built using the Normal distribution.
 #'
 #' @param a_size the alphabet size, a value between 2 and 20 (inclusive).
