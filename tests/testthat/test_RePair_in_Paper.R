@@ -4,8 +4,8 @@ test_that("RePair test #1", {
 
   grammar <- str_to_repair_grammar(str)
 
-  expect_equal("R4 xxx R4", grammar[grammar$rule == "R0", ]$rule_string)
+  expect_equal("R4 xxx R4", grammar[[1]]$rule_string)
 
-  expect_equal("R3 bac", grammar[grammar$rule == "R4", ]$rule_string)
+  expect_equal("R3 bac", grammar[[5]]$rule_string)
 
 })

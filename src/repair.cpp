@@ -82,7 +82,7 @@ struct sort_pred {
 //' @examples
 //' str_to_repair_grammar("abc abc cba cba bac xxx abc abc cba cba bac")
 // [[Rcpp::export]]
-Rcpp::DataFrame str_to_repair_grammar(CharacterVector str){
+Rcpp::List str_to_repair_grammar(CharacterVector str){
 
   // Rcout << "input string \'" << str << "\'\n making a digram table...\n";
 
@@ -334,16 +334,16 @@ Rcpp::DataFrame str_to_repair_grammar(CharacterVector str){
   rules[0].rule_string = new_r0;
 
   // print the grammar
-  Rcout << "\n\nInput: " << str << "\n\nInferred Grammar:\n";
-  for(std::map<int, Rule>::iterator it = rules.begin(); it != rules.end(); ++it) {
-  Rcout << it->second;
-  for(std::vector<int>::iterator ito = it->second.occurrences.begin();
-      ito != it->second.occurrences.end(); ++ito) {
-    Rcout << *ito << ", ";
-  }
-  Rcout << std::endl;
-  }
-  Rcout << std::endl;
+  //   Rcout << "\n\nInput: " << str << "\n\nInferred Grammar:\n";
+//   for(std::map<int, Rule>::iterator it = rules.begin(); it != rules.end(); ++it) {
+//   Rcout << it->second;
+//   for(std::vector<int>::iterator ito = it->second.occurrences.begin();
+//       ito != it->second.occurrences.end(); ++ito) {
+//     Rcout << *ito << ", ";
+//   }
+//   Rcout << std::endl;
+//   }
+//   Rcout << std::endl;
 
   // trying to expand the rules
   //
@@ -385,22 +385,31 @@ Rcpp::DataFrame str_to_repair_grammar(CharacterVector str){
   // Rcout << std::endl;rule_str
 
   // make results
-  CharacterVector rule_names = CharacterVector(rules.size());
-  CharacterVector rule_strings = CharacterVector(rules.size());
-  CharacterVector expanded_rule_strings = CharacterVector(rules.size());
+  Rcpp::List res(rules.size());
+//   CharacterVector rule_names = CharacterVector(rules.size());
+//   CharacterVector rule_strings = CharacterVector(rules.size());
+//   CharacterVector expanded_rule_strings = CharacterVector(rules.size());
   for(std::map<int, Rule>::iterator it = rules.begin(); it != rules.end(); ++it) {
-    rule_names[it->first] = it->second.ruleString();
-    rule_strings[it->first] = it->second.rule_string;
-    expanded_rule_strings[it->first] = it->second.expanded_rule_string;
+    Rcpp::CharacterVector rule_name = it->second.ruleString();
+    Rcpp::CharacterVector rule_string = it->second.rule_string;
+    Rcpp::CharacterVector expanded_rule_string = it->second.expanded_rule_string;
+    Rcpp::NumericVector rule_interval_starts = Rcpp::wrap(it->second.occurrences);
+    res[it->first] = List::create(
+      _["rule_name"]  = rule_name,
+      _["rule_string"]  = rule_string,
+      _["expanded_rule_string"] = expanded_rule_string,
+      _["rule_intervals_starts"] = rule_interval_starts
+    ) ;
   }
 
+  return res;
   // return results
-  return Rcpp::DataFrame::create(
-    Named("rule") = rule_names,
-    Named("rule_string") = rule_strings,
-    Named("expanded_rule_string") = expanded_rule_strings,
-    Named("stringsAsFactors") = false
-  );
+//   return Rcpp::DataFrame::create(
+//     Named("rule") = rule_names,
+//     Named("rule_string") = rule_strings,
+//     Named("expanded_rule_string") = expanded_rule_strings,
+//     Named("stringsAsFactors") = false
+//   );
 
 }
 
