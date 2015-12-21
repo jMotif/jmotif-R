@@ -477,7 +477,9 @@ It is easy to sort discord by the nearest neighbor distance:
     5   0.4177020      188
 
 #### 7.0 Rule density curve
-As we have discuss in our paper [8], SAX opens a door for many high-level string algorithms aplication to the problem of patterns minin in time series. Specifically, we have shown the useful properties of grammatical inference. Jmotif-R implements RePair [7] algoithm for grammar inference, which can be used to build a rule density curve which enables approximate time series anomaly discovery.
+As we have discussed in [8], SAX opens door for many high-level string algorithms aplication to the problem of patterns minin in time series. Specifically, we have shown useful properties of grammatical compression (i.e., algorithmic complexity) when applied to the problem of recurrent and anomalous pattern discovery.
+
+Jmotif-R implements RePair [7] algoithm for grammar induction, which can be used to build the rule density curve enabling highly efficient approximate time series anomaly discovery.
 
 I use the same ECG0606 dataset in this example:
 
