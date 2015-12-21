@@ -1,4 +1,11 @@
-### R (Rcpp) implementation of SAX, HOT-SAX, VSM, and SAX-VSM (with parameters optimization)
+### R (Rcpp) implementation of :
+ * SAX, i.e., Symbolic Aggregate approXimation
+ * HOT-SAX, an algorithm for the exact time series discord discovery
+ * VSM, i.e., Vector Space Model
+ * SAX-VSM, and algorithm for interpretable time series classification (with parameters optimization)
+ * RePair, an algorithm for grammatical inference
+ * rule density curve, an efficient technique for an approximate time series anomaly discovery
+ * RRA (Rare Rule Anomaly), an algorithm for the exact time series discord discovery
 
 [![Build Status](https://travis-ci.org/jMotif/jmotif-R.svg?branch=master)](https://travis-ci.org/jMotif/jmotif-R)
 [![codecov.io](http://codecov.io/github/jMotif/jmotif-R/coverage.svg?branch=master)](http://codecov.io/github/jMotif/jmotif-R?branch=master)
@@ -30,6 +37,11 @@ Data Mining (ICDM), 2013 IEEE 13th International Conference on, pp.1175,1180, 7-
 [6] Keogh, E., Lin, J., Fu, A.,
 [*HOT SAX: Efficiently finding the most unusual time series subsequence*](http://www.cs.ucr.edu/~eamonn/HOT%20SAX%20%20long-ver.pdf),
 In Proc. ICDM (2005)
+
+[7] N.J. Larsson and A. Moffat. [*Offline dictionary-based compression.*](http://ieeexplore.ieee.org/xpl/login.jsp?tp=&arnumber=755679), In Data Compression Conference, 1999.
+
+[8] Pavel Senin, Jessica Lin , Xing Wang, Tim Oates, Sunil Gandhi, Arnold P. Boedihardjo, Crystal Chen, Susan Frankenstein, [*Time series anomaly discovery with grammar-based compression.*](http://openproceedings.org/2015/conf/edbt/paper-155.pdf), In Proc. of The International Conference on Extending Database Technology, EDBT 15.
+
 
 #### 0.0 Installation
     install.packages("devtools")
