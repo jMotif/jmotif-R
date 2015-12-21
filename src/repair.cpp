@@ -22,6 +22,7 @@ public:
     return strm << "T(" << t.payload << " @ " << t.str_idx << ")";
 };
 
+
 // Rules build up the rules table, i.e. the grammar
 //
 class Rule {
@@ -29,6 +30,7 @@ public:
   int id;
   std::string rule_string;
   std::string expanded_rule_string;
+  std::vector<int> occurrences;
   Rule(){
     id = -1;
     rule_string = "\0";
@@ -47,6 +49,18 @@ public:
 };
 std::ostream& operator<<(std::ostream &strm, const Rule &d) {
     return strm << "R" << d.id << "\t" << d.rule_string << "\t" << d.expanded_rule_string;
+};
+
+// Tokens are used in the R0
+//
+class Guard: public Token {
+public:
+  Rule r;
+  Guard(Rule rule, int idx){
+    r = rule;
+    payload = r.ruleString();
+    str_idx = idx;
+  };
 };
 
 // this is the digram priority queue sorter
@@ -82,7 +96,7 @@ Rcpp::DataFrame str_to_repair_grammar(CharacterVector str){
   std::map<int, Rule> rules; // the grammar rules dictionary
   rules.insert(std::make_pair(0, Rule(0, "\0", "\0"))); // insert the R0 placeholder
   std::map<std::string, int> digrams_map; // digram counts map
-std::vector< std::pair<std::string, int> > digrams_vector; // digram - count pairs
+  std::vector< std::pair<std::string, int> > digrams_vector; // digram - count pairs
 
   // tokenizer variables
   std::string old_token;
@@ -93,7 +107,7 @@ std::vector< std::pair<std::string, int> > digrams_vector; // digram - count pai
 
     token = s.substr(0, pos);
     // Rcout << "current token: " << token << std::endl;
-    R0.push_back( Token(token, pos) );
+    R0.push_back( Token(token, token_counter) );
 
     if (!old_token.empty()) {
       std::string d_str = old_token + " " + token;
@@ -150,7 +164,6 @@ std::vector< std::pair<std::string, int> > digrams_vector; // digram - count pai
     // create the new rule
     int rule_id = rules.size();
     Rule r(rule_id, digram_str, "\0");
-    rules.insert(std::make_pair(r.id, r));
 
     // do a pass over the R0 substituting the digram string with R#
     int start = 0;
@@ -163,7 +176,8 @@ std::vector< std::pair<std::string, int> > digrams_vector; // digram - count pai
         // Rcout << "hit @ " << cp-1 << "\n";
 
         // update the first digram's token with the rule [cp-1]
-        R0[cp-1] = Token(r.ruleString(), cp-1);
+        R0[cp-1] = Guard(r, R0[cp-1].str_idx);
+        r.occurrences.push_back(R0[cp-1].str_idx);
         // and remove its second token
         R0.erase(R0.begin() + cp); // ******* removes the token at [cp] *******
         // update limits
@@ -287,6 +301,8 @@ std::vector< std::pair<std::string, int> > digrams_vector; // digram - count pai
 
     } // while cp <= end
 
+    rules.insert(std::make_pair(r.id, r));
+
     // Rcout << "\n\nthe digrams table\n=================" << std::endl;
     // for(std::map<std::string, int>::iterator it = digrams_map.begin();
     // it != digrams_map.end(); ++it) {
@@ -318,11 +334,16 @@ std::vector< std::pair<std::string, int> > digrams_vector; // digram - count pai
   rules[0].rule_string = new_r0;
 
   // print the grammar
-  // Rcout << "\n\nInput: " << str << "\n\nInferred Grammar:\n";
-  // for(std::map<int, Rule>::iterator it = rules.begin(); it != rules.end(); ++it) {
-  // Rcout << it->second << std::endl;
-  // }
-  // Rcout << std::endl;
+  Rcout << "\n\nInput: " << str << "\n\nInferred Grammar:\n";
+  for(std::map<int, Rule>::iterator it = rules.begin(); it != rules.end(); ++it) {
+  Rcout << it->second;
+  for(std::vector<int>::iterator ito = it->second.occurrences.begin();
+      ito != it->second.occurrences.end(); ++ito) {
+    Rcout << *ito << ", ";
+  }
+  Rcout << std::endl;
+  }
+  Rcout << std::endl;
 
   // trying to expand the rules
   //
