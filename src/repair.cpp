@@ -58,11 +58,16 @@ struct sort_pred {
   }
 };
 
-//' Runs the repair.
+//' Runs the repair on a string.
 //'
 //' @param str the input string.
 //' @useDynLib jmotif
 //' @export
+//' @references  N.J. Larsson and A. Moffat. 1999. Offline dictionary-based compression.
+//' In Data Compression Conference,
+//' 1999. Proceedings. DCC ’99. 296–305. DOI: http://dx.doi.org/10.1109/DCC.1999.755679
+//' @examples
+//' str_to_repair_grammar("abc abc cba cba bac xxx abc abc cba cba bac")
 // [[Rcpp::export]]
 Rcpp::DataFrame str_to_repair_grammar(CharacterVector str){
 
