@@ -1,11 +1,11 @@
 ### R (Rcpp) implementation of :
- * SAX, i.e., Symbolic Aggregate approXimation
- * HOT-SAX, an algorithm for the exact time series discord discovery
- * VSM, i.e., Vector Space Model
- * SAX-VSM, and algorithm for interpretable time series classification (with parameters optimization)
- * RePair, an algorithm for grammatical inference
- * rule density curve, an efficient technique for an approximate time series anomaly discovery
- * RRA (Rare Rule Anomaly), an algorithm for the exact time series discord discovery
+ * **SAX**, i.e., Symbolic Aggregate approXimation
+ * **HOT-SAX**, an algorithm for the exact time series discord discovery
+ * **VSM**, i.e., Vector Space Model
+ * **SAX-VSM**, and algorithm for interpretable time series classification (with parameters optimization)
+ * **RePair**, an algorithm for grammatical inference
+ * **rule density curve**, an efficient technique for an approximate time series anomaly discovery
+ * **RRA** (Rare Rule Anomaly), an algorithm for the exact time series discord discovery
 
 [![Build Status](https://travis-ci.org/jMotif/jmotif-R.svg?branch=master)](https://travis-ci.org/jMotif/jmotif-R)
 [![codecov.io](http://codecov.io/github/jMotif/jmotif-R/coverage.svg?branch=master)](http://codecov.io/github/jMotif/jmotif-R?branch=master)
