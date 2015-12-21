@@ -479,7 +479,7 @@ It is easy to sort discord by the nearest neighbor distance:
 #### 7.0 Rule density curve
 As we have discuss in our paper [8], SAX opens a door for many high-level string algorithms aplication to the problem of patterns minin in time series. Specifically, we have shown the useful properties of grammatical inference. Jmotif-R implements RePair [7] algoithm for grammar inference, which can be used to build a rule density curve which enables approximate time series anomaly discovery.
 
-Iuse the same ECG0606 dataset in this example:
+I use the same ECG0606 dataset in this example:
 
     ecg <- ecg0606
     
@@ -523,9 +523,10 @@ and use RePar implementation to build the gramar curve:
     
     # see global minimas
     which(density_curve==min(density_curve))
-    [1]   1   2   3   4   5   6   7   8   9  10  11  12  13  14  15  16  17  18  19  20  21  22  23  24
-    [25]  25  26  27  28  29  30 444 445 446 447 448 449 450 451 452 453 454 455 456 457 458 459 460 461
-    [49] 462 463 464 465 466 467 468 469 470 471 472 473 474 475 476
+    # [1]   1   2   3   4   5   6   7   8   9  10  11  12  13  14  15  16  17  18  19  20  21  22  23  24
+    # [25]  25  26  27  28  29  30 444 445 446 447 448 449 450 451 452 453 454 455 456 457 458 459 460 461
+    # [49] 462 463 464 465 466 467 468 469 470 471 472 473 474 475 476
+    min_values = data.frame(x=c(444:476),y=rep(0,(476-443)))
     
     # plot the curve
     density_df=data.frame(time=c(1:length(density_curve)),value=density_curve)
@@ -536,7 +537,8 @@ and use RePar implementation to build the gramar curve:
         geom_polygon(data = shade, aes(x, y), fill="cyan", alpha=0.5) +
         ggtitle("RePair rules density for (w=100,p=8,a=8)") +
         theme(plot.title = element_text(size = rel(1.5)), axis.title.x = element_blank(),axis.title.y=element_blank(),
-        axis.ticks.y=element_blank(),axis.text.y=element_blank())
+        axis.ticks.y=element_blank(),axis.text.y=element_blank())+
+        geom_line(data=min_values,aes(x,y),lwd=2,col="red")
     p2
     
     grid.arrange(p1, p2, ncol=1)
