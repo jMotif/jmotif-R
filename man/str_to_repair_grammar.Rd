@@ -2,7 +2,7 @@
 % Please edit documentation in R/RcppExports.R
 \name{str_to_repair_grammar}
 \alias{str_to_repair_grammar}
-\title{Runs the repair.}
+\title{Runs the repair on a string.}
 \usage{
 str_to_repair_grammar(str)
 }
@@ -10,6 +10,13 @@ str_to_repair_grammar(str)
 \item{str}{the input string.}
 }
 \description{
-Runs the repair.
+Runs the repair on a string.
+}
+\examples{
+str_to_repair_grammar("abc abc cba cba bac xxx abc abc cba cba bac")
+}
+\references{
+N.J. Larsson and A. Moffat. Offline dictionary-based compression.
+In Data Compression Conference, 1999.
 }
 
