@@ -536,8 +536,8 @@ and use RePar implementation to build the gramar curve:
         geom_line(col="cyan2") + theme_classic() +
         geom_polygon(data = shade, aes(x, y), fill="cyan", alpha=0.5) +
         ggtitle("RePair rules density for (w=100,p=8,a=8)") +
-        theme(plot.title = element_text(size = rel(1.5)), axis.title.x = element_blank(),axis.title.y=element_blank(),
-        axis.ticks.y=element_blank(),axis.text.y=element_blank())+
+        theme(plot.title = element_text(size = rel(1.5)), axis.title.x = element_blank(),
+        axis.title.y=element_blank(), axis.ticks.y=element_blank(),axis.text.y=element_blank())+
         geom_line(data=min_values,aes(x,y),lwd=2,col="red")
     p2
     
