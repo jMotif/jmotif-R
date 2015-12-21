@@ -1,4 +1,4 @@
-### R (Rcpp) implementation of :
+### R (Rcpp) implementation of:
  * **SAX**, i.e., Symbolic Aggregate approXimation
  * **HOT-SAX**, an algorithm for the exact time series discord discovery
  * **VSM**, i.e., Vector Space Model
