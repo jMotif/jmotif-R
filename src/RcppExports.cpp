@@ -74,7 +74,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // str_to_repair_grammar
-Rcpp::DataFrame str_to_repair_grammar(CharacterVector str);
+Rcpp::List str_to_repair_grammar(CharacterVector str);
 RcppExport SEXP jmotif_str_to_repair_grammar(SEXP strSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
