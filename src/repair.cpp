@@ -72,6 +72,13 @@ struct sort_pred {
   }
 };
 
+int count_spaces(std::string s) {
+  int count = 0;
+    for (int i = 0; i < s.size(); i++)
+    if (s[i] == ' ') count++;
+    return count;
+}
+
 //' Runs the repair on a string.
 //'
 //' @param str the input string.
@@ -394,11 +401,14 @@ Rcpp::List str_to_repair_grammar(CharacterVector str){
     Rcpp::CharacterVector rule_string = it->second.rule_string;
     Rcpp::CharacterVector expanded_rule_string = it->second.expanded_rule_string;
     Rcpp::NumericVector rule_interval_starts = Rcpp::wrap(it->second.occurrences);
+    Rcpp::NumericVector rule_interval_ends = rule_interval_starts +
+      count_spaces(it->second.expanded_rule_string);
     res[it->first] = List::create(
       _["rule_name"]  = rule_name,
       _["rule_string"]  = rule_string,
       _["expanded_rule_string"] = expanded_rule_string,
-      _["rule_intervals_starts"] = rule_interval_starts
+      _["rule_interval_starts"] = rule_interval_starts,
+      _["rule_interval_ends"] = rule_interval_ends
     ) ;
   }
 
