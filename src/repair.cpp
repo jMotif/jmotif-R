@@ -64,7 +64,7 @@ struct sort_pred {
 //' @useDynLib jmotif
 //' @export
 // [[Rcpp::export]]
-CharacterVector str_to_repair_grammar(CharacterVector str){
+Rcpp::DataFrame str_to_repair_grammar(CharacterVector str){
 
   // Rcout << "input string \'" << str << "\'\n making a digram table...\n";
 
@@ -78,7 +78,7 @@ CharacterVector str_to_repair_grammar(CharacterVector str){
   std::map<int, Rule> rules; // the grammar rules dictionary
   rules.insert(std::make_pair(0, Rule(0, "\0", "\0"))); // insert the R0 placeholder
   std::map<std::string, int> digrams_map; // digram counts map
-  std::vector< std::pair<std::string, int> > digrams_vector; // digram - count pairs
+std::vector< std::pair<std::string, int> > digrams_vector; // digram - count pairs
 
   // tokenizer variables
   std::string old_token;
@@ -314,11 +314,11 @@ CharacterVector str_to_repair_grammar(CharacterVector str){
   rules[0].rule_string = new_r0;
 
   // print the grammar
-  Rcout << "\n\nInput: " << str << "\n\nInferred Grammar:\n";
-  for(std::map<int, Rule>::iterator it = rules.begin(); it != rules.end(); ++it) {
-    Rcout << it->second << std::endl;
-  }
-  Rcout << std::endl;
+  // Rcout << "\n\nInput: " << str << "\n\nInferred Grammar:\n";
+  // for(std::map<int, Rule>::iterator it = rules.begin(); it != rules.end(); ++it) {
+  // Rcout << it->second << std::endl;
+  // }
+  // Rcout << std::endl;
 
   // trying to expand the rules
   //
@@ -329,37 +329,54 @@ CharacterVector str_to_repair_grammar(CharacterVector str){
   while(seen_r){
     seen_r = false;
     for(std::map<int, Rule>::iterator it = rules.begin(); it != rules.end(); ++it) {
-      std::string pre_exanded = it->second.expanded_rule_string;
+      std::string pre_expanded = it->second.expanded_rule_string;
       int pos = 0;
-      // Rcout << "pre-expanded: " << pre_exanded << "\n";
-      while ((pos = pre_exanded.find("R", pos)) != std::string::npos) {
-        int space_pos = pre_exanded.find(" ", pos);
+      // Rcout << "pre-expanded: " << pre_expanded << "\n";
+      while ((pos = pre_expanded.find("R", pos)) != std::string::npos) {
+        int space_pos = pre_expanded.find(" ", pos);
         if(space_pos == std::string::npos){
-          space_pos = pre_exanded.length();
+          space_pos = pre_expanded.length();
         }
-        int rule_id = atoi(pre_exanded.substr(pos+1, space_pos-pos-1).c_str());
-        // Rcout << pre_exanded.substr(pos, space_pos-pos) << " @ " << pos << ", rule " << rule_id << "\n";
-        pre_exanded.erase(pos, space_pos-pos);
+        int rule_id = atoi(pre_expanded.substr(pos+1, space_pos-pos-1).c_str());
+        // Rcout << pre_expanded.substr(pos, space_pos-pos) << " @ " << pos << ", rule " << rule_id << "\n";
+        pre_expanded.erase(pos, space_pos-pos);
         std::string replacement = rules[rule_id].expanded_rule_string;
-        pre_exanded.insert(pos, replacement);
+        pre_expanded.insert(pos, replacement);
         pos = pos + replacement.length();
       }
-      // Rcout << "post-expanded " << pre_exanded << "\n";
-      it->second.expanded_rule_string = pre_exanded;
-      if(pre_exanded.find("R") != std::string::npos) {
+      // Rcout << "post-expanded " << pre_expanded << "\n";
+      it->second.expanded_rule_string = pre_expanded;
+      if(pre_expanded.find("R") != std::string::npos) {
         seen_r = true;
       }
     }
   }
 
   // print the grammar with expansion
-  Rcout << "\n\nFull Grammar:\n";
-  for(std::map<int, Rule>::iterator it = rules.begin(); it != rules.end(); ++it) {
-    Rcout << it->second << std::endl;
-  }
-  Rcout << std::endl;
+  // Rcout << "\n\nFull Grammar:\n";
+  // for(std::map<int, Rule>::iterator it = rules.begin(); it != rules.end(); ++it) {
+  // Rcout << it->second << std::endl;
+  // }
+  // Rcout << std::endl;rule_str
 
-  return new_r0;
+  // make results
+  CharacterVector rule_names = CharacterVector(rules.size());
+  CharacterVector rule_strings = CharacterVector(rules.size());
+  CharacterVector expanded_rule_strings = CharacterVector(rules.size());
+  for(std::map<int, Rule>::iterator it = rules.begin(); it != rules.end(); ++it) {
+    rule_names[it->first] = it->second.ruleString();
+    rule_strings[it->first] = it->second.rule_string;
+    expanded_rule_strings[it->first] = it->second.expanded_rule_string;
+  }
+
+  // return results
+  return Rcpp::DataFrame::create(
+    Named("rule") = rule_names,
+    Named("rule_string") = rule_strings,
+    Named("expanded_rule_string") = expanded_rule_strings,
+    Named("stringsAsFactors") = false
+  );
+
 }
 
 // library(jmotif); str_to_repair_grammar("abc abc cba cba bac xxx abc abc cba cba bac")
