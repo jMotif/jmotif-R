@@ -26,6 +26,8 @@ NumericVector znorm(NumericVector ts, double threshold  = 0.01) {
   if (ts_sd < threshold){
     return clone(ts);
   }
+  //Rcout << " mean1 " << mean(ts)  << "\n";
+  //Rcout << " stdev1 " << ts_sd << "\n";
   return (ts - mean(ts)) / ts_sd;
 }
 
@@ -35,11 +37,20 @@ std::vector<double> _znorm(std::vector<double> ts, double threshold) {
   double sum = std::accumulate(std::begin(ts), std::end(ts), 0.0);
   double mean =  sum / ts.size();
 
+  // Rcout << " mean2 " << mean << "\n";
+
   std::vector<double> diff(ts.size());
   std::transform(ts.begin(), ts.end(), diff.begin(),
                  std::bind2nd(std::minus<double>(), mean));
   double sq_sum = std::inner_product(diff.begin(), diff.end(), diff.begin(), 0.0);
-  double stdev = std::sqrt(sq_sum / ts.size());
+  double stdev = std::sqrt(sq_sum / (ts.size()-1));
+
+  // Rcout << " stdev2 " << stdev << "\n";
+
+  if (stdev < threshold){
+    std::vector<double> res(ts);
+    return res;
+  }
 
   std::vector<double> res(ts.size());
   for(int i=0; i<ts.size(); i++){

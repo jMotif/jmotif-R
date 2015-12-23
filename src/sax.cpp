@@ -111,12 +111,21 @@ std::map<int, std::string> _sax_via_window(
 
   for (int i = 0; i <= ts.size() - w_size; i++) {
 
-    // NumericVector subSection = subseries(ts, i, i + w_size);
     std::vector<double>::const_iterator first = ts.begin() + i;
+
     std::vector<double>::const_iterator last = ts.begin() + i + w_size;
+
     std::vector<double> subSection(first, last);
 
+//     for (auto i = subSection.begin(); i != subSection.end(); ++i)
+//       Rcout << *i << ' ';
+//     Rcout << "\n";
+
     subSection = _znorm(subSection, n_threshold);
+
+//     for (auto i = subSection.begin(); i != subSection.end(); ++i)
+//       Rcout << *i << ' ';
+//     Rcout << "\n";
 
     subSection = _paa(subSection, paa_size);
 
@@ -135,6 +144,8 @@ std::map<int, std::string> _sax_via_window(
 
     old_str = curr_str;
   }
+
+
   return idx2word;
 }
 

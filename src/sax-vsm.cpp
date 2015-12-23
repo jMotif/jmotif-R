@@ -28,11 +28,19 @@ Rcpp::DataFrame series_to_wordbag(
 
   std::string old_str;
 
-  for (int i = 0; i < ts.length() - w_size; i++) {
+  for (int i = 0; i <= ts.length() - w_size; i++) {
 
     NumericVector subSection = subseries(ts, i, i + w_size);
 
+//     for (auto i = subSection.begin(); i != subSection.end(); ++i)
+//       Rcout << *i << ' ';
+//     Rcout << "\n";
+
     subSection = znorm(subSection, n_threshold);
+
+//     for (auto i = subSection.begin(); i != subSection.end(); ++i)
+//       Rcout << *i << ' ';
+//     Rcout << "\n";
 
     subSection = paa(subSection, paa_size);
 
@@ -103,6 +111,8 @@ Rcpp::DataFrame series_to_wordbag2(
   std::map<int, std::string> sax_map = _sax_via_window(
     Rcpp::as<std::vector<double>>(ts), w_size, paa_size, a_size,
     Rcpp::as<std::string>(nr_strategy), n_threshold);
+
+  // Rcout << "sax done" << "\n";
 
   std::map<std::string, int> word_bag;
   for(std::map<int, std::string>::iterator it = sax_map.begin();
