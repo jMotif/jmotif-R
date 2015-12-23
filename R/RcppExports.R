@@ -198,25 +198,6 @@ series_to_wordbag <- function(ts, w_size, paa_size, a_size, nr_strategy, n_thres
     .Call('jmotif_series_to_wordbag', PACKAGE = 'jmotif', ts, w_size, paa_size, a_size, nr_strategy, n_threshold)
 }
 
-#' Converts a single time series into a bag of words.
-#'
-#' @param ts the timeseries.
-#' @param w_size the sliding window size.
-#' @param paa_size the PAA size.
-#' @param a_size the alphabet size.
-#' @param nr_strategy the NR strategy.
-#' @param n_threshold the normalization threshold.
-#' @useDynLib jmotif
-#' @export
-#' @references Senin Pavel and Malinchik Sergey,
-#' SAX-VSM: Interpretable Time Series Classification Using SAX and Vector Space Model.
-#' Data Mining (ICDM), 2013 IEEE 13th International Conference on, pp.1175,1180, 7-10 Dec. 2013.
-#' @references Salton, G., Wong, A., Yang., C.,
-#' A vector space model for automatic indexing. Commun. ACM 18, 11, 613-620, 1975.
-series_to_wordbag2 <- function(ts, w_size, paa_size, a_size, nr_strategy, n_threshold) {
-    .Call('jmotif_series_to_wordbag2', PACKAGE = 'jmotif', ts, w_size, paa_size, a_size, nr_strategy, n_threshold)
-}
-
 #' Converts a set of time-series into a single bag of words.
 #'
 #' @param data the timeseries data, row-wise.

@@ -114,8 +114,5 @@ std::string _series_to_string(std::vector<double> ts, int a_size);
 std::map<int, std::string> _sax_via_window(
     std::vector<double> ts, int w_size, int paa_size, int a_size,
     std::string nr_strategy, double n_threshold);
-Rcpp::DataFrame series_to_wordbag2(
-    NumericVector ts, int w_size, int paa_size, int a_size,
-    CharacterVector nr_strategy, double n_threshold);
 
 #endif
