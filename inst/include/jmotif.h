@@ -3,6 +3,8 @@
 //
 #include <RcppArmadillo.h>
 using namespace Rcpp ;
+// Enable C++11 via this plugin (Rcpp 0.10.3 or later)
+// [[Rcpp::plugins("cpp11")]]
 
 //
 // Define the letters array
@@ -103,5 +105,14 @@ NumericVector col_means(NumericMatrix m);
 NumericVector subseries(NumericVector ts, int start, int end);
 
 Rcpp::List str_to_repair_grammar(CharacterVector str);
+
+// internal high performance computing
+bool _is_equal_mindist(std::string a, std::string b);
+std::vector<double> _znorm(std::vector<double> ts, double threshold);
+std::vector<double> _paa(std::vector<double> ts, int paa_num);
+std::string _series_to_string(std::vector<double> ts, int a_size);
+std::map<int, std::string> _sax_via_window(
+    std::vector<double> ts, int w_size, int paa_size, int a_size,
+    std::string nr_strategy, double n_threshold);
 
 #endif

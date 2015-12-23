@@ -24,46 +24,20 @@ Rcpp::DataFrame series_to_wordbag(
     NumericVector ts, int w_size, int paa_size, int a_size,
     CharacterVector nr_strategy, double n_threshold) {
 
+  std::map<int, std::string> sax_map = _sax_via_window(
+    Rcpp::as<std::vector<double>>(ts), w_size, paa_size, a_size,
+    Rcpp::as<std::string>(nr_strategy), n_threshold);
+
+  // Rcout << "sax done" << "\n";
+
   std::map<std::string, int> word_bag;
-
-  std::string old_str;
-
-  for (int i = 0; i < ts.length() - w_size; i++) {
-
-    NumericVector subSection = subseries(ts, i, i + w_size);
-
-    subSection = znorm(subSection, n_threshold);
-
-    subSection = paa(subSection, paa_size);
-
-    std::string curr_str = Rcpp::as<std::string>(
-      series_to_string(subSection, a_size));
-
-    // Rcout << curr_str << "\n";
-
-    if (!(0 == old_str.length())) {
-      if ( is_equal_str("exact", nr_strategy)
-             && is_equal_str(old_str, curr_str) ) {
-        continue;
-      }
-      else if (is_equal_str("mindist", nr_strategy)
-                 && is_equal_mindist(old_str, curr_str) ) {
-        continue;
-      }
-    }
-
-    // Rcout << "processing " << curr_str << "\n";
-
-    if (word_bag.find(curr_str) == word_bag.end()){
-      // Rcout << "word " << curr_str << " not found \n";
-      word_bag.insert(std::make_pair(curr_str, 1));
+  for(std::map<int, std::string>::iterator it = sax_map.begin();
+      it != sax_map.end(); ++it) {
+    if (word_bag.find(it->second) == word_bag.end()){
+      word_bag.insert(std::make_pair(it->second, 1));
     }else{
-      // Rcout << "word " << curr_str << " found: " << word_bag[curr_str] << "\n";
-      word_bag[curr_str] += 1;
+      word_bag[it->second] += 1;
     }
-
-    old_str = curr_str;
-
   }
 
   std::vector<std::string> k;
@@ -79,6 +53,7 @@ Rcpp::DataFrame series_to_wordbag(
                                   Named("stringsAsFactors") = false);
 
 }
+
 
 //' Converts a set of time-series into a single bag of words.
 //'
@@ -106,34 +81,17 @@ Rcpp::DataFrame manyseries_to_wordbag(
 
     NumericVector ts = data.row(s);
 
-    std::string old_str;
+    std::map<int, std::string> sax_map = _sax_via_window(
+      Rcpp::as<std::vector<double>>(ts), w_size, paa_size, a_size,
+      Rcpp::as<std::string>(nr_strategy), n_threshold);
 
-    for (int i = 0; i < ts.length() - w_size; i++) {
-
-      NumericVector subSection = subseries(ts, i, i + w_size);
-      subSection = znorm(subSection, n_threshold);
-      subSection = paa(subSection, paa_size);
-      std::string curr_str = Rcpp::as<std::string>(series_to_string(subSection, a_size));
-
-      if (!(0 == old_str.length())) {
-        if ( is_equal_str("exact", nr_strategy)
-               && is_equal_str(old_str, curr_str) ) {
-          continue;
-        }
-        else if (is_equal_str("mindist", nr_strategy)
-                   && is_equal_mindist(old_str, curr_str) ) {
-          continue;
-        }
-      }
-
-      if (word_bag.find(curr_str) == word_bag.end()){
-        word_bag.insert(std::make_pair(curr_str, 1));
+    for(std::map<int, std::string>::iterator it = sax_map.begin();
+        it != sax_map.end(); ++it) {
+      if (word_bag.find(it->second) == word_bag.end()){
+        word_bag.insert(std::make_pair(it->second, 1));
       }else{
-        word_bag[curr_str] += 1;
+        word_bag[it->second] += 1;
       }
-
-      old_str = curr_str;
-
     }
   }
 

@@ -80,8 +80,20 @@ bool is_equal_mindist(CharacterVector a, CharacterVector b) {
     return false;
   }else{
     for(unsigned i=0; i<ca.length(); i++){
-      // Rcout << ca[i] << " " << cb[i] << " " << " " << abs(ca[i] - cb[i]) << "\n";
       if( abs(ca[i] - cb[i]) > 1 ){
+        return false;
+      }
+    }
+  }
+  return true;
+}
+
+bool _is_equal_mindist(std::string a, std::string b) {
+  if(a.length() != b.length()){
+    return false;
+  }else{
+    for(unsigned i=0; i<a.length(); i++){
+      if( abs(a[i] - b[i]) > 1 ){
         return false;
       }
     }

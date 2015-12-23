@@ -57,13 +57,12 @@ NumericVector alphabet_to_cuts(int a_size) {
 CharacterVector series_to_chars(NumericVector ts, int a_size) {
   NumericVector cuts = alphabet_to_cuts(a_size);
   int len = ts.length();
-  CharacterVector res(len);
+  std::vector<char> res(len);
   for (int i=0; i<len; i++) {
     NumericVector dd = cuts[cuts <= ts[i]];
-    char b[] = {idx_to_letter(dd.length()), '\0'};
-    res[i] = b;
+    res[i] = idx_to_letter(dd.length());
   }
-  return res;
+  return Rcpp::wrap(res);
 }
 
 //' Transforms a time series into the string.
@@ -88,8 +87,68 @@ CharacterVector series_to_string(NumericVector ts, int a_size) {
     NumericVector dd = cuts[cuts <= ts[i]];
     res[i] = idx_to_letter(dd.length());
   }
-  return wrap(res);
+  return Rcpp::wrap(res);
 }
+
+std::string _series_to_string(std::vector<double> ts, int a_size) {
+  NumericVector cuts = alphabet_to_cuts(a_size);
+  int len = ts.size();
+  std::string res(len, ' ');
+  for (int i=0; i<len; i++) {
+    NumericVector dd = cuts[cuts <= ts[i]];
+    res[i] = idx_to_letter(dd.length());
+  }
+  return res;
+}
+
+std::map<int, std::string> _sax_via_window(
+    std::vector<double> ts, int w_size, int paa_size, int a_size,
+    std::string nr_strategy, double n_threshold) {
+
+  std::map<int, std::string> idx2word;
+
+  std::string old_str;
+
+  for (int i = 0; i <= ts.size() - w_size; i++) {
+
+    std::vector<double>::const_iterator first = ts.begin() + i;
+
+    std::vector<double>::const_iterator last = ts.begin() + i + w_size;
+
+    std::vector<double> subSection(first, last);
+
+//     for (auto i = subSection.begin(); i != subSection.end(); ++i)
+//       Rcout << *i << ' ';
+//     Rcout << "\n";
+
+    subSection = _znorm(subSection, n_threshold);
+
+//     for (auto i = subSection.begin(); i != subSection.end(); ++i)
+//       Rcout << *i << ' ';
+//     Rcout << "\n";
+
+    subSection = _paa(subSection, paa_size);
+
+    std::string curr_str = _series_to_string(subSection, a_size);
+
+    if (!(old_str.empty())) {
+      if ("exact"==nr_strategy && old_str==curr_str) {
+        continue;
+      }
+      else if ("mindist"==nr_strategy && is_equal_mindist(old_str, curr_str) ) {
+        continue;
+      }
+    }
+
+    idx2word.insert(std::make_pair(i,curr_str));
+
+    old_str = curr_str;
+  }
+
+
+  return idx2word;
+}
+
 
 //' Discretizes a time series with SAX via sliding window.
 //'
