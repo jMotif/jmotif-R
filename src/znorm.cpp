@@ -2,6 +2,8 @@
 using namespace Rcpp ;
 //
 #include <jmotif.h>
+#include <vector>
+#include <algorithm>
 //
 //' Z-normalizes a time series by subtracting the mean value and dividing by the standard deviation value.
 //'
@@ -25,4 +27,24 @@ NumericVector znorm(NumericVector ts, double threshold  = 0.01) {
     return clone(ts);
   }
   return (ts - mean(ts)) / ts_sd;
+}
+
+
+std::vector<double> _znorm(std::vector<double> ts, double threshold) {
+
+  double sum = std::accumulate(std::begin(ts), std::end(ts), 0.0);
+  double mean =  sum / ts.size();
+
+  std::vector<double> diff(ts.size());
+  std::transform(ts.begin(), ts.end(), diff.begin(),
+                 std::bind2nd(std::minus<double>(), mean));
+  double sq_sum = std::inner_product(diff.begin(), diff.end(), diff.begin(), 0.0);
+  double stdev = std::sqrt(sq_sum / ts.size());
+
+  std::vector<double> res(ts.size());
+  for(int i=0; i<ts.size(); i++){
+    res[i] = (ts[i]-mean)/stdev;
+  }
+
+  return res;
 }

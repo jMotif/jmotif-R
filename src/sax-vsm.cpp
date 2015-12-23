@@ -80,6 +80,55 @@ Rcpp::DataFrame series_to_wordbag(
 
 }
 
+//' Converts a single time series into a bag of words.
+//'
+//' @param ts the timeseries.
+//' @param w_size the sliding window size.
+//' @param paa_size the PAA size.
+//' @param a_size the alphabet size.
+//' @param nr_strategy the NR strategy.
+//' @param n_threshold the normalization threshold.
+//' @useDynLib jmotif
+//' @export
+//' @references Senin Pavel and Malinchik Sergey,
+//' SAX-VSM: Interpretable Time Series Classification Using SAX and Vector Space Model.
+//' Data Mining (ICDM), 2013 IEEE 13th International Conference on, pp.1175,1180, 7-10 Dec. 2013.
+//' @references Salton, G., Wong, A., Yang., C.,
+//' A vector space model for automatic indexing. Commun. ACM 18, 11, 613-620, 1975.
+// [[Rcpp::export]]
+Rcpp::DataFrame series_to_wordbag2(
+    NumericVector ts, int w_size, int paa_size, int a_size,
+    CharacterVector nr_strategy, double n_threshold) {
+
+  std::map<int, std::string> sax_map = _sax_via_window(
+    Rcpp::as<std::vector<double>>(ts), w_size, paa_size, a_size,
+    Rcpp::as<std::string>(nr_strategy), n_threshold);
+
+  std::map<std::string, int> word_bag;
+  for(std::map<int, std::string>::iterator it = sax_map.begin();
+      it != sax_map.end(); ++it) {
+    if (word_bag.find(it->second) == word_bag.end()){
+      word_bag.insert(std::make_pair(it->second, 1));
+    }else{
+      word_bag[it->second] += 1;
+    }
+  }
+
+  std::vector<std::string> k;
+  std::vector<int> v;
+  for(std::map<std::string, int>::iterator it = word_bag.begin();
+      it != word_bag.end(); ++it) {
+    k.push_back(it->first);
+    v.push_back(it->second);
+  }
+
+  return Rcpp::DataFrame::create( Named("words")= k,
+                                  Named("counts") = v,
+                                  Named("stringsAsFactors") = false);
+
+}
+
+
 //' Converts a set of time-series into a single bag of words.
 //'
 //' @param data the timeseries data, row-wise.
