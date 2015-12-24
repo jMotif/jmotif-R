@@ -22,13 +22,14 @@ using namespace Rcpp ;
 //' lines(x, znorm(y, 0.01), type="l", col="red")
 // [[Rcpp::export]]
 NumericVector znorm(NumericVector ts, double threshold  = 0.01) {
-  double ts_sd = sd(ts);
-  if (ts_sd < threshold){
-    return clone(ts);
-  }
-  //Rcout << " mean1 " << mean(ts)  << "\n";
-  //Rcout << " stdev1 " << ts_sd << "\n";
-  return (ts - mean(ts)) / ts_sd;
+  // double ts_sd = sd(ts);
+  // if (ts_sd < threshold){
+  //  return clone(ts);
+  // }
+  // Rcout << " mean1 " << mean(ts)  << "\n";
+  // Rcout << " stdev1 " << ts_sd << "\n";
+  // return (ts - mean(ts)) / ts_sd;
+  return wrap(_znorm(Rcpp::as< std::vector<double> >(ts), threshold));
 }
 
 

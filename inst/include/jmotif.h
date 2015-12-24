@@ -107,13 +107,18 @@ NumericVector subseries(NumericVector ts, int start, int end);
 Rcpp::List str_to_repair_grammar(CharacterVector str);
 
 // internal high performance computing
+//
 std::vector<double> _alphabet_to_cuts(int a_size);
-bool _is_equal_mindist(std::string a, std::string b);
 std::vector<double> _znorm(std::vector<double> ts, double threshold);
 std::vector<double> _paa(std::vector<double> ts, int paa_num);
+double _euclidean_dist(std::vector<double>* seq1, std::vector<double>* seq2);
+//
 std::string _series_to_string(std::vector<double> ts, int a_size);
+bool _is_equal_mindist(std::string a, std::string b);
+//
 std::map<int, std::string> _sax_via_window(
     std::vector<double> ts, int w_size, int paa_size, int a_size,
     std::string nr_strategy, double n_threshold);
+//
 
 #endif

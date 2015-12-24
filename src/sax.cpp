@@ -157,10 +157,9 @@ std::map<int, std::string> _sax_via_window(
 
   for (int i = 0; i <= ts.size() - w_size; i++) {
 
+    // subseries extraction
     std::vector<double>::const_iterator first = ts.begin() + i;
-
     std::vector<double>::const_iterator last = ts.begin() + i + w_size;
-
     std::vector<double> subSection(first, last);
 
 //     for (auto i = subSection.begin(); i != subSection.end(); ++i)
