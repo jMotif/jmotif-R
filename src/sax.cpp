@@ -40,6 +40,31 @@ NumericVector alphabet_to_cuts(int a_size) {
   }
 }
 
+std::vector<double> _alphabet_to_cuts(int a_size) {
+  switch(a_size){
+  case 2: {return std::vector<double> {std::numeric_limits<double>::lowest(),  0.00};}
+  case 3: {return std::vector<double> {std::numeric_limits<double>::lowest(), -0.43,  0.43};}
+  case 4: {return std::vector<double> {std::numeric_limits<double>::lowest(), -0.67,  0.00,  0.67};}
+  case 5: {return std::vector<double> {std::numeric_limits<double>::lowest(), -0.84, -0.25,  0.25,  0.84};}
+  case 6: {return std::vector<double> {std::numeric_limits<double>::lowest(), -0.97, -0.43,  0.00,  0.43,  0.97};}
+  case 7: {return std::vector<double> {std::numeric_limits<double>::lowest(), -1.07, -0.57, -0.18,  0.18,  0.57,  1.07};}
+  case 8: {return std::vector<double> {std::numeric_limits<double>::lowest(), -1.15, -0.67, -0.32,  0.00,  0.32,  0.67,  1.15};}
+  case 9: {return std::vector<double> {std::numeric_limits<double>::lowest(), -1.22, -0.76, -0.43, -0.14,  0.14,  0.43,  0.76,  1.22};}
+  case 10: {return std::vector<double> {std::numeric_limits<double>::lowest(), -1.28, -0.84, -0.52, -0.25,  0.00,  0.25,  0.52,  0.84,  1.28};}
+  case 11: {return std::vector<double> {std::numeric_limits<double>::lowest(), -1.34, -0.91, -0.60, -0.35, -0.11,  0.11,  0.35,  0.60,  0.91, 1.34};}
+  case 12: {return std::vector<double> {std::numeric_limits<double>::lowest(), -1.38, -0.97, -0.67, -0.43, -0.21,  0.00,  0.21,  0.43,  0.67, 0.97, 1.38};}
+  case 13: {return std::vector<double> {std::numeric_limits<double>::lowest(), -1.43, -1.02, -0.74, -0.50, -0.29, -0.10,  0.10,  0.29,  0.50, 0.74, 1.02, 1.43};}
+  case 14: {return std::vector<double> {std::numeric_limits<double>::lowest(), -1.47, -1.07, -0.79, -0.57, -0.37, -0.18,  0.00,  0.18,  0.37, 0.57, 0.79, 1.07, 1.47};}
+  case 15: {return std::vector<double> {std::numeric_limits<double>::lowest(), -1.50, -1.11, -0.84, -0.62, -0.43, -0.25, -0.08,  0.08,  0.25, 0.43, 0.62, 0.84, 1.11, 1.5};}
+  case 16: {return std::vector<double> {std::numeric_limits<double>::lowest(), -1.53, -1.15, -0.89, -0.67, -0.49, -0.32, -0.16,  0.00,  0.16, 0.32, 0.49, 0.67, 0.89, 1.15, 1.53};}
+  case 17: {return std::vector<double> {std::numeric_limits<double>::lowest(), -1.56, -1.19, -0.93, -0.72, -0.54, -0.38, -0.22, -0.07,  0.07, 0.22, 0.38, 0.54, 0.72, 0.93, 1.19, 1.56};}
+  case 18: {return std::vector<double> {std::numeric_limits<double>::lowest(), -1.59, -1.22, -0.97, -0.76, -0.59, -0.43, -0.28, -0.14,  0.00, 0.14, 0.28, 0.43, 0.59, 0.76, 0.97, 1.22, 1.59};}
+  case 19: {return std::vector<double> {std::numeric_limits<double>::lowest(), -1.62, -1.25, -1.00, -0.80, -0.63, -0.48, -0.34, -0.20, -0.07, 0.07, 0.20, 0.34, 0.48, 0.63, 0.80, 1.00, 1.25, 1.62};}
+  case 20: {return std::vector<double> {std::numeric_limits<double>::lowest(), -1.64, -1.28, -1.04, -0.84, -0.67, -0.52, -0.39, -0.25, -0.13, 0.00, 0.13, 0.25, 0.39, 0.52, 0.67, 0.84, 1.04, 1.28, 1.64};}
+  default: { stop("'a_size' is invalid"); std::vector<double> {0.0}; }
+  }
+}
+
 //' Transforms a time series into the char array using SAX and the normal alphabet.
 //'
 //' @param ts the timeseries.
@@ -55,12 +80,19 @@ NumericVector alphabet_to_cuts(int a_size) {
 //' series_to_chars(y_paa3, 3)
 // [[Rcpp::export]]
 CharacterVector series_to_chars(NumericVector ts, int a_size) {
-  NumericVector cuts = alphabet_to_cuts(a_size);
+  std::vector<double> cuts = _alphabet_to_cuts(a_size);
   int len = ts.length();
   std::vector<char> res(len);
   for (int i=0; i<len; i++) {
-    NumericVector dd = cuts[cuts <= ts[i]];
-    res[i] = idx_to_letter(dd.length());
+    int ctr = 0;
+    for(int j=0; j<cuts.size(); j++){
+      if(cuts[j]<ts[i]){
+        ctr++;
+      } else {
+        break;
+      }
+    }
+    res[i] = idx_to_letter(ctr);
   }
   return Rcpp::wrap(res);
 }
@@ -80,23 +112,37 @@ CharacterVector series_to_chars(NumericVector ts, int a_size) {
 //' series_to_string(y_paa3, 3)
 // [[Rcpp::export]]
 CharacterVector series_to_string(NumericVector ts, int a_size) {
-  NumericVector cuts = alphabet_to_cuts(a_size);
+  std::vector<double> cuts = _alphabet_to_cuts(a_size);
   int len = ts.length();
   std::string res(len, ' ');
   for (int i=0; i<len; i++) {
-    NumericVector dd = cuts[cuts <= ts[i]];
-    res[i] = idx_to_letter(dd.length());
+    int ctr = 0;
+    for(int j=0; j<cuts.size(); j++){
+      if(cuts[j]<ts[i]){
+        ctr++;
+      } else {
+        break;
+      }
+    }
+    res[i] = idx_to_letter(ctr);
   }
   return Rcpp::wrap(res);
 }
 
 std::string _series_to_string(std::vector<double> ts, int a_size) {
-  NumericVector cuts = alphabet_to_cuts(a_size);
+  std::vector<double> cuts = _alphabet_to_cuts(a_size);
   int len = ts.size();
   std::string res(len, ' ');
   for (int i=0; i<len; i++) {
-    NumericVector dd = cuts[cuts <= ts[i]];
-    res[i] = idx_to_letter(dd.length());
+    int ctr = 0;
+    for(int j=0; j<cuts.size(); j++){
+      if(cuts[j]<ts[i]){
+        ctr++;
+      } else {
+        break;
+      }
+    }
+    res[i] = idx_to_letter(ctr);
   }
   return res;
 }

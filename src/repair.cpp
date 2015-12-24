@@ -51,7 +51,7 @@ std::ostream& operator<<(std::ostream &strm, const Rule &d) {
     return strm << "R" << d.id << "\t" << d.rule_string << "\t" << d.expanded_rule_string;
 };
 
-// Tokens are used in the R0
+// Guards are the placeholders for tokens
 //
 class Guard: public Token {
 public:
