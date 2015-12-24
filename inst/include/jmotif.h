@@ -107,6 +107,7 @@ NumericVector subseries(NumericVector ts, int start, int end);
 Rcpp::List str_to_repair_grammar(CharacterVector str);
 
 // internal high performance computing
+std::vector<double> _alphabet_to_cuts(int a_size);
 bool _is_equal_mindist(std::string a, std::string b);
 std::vector<double> _znorm(std::vector<double> ts, double threshold);
 std::vector<double> _paa(std::vector<double> ts, int paa_num);

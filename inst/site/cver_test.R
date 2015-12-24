@@ -9,12 +9,3 @@ dat <- read.table(textConnection(
        0.437113583759113 0.437208643628268 0.989892093383503 1.76545983424176 0.119483882364649
        -0.222311941138971 -0.74669456611669 -0.0663660879732063 0 0 0 0 0")
 ), as.is = T)
-
-sax1 <- series_to_wordbag(t(dat), 6, 3, 3, "none", 0.01)
-
-sax2 <- series_to_wordbag2(t(dat), 6, 3, 3, "none", 0.01)
-
-library(microbenchmark)
-
-microbenchmark(series_to_wordbag(ecg0606, 51, 5, 7, "exact", 0.01),
-               series_to_wordbag2(ecg0606, 51, 5, 7, "exact", 0.01))
