@@ -4,8 +4,8 @@
  * **[HOT-SAX](https://github.com/jMotif/jmotif-R#70-hot-sax-algorithm-for-time-series-discord-discovery)**, an algorithm for the exact time series discord discovery
  * **[VSM](https://github.com/jMotif/jmotif-R#52-tfidf-weighting)**, i.e., Vector Space Model
  * **[SAX-VSM](https://github.com/jMotif/jmotif-R#70-hot-sax-algorithm-for-time-series-discord-discovery)**, and algorithm for interpretable time series classification (with parameters optimization)
- * **RePair**, an algorithm for grammatical inference
- * **[rule density curve](https://github.com/jMotif/jmotif-R#70-rule-density-curve)**, an efficient technique for an approximate time series anomaly discovery
+ * **[RePair](https://github.com/jMotif/jmotif-R#70-grammatical-inference-with-repair)**, an algorithm for grammatical inference
+ * **[rule density curve](https://github.com/jMotif/jmotif-R#80-rule-density-curve)**, an efficient technique for an approximate time series anomaly discovery
  * **RRA** (Rare Rule Anomaly), an algorithm for the exact time series discord discovery
 
 [![Build Status](https://travis-ci.org/jMotif/jmotif-R.svg?branch=master)](https://travis-ci.org/jMotif/jmotif-R)
@@ -477,7 +477,37 @@ It is easy to sort discord by the nearest neighbor distance:
     4   0.4437060     1566
     5   0.4177020      188
 
-#### 7.0 Rule density curve
+#### 7.0 Grammatical inference with RePair
+RePair is a dictionary-based compression method proposed in 1999 by Larsson and Moffat. In contrast with Sequitur, Repair is an *off-line algorithm* that requires the whole input sequence to be accessible before building a grammar. Similar to Sequitur, RePair also can be utilized as a grammar-based compressor able to discover a compact grammar that generates the text. It is a remarkably simple algorithm which is known for its very fast decompression. 
+
+In short, RePair performs a recursive pairing step -- finding the most frequent pair of symbols in the input sequence and replacing it with a new symbol -- until every pair appears only once.
+
+As noted by the authors, when compared with online compression algorithms, the disadvantage of Repair having to store a large message in memory for processing is *illusory* when compared with storing the growing dictionary of an online compressor, as the incremental dictionary-based algorithms maintain an equally large message in memory as a part of the dictionary.
+
+Here is an example of RePair grammar for the input string containing an anomaly (`xxx`). Note that none of the grammar rules includes the anomalous terminal symbol.
+
+    Grammar rule        Expanded grammar rule                        Occurrence in R0
+    R0 -> R4 xxx R4     abc abc cba cba bac xxx abc abc cba cba bac  
+    R1 -> abc abc       abc abc                                      2-3, 8-9
+    R2 -> cba cba       cba cba                                      0-1, 6-7
+    R3 -> R1 R2         abc abc cba cba                              0-3, 6-9
+    R4 -> R3 bac        abc abc cba cba bac                          0-4, 6-10
+
+Calling RePair implementation in jmotif-R 
+
+    grammar <- str_to_repair_grammar("abc abc cba cba bac xxx abc abc cba cba bac")
+    
+produces a list of data frames, each of which contains the RePair grammar rule information. For example the first rule f the grammar:
+
+    > str(grammar[[2]])
+    List of 5
+     $ rule_name           : chr "R1"
+     $ rule_string         : chr "cba cba"
+     $ expanded_rule_string: chr "cba cba"
+     $ rule_interval_starts: num [1:2] 2 8
+     $ rule_interval_ends  : num [1:2] 3 9
+
+#### 8.0 Rule density curve
 As we have discussed in our work, SAX opens door for many high-level string algorithms aplication to the problem of patterns mining in time series. Specifically in [[8](http://csdl.ics.hawaii.edu/techreports/2014/14-05/14-05.pdf)], we have shown useful properties of grammatical compression (i.e., algorithmic complexity) when applied to the problem of recurrent and anomalous pattern discovery.
 
 Jmotif-R implements RePair [7] algoithm for grammar induction, which can be used to build the rule density curve enabling highly efficient approximate time series anomaly discovery.
