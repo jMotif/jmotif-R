@@ -437,11 +437,11 @@ The brute-force takes 14 seconds to discover 5 discords in the data (with early-
     1 13.951 6211.306 6209.214    2                ".Call" .Call         
     2  0.001    0.000    0.000   44 c(".Call", "tryCatch") .Call/tryCatch
 
-whereas HOT-SAX finishes under a second:
+whereas HOT-SAX finishes in fraction of a second:
 
     > lineprof( find_discords_hot_sax(ecg0606, 100, 4, 4, 0.01, 5) )
-       time   alloc release dups     ref   src
-    1 0.637 249.577 245.077   55 ".Call" .Call
+       time alloc release dups     ref   src
+    1 0.191 0.245       0   56 ".Call" .Call
 
 The discords returned as a data frame sorted by the position:
 
