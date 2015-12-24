@@ -497,7 +497,7 @@ Calling RePair implementation in jmotif-R
 
     grammar <- str_to_repair_grammar("abc abc cba cba bac xxx abc abc cba cba bac")
     
-produces a list of data frames, each of which contains the RePair grammar rule information. For example the first rule f the grammar:
+produces a list of data frames, each of which contains the RePair grammar rule information. For example the first rule of the grammar (second list element):
 
     > str(grammar[[2]])
     List of 5
