@@ -3,10 +3,10 @@
  * **[SAX](https://github.com/jMotif/jmotif-R#30-sax-transform)**, i.e., Symbolic Aggregate approXimation
  * **[HOT-SAX](https://github.com/jMotif/jmotif-R#70-hot-sax-algorithm-for-time-series-discord-discovery)**, an algorithm for the exact time series discord discovery
  * **[VSM](https://github.com/jMotif/jmotif-R#52-tfidf-weighting)**, i.e., Vector Space Model
- * **[SAX-VSM](https://github.com/jMotif/jmotif-R#70-hot-sax-algorithm-for-time-series-discord-discovery)**, and algorithm for interpretable time series classification (with parameters optimization)
+ * **[SAX-VSM](https://github.com/jMotif/jmotif-R#70-hot-sax-algorithm-for-time-series-discord-discovery)**, an algorithm for interpretable time series classification (and parameters optimization)
  * **[RePair](https://github.com/jMotif/jmotif-R#70-grammatical-inference-with-repair)**, an algorithm for grammatical inference
- * **[rule density curve](https://github.com/jMotif/jmotif-R#80-rule-density-curve)**, an efficient technique for an approximate time series anomaly discovery
- * **RRA** (Rare Rule Anomaly), an algorithm for the exact time series discord discovery
+ * **[rule density curve](https://github.com/jMotif/jmotif-R#80-rule-density-curve)**, an efficient technique for approximate time series anomaly discovery
+ * **RRA** (Rare Rule Anomaly), an algorithm for the exact time series discord discovery (implementation is in progress)
 
 [![Build Status](https://travis-ci.org/jMotif/jmotif-R.svg?branch=master)](https://travis-ci.org/jMotif/jmotif-R)
 [![codecov.io](http://codecov.io/github/jMotif/jmotif-R/coverage.svg?branch=master)](http://codecov.io/github/jMotif/jmotif-R?branch=master)
@@ -14,9 +14,7 @@
 [![License](http://img.shields.io/:license-gpl2-green.svg)](http://dplwww.gnu.org/licenses/gpl-2.0.html)
 [![Downloads](http://cranlogs.r-pkg.org/badges/jmotif?color=brightgreen)](https://github.com/jMotif/jmotif-R)
 
-Implements a set of R functions for time series pattern mining based on Symbolic Aggregate approXimation (i.e., SAX) and Vector Space Model (i.e., VSM) -- which makes SAX-VSM! 
-
-Specifically, this library implements the full stack of tools needed for SAX-VSM [5] -- an algorithm for interpretable time series classification and characteristic patterns discovery -- among which are the time series z-Normalization [1], PAA [2], SAX [3], and VSM [4]. In addition, implements HOT-SAX -- the time series discord (time series anomaly) discovery algorithm [6].
+#### References:
 
 [1] Dina Goldin and Paris Kanellakis,
 [*On similarity queries for time-series data: Constraint specification and implementation*](http://dl.acm.org/citation.cfm?id=726176),
