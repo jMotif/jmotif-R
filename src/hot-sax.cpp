@@ -6,7 +6,7 @@ using namespace Rcpp ;
 
 discord_record find_best_discord_hot_sax(std::vector<double>* ts, int w_size,
           std::unordered_map<std::string, std::vector<int> >* word2indexes,
-          std::map<int, std::string>* ordered_words, VisitRegistry* globalRegistry) {
+          std::multimap<int, std::string>* ordered_words, VisitRegistry* globalRegistry) {
 
   // searching for the discord
   //
@@ -168,7 +168,7 @@ Rcpp::DataFrame find_discords_hot_sax(NumericVector ts, int w_size, int paa_size
 
   // this is a magic arry map that is ordered by the words frequency
   //
-  std::map<int, std::string> ordered_words;
+  std::multimap<int, std::string> ordered_words;
   for(std::unordered_map<std::string, std::vector<int> >::iterator it = word2indexes.begin();
       it != word2indexes.end(); ++it) {
     ordered_words.insert(std::make_pair( (it->second).size(), it->first));
