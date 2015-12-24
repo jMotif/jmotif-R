@@ -20,11 +20,8 @@ using namespace Rcpp ;
 //' abline(v = c(1, 1+7/3, 1+7/3 * 2, 8), lty = 3, lwd = 2)
 // [[Rcpp::export]]
 NumericVector paa(NumericVector ts, int paa_num) {
-
   return wrap(_paa(Rcpp::as< std::vector<double> >(ts), paa_num));
-
 }
-
 
 std::vector<double> _paa(std::vector<double> ts, int paa_num) {
 

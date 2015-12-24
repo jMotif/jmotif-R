@@ -4,15 +4,15 @@ using namespace Rcpp ;
 #include <jmotif.h>
 //
 
-discord_record find_best_discord_hot_sax(NumericVector ts, int w_size,
-          std::map<std::string, std::vector<int> > &word2indexes,
-          std::multimap<int, std::string> &ordered_words, VisitRegistry* globalRegistry) {
+discord_record find_best_discord_hot_sax(std::vector<double> ts, int w_size,
+          std::unordered_map<std::string, std::vector<int> > &word2indexes,
+          std::map<int, std::string> &ordered_words, VisitRegistry* globalRegistry) {
 
   // searching for the discord
   //
   double best_so_far_distance = 0;
   int best_so_far_index = -1;
-  CharacterVector best_so_far_word = "";
+  std::string best_so_far_word = "";
 
   VisitRegistry outerRegistry(ts.size() - w_size);
 
@@ -29,7 +29,11 @@ discord_record find_best_discord_hot_sax(NumericVector ts, int w_size,
       if(globalRegistry->isVisited(candidate_idx)){
         continue;
       }
-      NumericVector candidate_seq = subseries(ts, candidate_idx, candidate_idx + w_size);
+
+      // subseries extraction
+      std::vector<double>::const_iterator first = ts.begin() + candidate_idx;
+      std::vector<double>::const_iterator last = ts.begin() +  candidate_idx + w_size;
+      std::vector<double> candidate_seq(first, last);
 
       VisitRegistry innerRegistry(ts.size() - w_size);
       bool doRandomSearch = true;
@@ -43,8 +47,13 @@ discord_record find_best_discord_hot_sax(NumericVector ts, int w_size,
 
         // Rcout << innerRegistry.unvisited_count << ", " << inner_idx << "\n";
         if( std::abs(inner_idx-candidate_idx) > w_size){
-          NumericVector curr_seq = subseries(ts, inner_idx, inner_idx + w_size);
-          double dist = euclidean_dist(candidate_seq, curr_seq);
+
+          // subseries extraction
+          std::vector<double>::const_iterator first = ts.begin() + inner_idx;
+          std::vector<double>::const_iterator last = ts.begin() + inner_idx + w_size;
+          std::vector<double> curr_seq(first, last);
+
+          double dist = _euclidean_dist(&candidate_seq, &curr_seq);
           if(dist < nnDistance){
             nnDistance = dist;
           }
@@ -68,8 +77,12 @@ discord_record find_best_discord_hot_sax(NumericVector ts, int w_size,
           //Rcout << innerRegistry.unvisited_count << ", " << inner_idx << "\n";
 
           if( std::abs(inner_idx-candidate_idx) > w_size){
-            NumericVector curr_seq = subseries(ts, inner_idx, inner_idx + w_size);
-            double dist = euclidean_dist(candidate_seq, curr_seq);
+
+            std::vector<double>::const_iterator first = ts.begin() + inner_idx;
+            std::vector<double>::const_iterator last = ts.begin() + inner_idx + w_size;
+            std::vector<double> curr_seq(first, last);
+
+            double dist = _euclidean_dist(&candidate_seq, &curr_seq);
             if(dist < nnDistance){
               nnDistance = dist;
             }
@@ -125,34 +138,38 @@ discord_record find_best_discord_hot_sax(NumericVector ts, int w_size,
 Rcpp::DataFrame find_discords_hot_sax(NumericVector ts, int w_size, int paa_size,
                                       int a_size, double n_threshold, int discords_num) {
 
+  std::vector<double> series = Rcpp::as< std::vector<double> > (ts);
   // first step - fill in these maps which are the direct and inverse indices
   //
   std::map<int, std::string> idx2word;
-  std::map<std::string, std::vector<int> > word2indexes;
+  std::unordered_map<std::string, std::vector<int> > word2indexes;
 
   CharacterVector old_str("");
-  for (int i = 0; i <= ts.length() - w_size; i++) {
+  for (int i = 0; i <= series.size() - w_size; i++) {
 
-    NumericVector subSection = subseries(ts, i, i + w_size);
-    subSection = znorm(subSection, n_threshold);
-    subSection = paa(subSection, paa_size);
-    CharacterVector curr_str = series_to_string(subSection, a_size);
+    std::vector<double>::const_iterator first = series.begin() + i;
+    std::vector<double>::const_iterator last = series.begin() + i + w_size;
+    std::vector<double> sub_section(first, last);
 
-    idx2word.insert(std::make_pair(i, Rcpp::as<std::string>(curr_str)));
-    if (word2indexes.find(Rcpp::as<std::string>(curr_str)) == word2indexes.end()){
+    sub_section = _znorm(sub_section, n_threshold);
+    sub_section = _paa(sub_section, paa_size);
+    std::string curr_str = _series_to_string(sub_section, a_size);
+
+    idx2word.insert(std::make_pair(i, curr_str));
+    if (word2indexes.find(curr_str) == word2indexes.end()){
       std::vector<int> v; // since no entry has been found add the new one
       v.push_back(i);
-      word2indexes.insert(std::make_pair(Rcpp::as<std::string>(curr_str), v));
+      word2indexes.insert(std::make_pair(curr_str, v));
     }else{
-      word2indexes[Rcpp::as<std::string>(curr_str)].push_back(i); // add the idx to an existing entry
+      word2indexes[curr_str].push_back(i); // add the idx to an existing entry
     }
     old_str = curr_str;
   }
 
   // this is a magic arry map that is ordered by the words frequency
   //
-  std::multimap<int, std::string> ordered_words;
-  for(std::map<std::string, std::vector<int> >::iterator it = word2indexes.begin();
+  std::map<int, std::string> ordered_words;
+  for(std::unordered_map<std::string, std::vector<int> >::iterator it = word2indexes.begin();
       it != word2indexes.end(); ++it) {
     ordered_words.insert(std::make_pair( (it->second).size(), it->first));
   }
@@ -167,7 +184,8 @@ Rcpp::DataFrame find_discords_hot_sax(NumericVector ts, int w_size, int paa_size
   int discord_counter = 0;
   while(discord_counter < discords_num){
 
-    discord_record rec = find_best_discord_hot_sax(ts, w_size, word2indexes, ordered_words, &registry);
+    discord_record rec = find_best_discord_hot_sax(Rcpp::as< std::vector<double> >(ts),
+                            w_size, word2indexes, ordered_words, &registry);
 
     if(rec.nn_distance == 0 || rec.index == -1){ break; }
 

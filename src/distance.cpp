@@ -25,6 +25,14 @@ double euclidean_dist(NumericVector seq1, NumericVector seq2) {
   }
 }
 
+double _euclidean_dist(std::vector<double>* seq1, std::vector<double>* seq2) {
+  double res = 0;
+  for(int i=0; i<seq1->size(); i++){
+    res = res + (seq1->at(i) - seq2->at(i)) * (seq1->at(i) - seq2->at(i));
+  }
+  return sqrt(res);
+}
+
 //' Finds the Euclidean distance between points, if distance is above the threshold, abandons the computation
 //' and returns NAN.
 //'
