@@ -5,7 +5,7 @@ using namespace Rcpp ;
 //
 
 discord_record find_best_discord_hot_sax(std::vector<double>* ts, int w_size,
-          std::unordered_map<std::string, std::vector<int> >* word2indexes,
+          std::unordered_map<std::string, std::vector<int>>* word2indexes,
           std::multimap<int, std::string>* ordered_words, VisitRegistry* globalRegistry) {
 
   // searching for the discord
