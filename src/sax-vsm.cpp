@@ -24,14 +24,14 @@ Rcpp::DataFrame series_to_wordbag(
     NumericVector ts, int w_size, int paa_size, int a_size,
     CharacterVector nr_strategy, double n_threshold) {
 
-  std::map<int, std::string> sax_map = _sax_via_window(
+  std::unordered_map<int, std::string> sax_map = _sax_via_window(
     Rcpp::as<std::vector<double>>(ts), w_size, paa_size, a_size,
     Rcpp::as<std::string>(nr_strategy), n_threshold);
 
   // Rcout << "sax done" << "\n";
 
   std::map<std::string, int> word_bag;
-  for(std::map<int, std::string>::iterator it = sax_map.begin();
+  for(std::unordered_map<int, std::string>::iterator it = sax_map.begin();
       it != sax_map.end(); ++it) {
     if (word_bag.find(it->second) == word_bag.end()){
       word_bag.insert(std::make_pair(it->second, 1));
@@ -81,11 +81,11 @@ Rcpp::DataFrame manyseries_to_wordbag(
 
     NumericVector ts = data.row(s);
 
-    std::map<int, std::string> sax_map = _sax_via_window(
+    std::unordered_map<int, std::string> sax_map = _sax_via_window(
       Rcpp::as<std::vector<double>>(ts), w_size, paa_size, a_size,
       Rcpp::as<std::string>(nr_strategy), n_threshold);
 
-    for(std::map<int, std::string>::iterator it = sax_map.begin();
+    for(std::unordered_map<int, std::string>::iterator it = sax_map.begin();
         it != sax_map.end(); ++it) {
       if (word_bag.find(it->second) == word_bag.end()){
         word_bag.insert(std::make_pair(it->second, 1));
