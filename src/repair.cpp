@@ -63,6 +63,16 @@ public:
   };
 };
 
+
+class RuleRecord {
+public:
+  int rule_id;
+  std::string rule_string;
+  std::string expanded_rule_string;
+  std::vector<int> rule_occurrences;
+  std::vector<std::pair<int,int>> rule_intervals;
+};
+
 // this is the digram priority queue sorter
 //
 struct sort_pred {
@@ -72,29 +82,19 @@ struct sort_pred {
   }
 };
 
-int count_spaces(std::string s) {
+int count_spaces(std::string *s) {
   int count = 0;
-    for (int i = 0; i < s.size(); i++)
-    if (s[i] == ' ') count++;
+    for (int i = 0; i < s->size(); i++)
+    if (s->at(i) == ' ') count++;
     return count;
 }
 
 //' Runs the repair on a string.
-//'
-//' @param str the input string.
-//' @useDynLib jmotif
-//' @export
-//' @references  N.J. Larsson and A. Moffat. Offline dictionary-based compression.
-//' In Data Compression Conference, 1999.
-//' @examples
-//' str_to_repair_grammar("abc abc cba cba bac xxx abc abc cba cba bac")
-// [[Rcpp::export]]
-Rcpp::List str_to_repair_grammar(CharacterVector str){
+std::map<int, RuleRecord> _str_to_repair_grammar(std::string s){
 
-  // Rcout << "input string \'" << str << "\'\n making a digram table...\n";
+  // Rcout << "input string \'" << s << "\'\n making a digram table...\n";
 
   // define the objects we are working with
-  std::string s = Rcpp::as<std::string>(str);
   std::string delimiter = " ";
   s.append(delimiter);
 
@@ -298,7 +298,7 @@ Rcpp::List str_to_repair_grammar(CharacterVector str){
         digrams_vector.clear();
         digrams_vector.reserve(digrams_map.size());
         for(std::map<std::string, int>::iterator it = digrams_map.begin();
-          it != digrams_map.end(); ++it) {
+            it != digrams_map.end(); ++it) {
           digrams_vector.push_back(std::make_pair(it->first, it->second) );
         }
 
@@ -342,15 +342,15 @@ Rcpp::List str_to_repair_grammar(CharacterVector str){
 
   // print the grammar
   //   Rcout << "\n\nInput: " << str << "\n\nInferred Grammar:\n";
-//   for(std::map<int, Rule>::iterator it = rules.begin(); it != rules.end(); ++it) {
-//   Rcout << it->second;
-//   for(std::vector<int>::iterator ito = it->second.occurrences.begin();
-//       ito != it->second.occurrences.end(); ++ito) {
-//     Rcout << *ito << ", ";
-//   }
-//   Rcout << std::endl;
-//   }
-//   Rcout << std::endl;
+  //   for(std::map<int, Rule>::iterator it = rules.begin(); it != rules.end(); ++it) {
+  //   Rcout << it->second;
+  //   for(std::vector<int>::iterator ito = it->second.occurrences.begin();
+  //       ito != it->second.occurrences.end(); ++ito) {
+  //     Rcout << *ito << ", ";
+  //   }
+  //   Rcout << std::endl;
+  //   }
+  //   Rcout << std::endl;
 
   // trying to expand the rules
   //
@@ -392,17 +392,57 @@ Rcpp::List str_to_repair_grammar(CharacterVector str){
   // Rcout << std::endl;rule_str
 
   // make results
-  Rcpp::List res(rules.size());
-//   CharacterVector rule_names = CharacterVector(rules.size());
-//   CharacterVector rule_strings = CharacterVector(rules.size());
-//   CharacterVector expanded_rule_strings = CharacterVector(rules.size());
+  std::map<int, RuleRecord> res;
+
   for(std::map<int, Rule>::iterator it = rules.begin(); it != rules.end(); ++it) {
-    Rcpp::CharacterVector rule_name = it->second.ruleString();
+    RuleRecord rr;
+    rr.rule_id = it->first;
+    rr.rule_string = it->second.rule_string;
+    rr.expanded_rule_string = it->second.expanded_rule_string;
+    rr.rule_occurrences = it->second.occurrences;
+    for(std::vector<int>::iterator oi = rr.rule_occurrences.begin();
+        oi != rr.rule_occurrences.end(); ++oi) {
+      rr.rule_intervals.push_back(std::make_pair(*oi,
+                *oi + count_spaces(&rr.expanded_rule_string)));
+    }
+    res.insert(std::make_pair(it->first, rr));
+  }
+
+  return res;
+
+}
+
+
+//' Runs the repair on a string.
+//'
+//' @param str the input string.
+//' @useDynLib jmotif
+//' @export
+//' @references  N.J. Larsson and A. Moffat. Offline dictionary-based compression.
+//' In Data Compression Conference, 1999.
+//' @examples
+//' str_to_repair_grammar("abc abc cba cba bac xxx abc abc cba cba bac")
+// [[Rcpp::export]]
+Rcpp::List str_to_repair_grammar(CharacterVector str){
+
+  std::string s = Rcpp::as<std::string>(str);
+
+  std::map<int, RuleRecord> rules = _str_to_repair_grammar(s);
+
+  // make results
+  Rcpp::List res(rules.size());
+  for(std::map<int, RuleRecord>::iterator it = rules.begin(); it != rules.end(); ++it) {
+
+    std::stringstream ss;
+    ss << it->second.rule_id;
+    Rcpp::CharacterVector rule_name = "R" + ss.str();
+
     Rcpp::CharacterVector rule_string = it->second.rule_string;
     Rcpp::CharacterVector expanded_rule_string = it->second.expanded_rule_string;
-    Rcpp::NumericVector rule_interval_starts = Rcpp::wrap(it->second.occurrences);
+    Rcpp::NumericVector rule_interval_starts = Rcpp::wrap(it->second.rule_occurrences);
     Rcpp::NumericVector rule_interval_ends = rule_interval_starts +
-      count_spaces(it->second.expanded_rule_string);
+      count_spaces(&it->second.expanded_rule_string);
+
     res[it->first] = List::create(
       _["rule_name"]  = rule_name,
       _["rule_string"]  = rule_string,
@@ -413,13 +453,6 @@ Rcpp::List str_to_repair_grammar(CharacterVector str){
   }
 
   return res;
-  // return results
-//   return Rcpp::DataFrame::create(
-//     Named("rule") = rule_names,
-//     Named("rule_string") = rule_strings,
-//     Named("expanded_rule_string") = expanded_rule_strings,
-//     Named("stringsAsFactors") = false
-//   );
 
 }
 

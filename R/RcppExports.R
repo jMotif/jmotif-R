@@ -86,6 +86,9 @@ paa <- function(ts, paa_num) {
 }
 
 #' Runs the repair on a string.
+NULL
+
+#' Runs the repair on a string.
 #'
 #' @param str the input string.
 #' @useDynLib jmotif
