@@ -4,75 +4,6 @@ using namespace Rcpp ;
 #include <jmotif.h>
 #include <stdlib.h>
 
-// Tokens are used in the R0
-//
-class Token {
-public:
-  int str_idx;
-  std::string payload;
-  Token(){
-    str_idx = -1;
-  };
-  Token(std::string s, int idx){
-    payload = s;
-    str_idx = idx;
-  };
-};
-  std::ostream& operator<<(std::ostream &strm, const Token &t) {
-    return strm << "T(" << t.payload << " @ " << t.str_idx << ")";
-};
-
-
-// Rules build up the rules table, i.e. the grammar
-//
-class Rule {
-public:
-  int id;
-  std::string rule_string;
-  std::string expanded_rule_string;
-  std::vector<int> occurrences;
-  Rule(){
-    id = -1;
-    rule_string = "\0";
-    expanded_rule_string = "\0";
-  };
-  Rule(int r_id, std::string rule_str, std::string expanded_rule_str){
-    id = r_id;
-    rule_string = rule_str;
-    expanded_rule_string = expanded_rule_str;
-  };
-  std::string ruleString(){
-    std::stringstream ss;
-    ss << id;
-    return "R" + ss.str();
-  };
-};
-std::ostream& operator<<(std::ostream &strm, const Rule &d) {
-    return strm << "R" << d.id << "\t" << d.rule_string << "\t" << d.expanded_rule_string;
-};
-
-// Guards are the placeholders for tokens
-//
-class Guard: public Token {
-public:
-  Rule r;
-  Guard(Rule rule, int idx){
-    r = rule;
-    payload = r.ruleString();
-    str_idx = idx;
-  };
-};
-
-
-class RuleRecord {
-public:
-  int rule_id;
-  std::string rule_string;
-  std::string expanded_rule_string;
-  std::vector<int> rule_occurrences;
-  std::vector<std::pair<int,int>> rule_intervals;
-};
-
 // this is the digram priority queue sorter
 //
 struct sort_pred {
@@ -82,14 +13,7 @@ struct sort_pred {
   }
 };
 
-int count_spaces(std::string *s) {
-  int count = 0;
-    for (int i = 0; i < s->size(); i++)
-    if (s->at(i) == ' ') count++;
-    return count;
-}
-
-//' Runs the repair on a string.
+// Runs the repair on a string.
 std::map<int, RuleRecord> _str_to_repair_grammar(std::string s){
 
   // Rcout << "input string \'" << s << "\'\n making a digram table...\n";
@@ -455,5 +379,5 @@ Rcpp::List str_to_repair_grammar(CharacterVector str){
   return res;
 
 }
-
 // library(jmotif); str_to_repair_grammar("abc abc cba cba bac xxx abc abc cba cba bac")
+
