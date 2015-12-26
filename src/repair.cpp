@@ -96,6 +96,18 @@ std::map<int, RuleRecord> _str_to_repair_grammar(std::string s){
     int rule_id = rules.size();
     Rule r(rule_id, digram_str, "\0");
 
+    // update the rule use, if found
+    if(p[0]=='R'){
+      int rule_id = atoi(p.substr(1,p.size()-1).c_str());
+      rules[rule_id].rule_use++;
+      // Rcout << digram_str << " " << p << " updating " << rule_id << std::endl;
+    }
+    if(n[0]=='R'){
+      int rule_id = atoi(n.substr(1,n.size()-1).c_str());
+      rules[rule_id].rule_use++;
+      // Rcout << digram_str << " " << n << " updating " << rule_id << std::endl;
+    }
+
     // do a pass over the R0 substituting the digram string with R#
     int start = 0;
     int end = R0.size() - 1;
@@ -323,6 +335,7 @@ std::map<int, RuleRecord> _str_to_repair_grammar(std::string s){
     rr.rule_id = it->first;
     rr.rule_string = it->second.rule_string;
     rr.expanded_rule_string = it->second.expanded_rule_string;
+    rr.rule_use = it->second.rule_use;
     rr.rule_occurrences = it->second.occurrences;
     for(std::vector<int>::iterator oi = rr.rule_occurrences.begin();
         oi != rr.rule_occurrences.end(); ++oi) {

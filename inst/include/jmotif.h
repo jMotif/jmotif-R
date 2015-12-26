@@ -124,16 +124,19 @@ public:
 class Rule {
 public:
   int id;
+  int rule_use;
   std::string rule_string;
   std::string expanded_rule_string;
   std::vector<int> occurrences;
   Rule(){
     id = -1;
+    rule_use = 0;
     rule_string = "\0";
     expanded_rule_string = "\0";
   };
   Rule(int r_id, std::string rule_str, std::string expanded_rule_str){
     id = r_id;
+    rule_use = 0;
     rule_string = rule_str;
     expanded_rule_string = expanded_rule_str;
   };
@@ -167,10 +170,12 @@ public:
   int rule_id;
   std::string rule_string;
   std::string expanded_rule_string;
+  int rule_use;
   std::vector<int> rule_occurrences;
   std::vector<std::pair<int,int>> rule_intervals;
 };
 
+std::map<int, RuleRecord> _str_to_repair_grammar(std::string s);
 Rcpp::List str_to_repair_grammar(CharacterVector str);
 
 //

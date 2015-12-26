@@ -3,6 +3,21 @@ using namespace Rcpp ;
 //
 #include <jmotif.h>
 
+class RuleInterval {
+public:
+  int rule_id;
+  int start;
+  int end;
+  int cover;
+};
+
+struct sort_intervals {
+  bool operator()(const RuleInterval &left,
+                const RuleInterval &right) {
+    return left.cover < right.cover;
+  }
+};
+
 //' @useDynLib jmotif
 //' @export
 // [[Rcpp::export]]
@@ -23,6 +38,48 @@ Rcpp::NumericVector ts_to_intervals(NumericVector ts, int w_size, int paa_size,
     i++;
   }
   sort( indexes.begin(), indexes.end() );
+
+  // now compose the string
+  //
+  std::string sax_str;
+  for(int i=0; i<indexes.size(); i++){
+    sax_str.append(sax_map[ indexes[i] ]).append(" ");
+  }
+  sax_str.erase( sax_str.end()-1 );
+
+  // grammar
+  //
+  std::map<int, RuleRecord> grammar = _str_to_repair_grammar(sax_str);
+
+  // making intervals and ranking by the rule use
+  // meanwhile build the coverage curve
+  //
+  std::vector<RuleInterval> intervals;
+  std::vector<int> coverage_array(ts.size());
+  for(auto it = grammar.begin(); it != grammar.end(); ++it) {
+    for(auto rit = (it->second).rule_intervals.begin(); rit != (it->second).rule_intervals.end(); ++rit) {
+      int start = rit->first;
+      int end = rit->second;
+      for(int i=start; i<end; ++i){ // rule coverage
+        coverage_array[i]++;
+      }
+      RuleInterval rr;
+      rr.rule_id = it->first;
+      rr.start = start;
+      rr.end = end;
+      rr.cover = it->second.rule_use; // a shortcut
+      intervals.push_back(rr);
+    }
+  }
+  // sort the intervals rare < frequent
+  std::sort(intervals.begin(), intervals.end(), sort_intervals());
+  for(auto it=intervals.begin(); it!=intervals.end(); ++it){
+    Rcout << "R" << it->rule_id << " covr " << it->cover << std::endl;
+  }
+
+//ts_to_intervals(ecg0606, 300, 10, 3, "nored")
+
+  Rcout << "\"" << sax_str << "\"" << std::endl;
 
   return wrap(indexes);
 
