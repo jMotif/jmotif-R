@@ -147,11 +147,11 @@ std::string _series_to_string(std::vector<double> ts, int a_size) {
   return res;
 }
 
-std::map<int, std::string> _sax_via_window(
+std::unordered_map<int, std::string> _sax_via_window(
     std::vector<double> ts, int w_size, int paa_size, int a_size,
     std::string nr_strategy, double n_threshold) {
 
-  std::map<int, std::string> idx2word;
+  std::unordered_map<int, std::string> idx2word;
 
   std::string old_str;
 
