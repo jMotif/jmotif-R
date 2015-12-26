@@ -2,6 +2,7 @@
 using namespace Rcpp ;
 //
 #include <jmotif.h>
+#include <unordered_map>
 //
 
 //' Translates an alphabet size into the array of corresponding SAX cut-lines built using the Normal distribution.
@@ -162,15 +163,7 @@ std::unordered_map<int, std::string> _sax_via_window(
     std::vector<double>::const_iterator last = ts.begin() + i + w_size;
     std::vector<double> subSection(first, last);
 
-//     for (auto i = subSection.begin(); i != subSection.end(); ++i)
-//       Rcout << *i << ' ';
-//     Rcout << "\n";
-
     subSection = _znorm(subSection, n_threshold);
-
-//     for (auto i = subSection.begin(); i != subSection.end(); ++i)
-//       Rcout << *i << ' ';
-//     Rcout << "\n";
 
     subSection = _paa(subSection, paa_size);
 

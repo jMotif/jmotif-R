@@ -13,13 +13,18 @@ Rcpp::NumericVector ts_to_intervals(NumericVector ts, int w_size, int paa_size,
     Rcpp::as<std::vector<double>>(ts), w_size, paa_size, a_size,
     Rcpp::as<std::string>(nr_strategy), n_threshold);
 
-  std::vector<int> res(sax_map.size());
-  for(std::unordered_map<int, std::string>::iterator it = sax_map.begin(); it != sax_map.end(); ++it) {
-    Rcout << it->first << std::endl;
-    res.push_back(it->first);
+  // sax_map maps time-series positions to corresponding SAX words
+  // to compose the string we need to order keys
+  //
+  std::vector<int> indexes(sax_map.size());
+  int i=0;
+  for(auto it = sax_map.begin(); it != sax_map.end(); ++it) {
+    indexes[i] = it->first;
+    i++;
   }
+  sort( indexes.begin(), indexes.end() );
 
-  return wrap(res);
+  return wrap(indexes);
 
 //   std::string s = Rcpp::as<std::string>(str);
 //
