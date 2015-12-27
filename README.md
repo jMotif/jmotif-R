@@ -580,5 +580,5 @@ and use RePar implementation to build the gramar curve:
 #### 9.0 Rare Rule Anomaly algorithm.
 RRA (i.e., Rare Rule Anomaly) algorithm extends the HOT-SAX algorithm leveraging grammar compression properties. In particular, it runs the same HOT-SAX outer and inner loops but (i) uses a diferent candidate subsequences pool which is (ii) ordered by different criterion.
 
-Specifically, candidate subsequences are time series intervals corresponding to grammar rules (which naturally vary in length) and they are ordered by the corresponding grammar rule use (a grammar rule property which I utilize for the for the speed).
+Specifically, candidate subsequences are time series intervals corresponding to grammar rules (which naturally vary in length) and they are ordered by the corresponding grammar rule use (a grammar rule property which I utilize for the speed).
 
