@@ -31,11 +31,189 @@ double normalized_distance(int start1, int end1, int start2, int end2, std::vect
   return sqrt(res) / (double) count;
 }
 
+rra_discord_record find_best_rra_discord(std::vector<double> *ts, int w_size,
+      std::map<int, RuleRecord> *grammar, std::vector<int> *indexes,
+      std::vector<RuleInterval> *intervals,
+      std::unordered_set<int> *global_visited_positions){
+
+  std::vector<int> visit_array(ts->size(), -1);
+
+  //   for(auto it=intervals.begin(); it!=intervals.end(); ++it){
+  //     Rcout << "R" << it->rule_id << " covr " << it->cover << std::endl;
+  //   }
+
+  // init variables
+  int bestSoFarPosition = -1;
+  int bestSoFarLength = -1;
+  int bestSoFarRule = 0;
+  double bestSoFarDistance = -1;
+
+  // outer loop over all intervals
+  for(int i = 0; i < intervals->size(); i++){
+
+    RuleInterval c_interval = intervals->at(i);
+
+    auto find = global_visited_positions->find(c_interval.start);
+    if(find != global_visited_positions->end()){
+      continue;
+    }
+
+    // mark the location
+    std::unordered_set<int> visited_locations;
+    int markStart = c_interval.start - (c_interval.end - c_interval.start);
+    if (markStart < 0) {
+      markStart = 0;
+    }
+    int markEnd = c_interval.end;
+    if (markEnd > ts->size()) {
+      markEnd = ts->size();
+    }
+    for(int j=markStart;j<markEnd;j++){
+      visited_locations.insert(j);
+    }
+
+    double nn_distance = std::numeric_limits<double>::max();
+    bool do_random_search = true;
+
+    // Rcout << " considering interval " << c_interval.start << "-" << c_interval.end <<
+    //   " for rule " << c_interval.rule_id <<
+    //    ", best so far dist " << bestSoFarDistance << std::endl;
+
+    if(c_interval.rule_id>0){
+      auto this_rule_occurrences = grammar->at(c_interval.rule_id).rule_intervals;
+      // Rcout << "   going to iterate over " << this_rule_occurrences.size() <<
+      //  " rule occurrences first " << std::endl;
+      for(auto it=this_rule_occurrences.begin(); it !=this_rule_occurrences.end(); ++it) {
+        int start = indexes->at(it->first);
+        auto found = visited_locations.find(start);
+        if (found == visited_locations.end()) {
+          visited_locations.insert(start);
+          int end = indexes->at(it->second) + w_size;
+          // Rcout << "    examining a candidate at " << start << "-" <<
+          //  end << std::endl;
+          double dist = normalized_distance(c_interval.start, c_interval.end,
+                                            start, end, ts);
+          // keep track of best so far distance
+          if (dist < nn_distance) {
+            // Rcout << "    better nn distance found " << dist << std::endl;
+            nn_distance = dist;
+          }
+          if (dist < bestSoFarDistance) {
+            // Rcout << "    dist " << dist <<
+            //   " is less than best so far, breaking off the search" << std::endl;
+            do_random_search = false;
+            break;
+          }
+
+        } else {
+          continue;
+        }
+      }
+    }
+
+    if(do_random_search){
+      // Rcout << " starting the random search ..." <<
+      //   " nn dist " << nn_distance << std::endl;
+      // Rcout << "visited locations ";
+      // for(auto it=visited_locations.begin(); it != visited_locations.end(); ++it){
+      //  Rcout << *it << ", ";
+      //}
+      //Rcout << std::endl;
+
+      // init the visit array
+      int visitCounter = 0;
+      int cIndex = 0;
+      for (int j = 0; j < intervals->size(); j++) {
+        RuleInterval interval = intervals->at(j);
+        auto found = visited_locations.find(interval.start);
+        if (found == visited_locations.end()) {
+          visit_array[cIndex] = j;
+          cIndex++;
+          //} else {
+          // Rcout << "    - skipped " << interval.start << std::endl;
+          //}
+        }
+      }
+      cIndex--;
+
+      // shuffle the visit array
+      for (int j = cIndex; j > 0; j--) {
+        int index = armaRand() % (j + 1);
+        int a = visit_array[index];
+        visit_array[index] = visit_array[j];
+        visit_array[j] = a;
+      }
+
+      // while there are unvisited locations
+      while (cIndex >= 0) {
+
+        RuleInterval randomInterval = intervals->at(visit_array[cIndex]);
+        cIndex--;
+
+        // Rcout << "    random candidate " << randomInterval.start << "-" <<
+        //  randomInterval.end << ", cindex " << cIndex << std::endl;
+
+        double dist = normalized_distance(c_interval.start, c_interval.end,
+                        randomInterval.start, randomInterval.end, ts);
+        if (dist < bestSoFarDistance) {
+          // Rcout << "    dist " << dist <<
+          //   " is less than best so far, breaking off the search" << std::endl;
+          nn_distance = dist;
+          break;
+        }
+        if (dist < nn_distance) {
+          // Rcout << "    better nn distance found " << dist << std::endl;
+          nn_distance = dist;
+        }
+
+      }
+
+    } // random search
+
+    if(nn_distance > bestSoFarDistance){
+      bestSoFarDistance = nn_distance;
+      bestSoFarPosition = c_interval.start;
+      bestSoFarLength = c_interval.end - c_interval.start;
+      bestSoFarRule = c_interval.rule_id;
+      // Rcout << "    updating the discord " << nn_distance << " at " << bestSoFarPosition <<
+      //  " of length " << bestSoFarLength << " for rule " << bestSoFarRule << std::endl;
+    }
+
+
+  }
+
+  rra_discord_record res;
+  res.rule = bestSoFarRule;
+  res.start = bestSoFarPosition;
+  res.end = bestSoFarPosition + bestSoFarLength;
+  res.nn_distance = bestSoFarDistance;
+
+  return res;
+}
+
+//' Finds a discord with HOT-SAX.
+//'
+//' @param series the input timeseries.
+//' @param w_size the sliding window size.
+//' @param paa_size the PAA size.
+//' @param a_size the alphabet size.
+//' @param nr_strategy the numerosity reduction strategy ("none", "exact", "mindist").
+//' @param n_threshold the normalization threshold.
+//' @param discords_num the number of discords to report.
 //' @useDynLib jmotif
 //' @export
+//' @references Senin Pavel and Malinchik Sergey,
+//' SAX-VSM: Interpretable Time Series Classification Using SAX and Vector Space Model.,
+//' Data Mining (ICDM), 2013 IEEE 13th International Conference on.
+//' @examples
+//' discords = find_discords_rra(ecg0606, 100, 4, 4, "exact", 0.01, 1)
+//' plot(ecg0606, type = "l", col = "cornflowerblue", main = "ECG 0606")
+//' lines(x=c(discords[1,2]:(discords[1,2]+100)),
+//'    y=ecg0606[discords[1,2]:(discords[1,2]+100)], col="red")
 // [[Rcpp::export]]
-Rcpp::DataFrame ts_to_intervals(NumericVector series, int w_size, int paa_size,
-       int a_size, CharacterVector nr_strategy, double n_threshold = 0.01){
+Rcpp::DataFrame find_discords_rra(NumericVector series, int w_size, int paa_size,
+  int a_size, CharacterVector nr_strategy, double n_threshold,
+  int discords_num){
 
   std::vector<double> ts = Rcpp::as<std::vector<double>>(series);
   std::vector<int> visit_array(ts.size(), -1);
@@ -97,7 +275,8 @@ Rcpp::DataFrame ts_to_intervals(NumericVector series, int w_size, int paa_size,
     }
   }
 
-  Rcout << "  there are " << intervals.size() << " rule intervals to consider..." << std::endl;
+  Rcout << "  there are " << intervals.size() <<
+    " rule intervals to consider..." << std::endl;
   // we need to examine the coverage curve for continous zero intervals and mark those
   //
   int start = -1;
@@ -115,157 +294,63 @@ Rcpp::DataFrame ts_to_intervals(NumericVector series, int w_size, int paa_size,
       ri.rule_id=-1;
       intervals.push_back(ri);
       in_interval = false;
-      Rcout << " zero coverage" << start << " to " << i << std::endl;
+      Rcout << " zero coverage from " << start << " to " << i << std::endl;
     }
   }
-  Rcout << "  there are " << intervals.size() << " rule intervals including non-covered..." << std::endl;
+  Rcout << "  there are " << intervals.size() <<
+    " rule intervals including non-covered..." << std::endl;
 
   // sort the intervals rare < frequent
   std::sort(intervals.begin(), intervals.end(), sort_intervals());
 
-  //   for(auto it=intervals.begin(); it!=intervals.end(); ++it){
-  //     Rcout << "R" << it->rule_id << " covr " << it->cover << std::endl;
-  //   }
+  // from here on we'll be calling find best discord...
+  std::unordered_set<int> global_visited_positions;
 
-  // init variables
-  int bestSoFarPosition = -1;
-  int bestSoFarLength = -1;
-  int bestSoFarRule = 0;
-  double bestSoFarDistance = -1;
+  std::vector<rra_discord_record> discords;
 
-  // outer loop over all intervals
-  for(int i = 0; i < intervals.size(); i++){
-
-    RuleInterval c_interval = intervals[i];
+  while(discords.size() < discords_num){
+    rra_discord_record d = find_best_rra_discord(&ts, w_size, &grammar,
+                              &indexes, &intervals, &global_visited_positions);
+    if(d.nn_distance<0){
+      break;
+    }
+    discords.push_back(d);
 
     // mark the location
-    std::unordered_set<int> visited_locations;
-    int markStart = c_interval.start - (c_interval.end - c_interval.start);
+    int markStart = d.start - (d.end - d.start);
     if (markStart < 0) {
       markStart = 0;
     }
-    int markEnd = c_interval.end;
+    int markEnd = d.end;
     if (markEnd > ts.size()) {
       markEnd = ts.size();
     }
     for(int j=markStart;j<markEnd;j++){
-      visited_locations.insert(j);
+      global_visited_positions.insert(j);
     }
 
-    double nn_distance = std::numeric_limits<double>::max();
-    bool do_random_search = true;
-
-    Rcout << " considering interval " << c_interval.start << "-" << c_interval.end <<
-      " for rule " << c_interval.rule_id <<
-      ", best so far dist " << bestSoFarDistance << std::endl;
-
-    if(c_interval.rule_id>0){
-      auto this_rule_occurrences = grammar[c_interval.rule_id].rule_intervals;
-      Rcout << "   going to iterate over " << this_rule_occurrences.size() <<
-        " rule occurrences first " << std::endl;
-      for(auto it=this_rule_occurrences.begin(); it !=this_rule_occurrences.end(); ++it) {
-        int start = indexes[it->first];
-        auto found = visited_locations.find(start);
-        if (found == visited_locations.end()) {
-          visited_locations.insert(start);
-          int end = indexes[it->second] + w_size;
-          Rcout << "    examining a candidate at " << start << "-" <<
-            end << std::endl;
-          double dist = normalized_distance(c_interval.start, c_interval.end,
-                                            start, end, &ts);
-          // keep track of best so far distance
-          if (dist < nn_distance) {
-            Rcout << "    better nn distance found " << dist << std::endl;
-            nn_distance = dist;
-          }
-          if (dist < bestSoFarDistance) {
-            Rcout << "    dist " << dist <<
-              " is less than best so far, breaking off the search" << std::endl;
-            do_random_search = false;
-            break;
-          }
-
-        } else {
-          continue;
-        }
-    }
   }
 
-  if(do_random_search){
-    Rcout << " starting the random search ..." <<
-    " nn dist " << nn_distance << std::endl;
-    Rcout << "visited locations ";
-    for(auto it=visited_locations.begin(); it != visited_locations.end(); ++it){
-      Rcout << *it << ", ";
-    }
-    Rcout << std::endl;
+  // make results
+  std::vector<int> rule_ids;
+  std::vector<int> starts;
+  std::vector<int> ends;
+  std::vector<double > nn_distances;
 
-    // init the visit array
-    int visitCounter = 0;
-    int cIndex = 0;
-    for (int j = 0; j < intervals.size(); j++) {
-      RuleInterval interval = intervals[j];
-      auto found = visited_locations.find(interval.start);
-      if (found == visited_locations.end()) {
-        visit_array[cIndex] = j;
-        cIndex++;
-      } else {
-        Rcout << "    - skipped " << interval.start << std::endl;
-      }
-    }
-    cIndex--;
 
-    // shuffle the visit array
-    for (int j = cIndex; j > 0; j--) {
-      int index = armaRand() % (j + 1);
-      int a = visit_array[index];
-      visit_array[index] = visit_array[j];
-      visit_array[j] = a;
-    }
-
-    // while there are unvisited locations
-    while (cIndex >= 0) {
-
-      RuleInterval randomInterval = intervals[visit_array[cIndex]];
-      cIndex--;
-
-      Rcout << "    random candidate " << randomInterval.start << "-" <<
-        randomInterval.end << ", cindex " << cIndex << std::endl;
-
-      double dist = normalized_distance(c_interval.start, c_interval.end,
-                                        randomInterval.start, randomInterval.end, &ts);
-      if (dist < bestSoFarDistance) {
-        Rcout << "    dist " << dist <<
-          " is less than best so far, breaking off the search" << std::endl;
-        nn_distance = dist;
-        break;
-      }
-      if (dist < nn_distance) {
-        Rcout << "    better nn distance found " << dist << std::endl;
-        nn_distance = dist;
-      }
-
-    }
-
-  } // random search
-
-  if(nn_distance > bestSoFarDistance){
-    bestSoFarDistance = nn_distance;
-    bestSoFarPosition = c_interval.start;
-    bestSoFarLength = c_interval.end - c_interval.start;
-    bestSoFarRule = c_interval.rule_id;
-    Rcout << "    updating the discord " << nn_distance << " at " << bestSoFarPosition <<
-      " of length " << bestSoFarLength << " for rule " << bestSoFarRule << std::endl;
+  for(auto it = discords.begin(); it != discords.end(); it++) {
+    rule_ids.push_back(it->rule);
+    starts.push_back(it->start);
+    ends.push_back(it->end);
+    nn_distances.push_back(it->nn_distance);
   }
-
- }
 
   // make results
   return Rcpp::DataFrame::create(
-    Named("nn_distance") = bestSoFarDistance,
-    Named("position") = bestSoFarPosition,
-    Named("Length") = bestSoFarLength,
-    Named("RuleId") = bestSoFarRule
+    Named("rule_id") = rule_ids,
+    Named("start") = starts,
+    Named("end") = ends,
+    Named("nn_distance") = nn_distances
   );
 
 }

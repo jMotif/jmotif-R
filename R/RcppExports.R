@@ -98,10 +98,27 @@ str_to_repair_grammar <- function(str) {
     .Call('jmotif_str_to_repair_grammar', PACKAGE = 'jmotif', str)
 }
 
+#' Finds a discord with HOT-SAX.
+#'
+#' @param series the input timeseries.
+#' @param w_size the sliding window size.
+#' @param paa_size the PAA size.
+#' @param a_size the alphabet size.
+#' @param nr_strategy the numerosity reduction strategy ("none", "exact", "mindist").
+#' @param n_threshold the normalization threshold.
+#' @param discords_num the number of discords to report.
 #' @useDynLib jmotif
 #' @export
-ts_to_intervals <- function(series, w_size, paa_size, a_size, nr_strategy, n_threshold = 0.01) {
-    .Call('jmotif_ts_to_intervals', PACKAGE = 'jmotif', series, w_size, paa_size, a_size, nr_strategy, n_threshold)
+#' @references Senin Pavel and Malinchik Sergey,
+#' SAX-VSM: Interpretable Time Series Classification Using SAX and Vector Space Model.,
+#' Data Mining (ICDM), 2013 IEEE 13th International Conference on.
+#' @examples
+#' discords = find_discords_rra(ecg0606, 100, 4, 4, "exact", 0.01, 1)
+#' plot(ecg0606, type = "l", col = "cornflowerblue", main = "ECG 0606")
+#' lines(x=c(discords[1,2]:(discords[1,2]+100)),
+#'    y=ecg0606[discords[1,2]:(discords[1,2]+100)], col="red")
+find_discords_rra <- function(series, w_size, paa_size, a_size, nr_strategy, n_threshold, discords_num) {
+    .Call('jmotif_find_discords_rra', PACKAGE = 'jmotif', series, w_size, paa_size, a_size, nr_strategy, n_threshold, discords_num)
 }
 
 #' Translates an alphabet size into the array of corresponding SAX cut-lines built using the Normal distribution.

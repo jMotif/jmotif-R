@@ -185,6 +185,8 @@ struct rra_discord_record {
   int end;
   double nn_distance;
 };
+Rcpp::DataFrame find_discords_rra(NumericVector series, int w_size, int paa_size,
+  int a_size, CharacterVector nr_strategy, double n_threshold = 0.01, int discords_num = 3);
 
 //
 // Utilities
