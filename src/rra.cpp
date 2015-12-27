@@ -262,6 +262,7 @@ Rcpp::DataFrame find_discords_rra(NumericVector series, int w_size, int paa_size
       //
       int start = indexes[t_start];
       int end = indexes[t_end] + w_size;
+      // Rcout << start << "_" << end << std::endl;
       // Rcout << " * rule interval " << start << " " << end << std::endl;
       for(int i=start; i<end; ++i){ // rule coverage
         coverage_array[i] = coverage_array[i] + 1;

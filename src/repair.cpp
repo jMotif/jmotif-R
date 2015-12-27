@@ -26,7 +26,7 @@ std::map<int, RuleRecord> _str_to_repair_grammar(std::string s){
   std::vector<Token> R0; // this is the R0 tokens sequence
   std::map<int, Rule> rules; // the grammar rules dictionary
   rules.insert(std::make_pair(0, Rule(0, "\0", "\0"))); // insert the R0 placeholder
-  std::unordered_map<std::string, int> digrams_map; // digram counts map
+  std::map<std::string, int> digrams_map; // digram counts map
   std::vector< std::pair<std::string, int> > digrams_vector; // digram - count pairs
 
   // tokenizer variables
