@@ -26,7 +26,7 @@ std::map<int, RuleRecord> _str_to_repair_grammar(std::string s){
   std::vector<Token> R0; // this is the R0 tokens sequence
   std::map<int, Rule> rules; // the grammar rules dictionary
   rules.insert(std::make_pair(0, Rule(0, "\0", "\0"))); // insert the R0 placeholder
-  std::map<std::string, int> digrams_map; // digram counts map
+  std::unordered_map<std::string, int> digrams_map; // digram counts map
   std::vector< std::pair<std::string, int> > digrams_vector; // digram - count pairs
 
   // tokenizer variables
@@ -62,7 +62,7 @@ std::map<int, RuleRecord> _str_to_repair_grammar(std::string s){
   // }
 
   // initialize the fake priority queue which is the vector of pairs
-  for(std::map<std::string, int>::iterator it = digrams_map.begin(); it != digrams_map.end(); ++it) {
+  for(auto it = digrams_map.begin(); it != digrams_map.end(); ++it) {
     digrams_vector.push_back(std::make_pair(it->first, it->second) ); // frequencies vec new element
   }
   // sort the frequencies vector
@@ -225,7 +225,7 @@ std::map<int, RuleRecord> _str_to_repair_grammar(std::string s){
         // if this was the last instance
         if(digrams_map[digram_str]==0){
           // Rcout << "  breaking the digram substitute loop and erasing dd" << std::endl;
-          std::map<std::string, int>::iterator im =  digrams_map.find(digram_str);
+          auto im =  digrams_map.find(digram_str);
           digrams_map.erase(digram_str);
           cp = end + 1; // this shall break the outer loop
         }
@@ -233,7 +233,7 @@ std::map<int, RuleRecord> _str_to_repair_grammar(std::string s){
         // all digrams are accounted for, re-populate the priority queue
         digrams_vector.clear();
         digrams_vector.reserve(digrams_map.size());
-        for(std::map<std::string, int>::iterator it = digrams_map.begin();
+        for(auto it = digrams_map.begin();
             it != digrams_map.end(); ++it) {
           digrams_vector.push_back(std::make_pair(it->first, it->second) );
         }

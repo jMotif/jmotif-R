@@ -231,7 +231,7 @@ Rcpp::DataFrame find_discords_rra(NumericVector series, int w_size, int paa_size
     i++;
   }
   sort( indexes.begin(), indexes.end() );
-  Rcout << "  there are " << indexes.size() << " SAX words..." << std::endl;
+  // Rcout << "  there are " << indexes.size() << " SAX words..." << std::endl;
 
   // now compose the string
   //
@@ -244,7 +244,7 @@ Rcpp::DataFrame find_discords_rra(NumericVector series, int w_size, int paa_size
   // grammar
   //
   std::map<int, RuleRecord> grammar = _str_to_repair_grammar(sax_str);
-  Rcout << "  there are " << grammar.size() << " RePair rules including R0..." << std::endl;
+  // Rcout << "  there are " << grammar.size() << " RePair rules including R0..." << std::endl;
 
   // making intervals and ranking by the rule use
   // meanwhile build the coverage curve
@@ -275,8 +275,8 @@ Rcpp::DataFrame find_discords_rra(NumericVector series, int w_size, int paa_size
     }
   }
 
-  Rcout << "  there are " << intervals.size() <<
-    " rule intervals to consider..." << std::endl;
+  // Rcout << "  there are " << intervals.size() <<
+  //  " rule intervals to consider..." << std::endl;
   // we need to examine the coverage curve for continous zero intervals and mark those
   //
   int start = -1;
@@ -294,11 +294,11 @@ Rcpp::DataFrame find_discords_rra(NumericVector series, int w_size, int paa_size
       ri.rule_id=-1;
       intervals.push_back(ri);
       in_interval = false;
-      Rcout << " zero coverage from " << start << " to " << i << std::endl;
+      // Rcout << " zero coverage from " << start << " to " << i << std::endl;
     }
   }
-  Rcout << "  there are " << intervals.size() <<
-    " rule intervals including non-covered..." << std::endl;
+  // Rcout << "  there are " << intervals.size() <<
+  //   " rule intervals including non-covered..." << std::endl;
 
   // sort the intervals rare < frequent
   std::sort(intervals.begin(), intervals.end(), sort_intervals());
