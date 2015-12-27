@@ -22,13 +22,42 @@ struct sort_intervals {
 double normalized_distance(int start1, int end1, int start2, int end2, std::vector<double> *series){
   double res = 0;
   int count = 0;
-  int length = std::min(end1-start1,end2-start2);
-  for(int i=0; i<length; i++){
-    res = res + (series->at(start1+i) - series->at(start2+i)) *
-      (series->at(start1+i) - series->at(start2+i));
-    count++;
+  int len1 = end1 - start1;
+  int len2 = end2 - start2;
+  if(len1 == len2){
+    for(int i=0; i<len1; i++){
+      res = res + (series->at(start1+i) - series->at(start2+i)) *
+                        (series->at(start1+i) - series->at(start2+i));
+      count++;
+    }
+    return sqrt(res) / (double) count;
   }
-  return sqrt(res) / (double) count;
+  int min_length = std::min(len1, len2);
+  if(len1 == min_length){
+    std::vector<double> subseries(len2);
+    for(int i=0; i<len2; i++){
+      subseries[i] = series->at(start2+i);
+    }
+    std::vector<double> subseries_paa = _paa(subseries, len1);
+    for(int i=0; i<len1; i++){
+      res = res + (series->at(start1+i) - subseries_paa[i]) *
+        (series->at(start1+i) - subseries_paa[i]);
+      count++;
+    }
+    return sqrt(res) / (double) count;
+  } else {
+    std::vector<double> subseries(len1);
+    for(int i=0; i<len1; i++){
+      subseries[i] = series->at(start1+i);
+    }
+    std::vector<double> subseries_paa = _paa(subseries, len2);
+    for(int i=0; i<len2; i++){
+      res = res + (subseries_paa[i] - series->at(start2+i)) *
+        (subseries_paa[i] - series->at(start2+i));
+      count++;
+    }
+    return sqrt(res) / (double) count;
+  }
 }
 
 rra_discord_record find_best_rra_discord(std::vector<double> *ts, int w_size,
