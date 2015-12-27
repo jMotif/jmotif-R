@@ -84,6 +84,23 @@ BEGIN_RCPP
     return __result;
 END_RCPP
 }
+// find_discords_rra
+Rcpp::DataFrame find_discords_rra(NumericVector series, int w_size, int paa_size, int a_size, CharacterVector nr_strategy, double n_threshold, int discords_num);
+RcppExport SEXP jmotif_find_discords_rra(SEXP seriesSEXP, SEXP w_sizeSEXP, SEXP paa_sizeSEXP, SEXP a_sizeSEXP, SEXP nr_strategySEXP, SEXP n_thresholdSEXP, SEXP discords_numSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< NumericVector >::type series(seriesSEXP);
+    Rcpp::traits::input_parameter< int >::type w_size(w_sizeSEXP);
+    Rcpp::traits::input_parameter< int >::type paa_size(paa_sizeSEXP);
+    Rcpp::traits::input_parameter< int >::type a_size(a_sizeSEXP);
+    Rcpp::traits::input_parameter< CharacterVector >::type nr_strategy(nr_strategySEXP);
+    Rcpp::traits::input_parameter< double >::type n_threshold(n_thresholdSEXP);
+    Rcpp::traits::input_parameter< int >::type discords_num(discords_numSEXP);
+    __result = Rcpp::wrap(find_discords_rra(series, w_size, paa_size, a_size, nr_strategy, n_threshold, discords_num));
+    return __result;
+END_RCPP
+}
 // alphabet_to_cuts
 NumericVector alphabet_to_cuts(int a_size);
 RcppExport SEXP jmotif_alphabet_to_cuts(SEXP a_sizeSEXP) {

@@ -4,11 +4,6 @@ using namespace Rcpp ;
 #include <jmotif.h>
 //
 
-int armaRand() {
-  arma::ivec x = arma::randi(1);
-  return x(0);
-}
-
 VisitRegistry::VisitRegistry( int capacity ) {
   registry = new bool[capacity];
   for( int i = 0; i < capacity; i++ ) {

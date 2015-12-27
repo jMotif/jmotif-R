@@ -73,8 +73,6 @@ struct discord_record {
   double nn_distance;
 };
 //
-int armaRand();
-//
 class VisitRegistry {
 public:
   int size;
@@ -98,13 +96,108 @@ Rcpp::DataFrame find_discords_hot_sax(NumericVector ts, int w_size, int paa_size
                                       int a_size, double n_threshold, int discords_num);
 
 //
+// REPAIR
+//
+
+// Tokens are used in the R0
+//
+class Token {
+public:
+  int str_idx;
+  std::string payload;
+  Token(){
+    str_idx = -1;
+  };
+  Token(std::string s, int idx){
+    payload = s;
+    str_idx = idx;
+  };
+//   std::ostream& operator<<(std::ostream &strm, const Token &t) {
+//     return strm << "T(" << t.payload << " @ " << t.str_idx << ")";
+//   };
+};
+
+// Rules build up the rules table, i.e. the grammar
+//
+class Rule {
+public:
+  int id;
+  int rule_use;
+  std::string rule_string;
+  std::string expanded_rule_string;
+  std::vector<int> occurrences;
+  Rule(){
+    id = -1;
+    rule_use = 0;
+    rule_string = "\0";
+    expanded_rule_string = "\0";
+  };
+  Rule(int r_id, std::string rule_str, std::string expanded_rule_str){
+    id = r_id;
+    rule_use = 0;
+    rule_string = rule_str;
+    expanded_rule_string = expanded_rule_str;
+  };
+  std::string ruleString(){
+    std::stringstream ss;
+    ss << id;
+    return "R" + ss.str();
+  };
+//   std::ostream& operator<<(std::ostream &strm, const Rule &d) {
+//     return strm << "R" << d.id << "\t" << d.rule_string << "\t" << d.expanded_rule_string;
+//   };
+};
+
+
+// Guards are the placeholders for tokens
+//
+class Guard: public Token {
+public:
+  Rule r;
+  Guard(Rule rule, int idx){
+    r = rule;
+    payload = r.ruleString();
+    str_idx = idx;
+  };
+};
+
+// Rule records make the REPAIR output
+//
+class RuleRecord {
+public:
+  int rule_id;
+  std::string rule_string;
+  std::string expanded_rule_string;
+  int rule_use;
+  std::vector<int> rule_occurrences;
+  std::vector<std::pair<int,int>> rule_intervals;
+};
+
+std::map<int, RuleRecord> _str_to_repair_grammar(std::string s);
+Rcpp::List str_to_repair_grammar(CharacterVector str);
+
+//
+// RRA
+//
+struct rra_discord_record {
+  int rule;
+  int start;
+  int end;
+  double nn_distance;
+};
+Rcpp::DataFrame find_discords_rra(NumericVector series, int w_size, int paa_size,
+  int a_size, CharacterVector nr_strategy, double n_threshold = 0.01, int discords_num = 3);
+
+//
 // Utilities
 //
 NumericVector col_means(NumericMatrix m);
 //
 NumericVector subseries(NumericVector ts, int start, int end);
-
-Rcpp::List str_to_repair_grammar(CharacterVector str);
+//
+int count_spaces(std::string *s);
+//
+int armaRand();
 
 // internal high performance computing
 //
