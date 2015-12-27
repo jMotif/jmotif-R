@@ -100,8 +100,8 @@ str_to_repair_grammar <- function(str) {
 
 #' @useDynLib jmotif
 #' @export
-ts_to_intervals <- function(ts, w_size, paa_size, a_size, nr_strategy, n_threshold = 0.01) {
-    .Call('jmotif_ts_to_intervals', PACKAGE = 'jmotif', ts, w_size, paa_size, a_size, nr_strategy, n_threshold)
+ts_to_intervals <- function(series, w_size, paa_size, a_size, nr_strategy, n_threshold = 0.01) {
+    .Call('jmotif_ts_to_intervals', PACKAGE = 'jmotif', series, w_size, paa_size, a_size, nr_strategy, n_threshold)
 }
 
 #' Translates an alphabet size into the array of corresponding SAX cut-lines built using the Normal distribution.

@@ -73,8 +73,6 @@ struct discord_record {
   double nn_distance;
 };
 //
-int armaRand();
-//
 class VisitRegistry {
 public:
   int size;
@@ -179,6 +177,16 @@ std::map<int, RuleRecord> _str_to_repair_grammar(std::string s);
 Rcpp::List str_to_repair_grammar(CharacterVector str);
 
 //
+// RRA
+//
+struct rra_discord_record {
+  int rule;
+  int start;
+  int end;
+  double nn_distance;
+};
+
+//
 // Utilities
 //
 NumericVector col_means(NumericMatrix m);
@@ -186,7 +194,8 @@ NumericVector col_means(NumericMatrix m);
 NumericVector subseries(NumericVector ts, int start, int end);
 //
 int count_spaces(std::string *s);
-
+//
+int armaRand();
 
 // internal high performance computing
 //

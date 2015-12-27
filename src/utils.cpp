@@ -51,3 +51,10 @@ int count_spaces(std::string *s) {
     return count;
 }
 
+//
+// random generator wrapper
+//
+int armaRand() {
+  arma::ivec x = arma::randi(1);
+  return x(0);
+}
