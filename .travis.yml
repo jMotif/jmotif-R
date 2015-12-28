@@ -13,8 +13,8 @@ before_install:
   - sudo apt-get -qq install gfortran-5
   - mkdir ~/.R
   - echo -e "CC=gcc-5 -std=gnu99\nCXX=g++-5 -std=c++11\nCXX1X=g++-5\n" > ~/.R/Makevars
-  - echo -e "CFLAGS += -O3 -Wall -pipe -pedantic -std=gnu99\n" >> ~/.R/Makevars
-  - echo -e "CXXFLAGS += -O3 -Wall -pipe -Wno-unused -pedantic\n" >> ~/.R/Makevars
+  - echo -e "CFLAGS += -fpic -g -O2 -Wall -pipe -pedantic -std=gnu99\n" >> ~/.R/Makevars
+  - echo -e "CXXFLAGS += -fpic -g -O2 -Wall -pipe -Wno-unused -pedantic\n" >> ~/.R/Makevars
 
 r_binary_packages:
   - crayon
