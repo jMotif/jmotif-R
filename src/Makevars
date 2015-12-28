@@ -1,1 +1,1 @@
-PKG_CPPFLAGS =	-I../inst/include/ -fprofile-arcs -ftest-coverage
+PKG_CPPFLAGS +=	-I../inst/include/ -O2 -Wall -pipe -Wno-unused -pedantic
