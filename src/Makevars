@@ -1,2 +1,2 @@
-PKG_CPPFLAGS +=	-I../inst/include/ -fpic -g -O2 -fstack-protector --param=ssp-buffer-size=4 -Wformat -Wformat-security -Werror=format-security -D_FORTIFY_SOURCE=2 -g
+PKG_CPPFLAGS = -I../inst/include/ -fpic -g -O2 -fstack-protector --param=ssp-buffer-size=4 -Wformat -Wformat-security -Werror=format-security -D_FORTIFY_SOURCE=2 -g
 # -g -fpic -O2 -Wall -pipe -Wno-unused -pedantic
