@@ -39,6 +39,7 @@ NumericVector alphabet_to_cuts(int a_size) {
   case 20: {return NumericVector::create(R_NegInf, -1.64, -1.28, -1.04, -0.84, -0.67, -0.52, -0.39, -0.25, -0.13, 0.00, 0.13, 0.25, 0.39, 0.52, 0.67, 0.84, 1.04, 1.28, 1.64);}
   default: { stop("'a_size' is invalid"); return NumericVector::create(0.0); }
   }
+  return NumericVector::create(R_NegInf, R_PosInf);
 }
 
 std::vector<double> _alphabet_to_cuts(int a_size) {
@@ -64,6 +65,7 @@ std::vector<double> _alphabet_to_cuts(int a_size) {
   case 20: {return std::vector<double> {std::numeric_limits<double>::lowest(), -1.64, -1.28, -1.04, -0.84, -0.67, -0.52, -0.39, -0.25, -0.13, 0.00, 0.13, 0.25, 0.39, 0.52, 0.67, 0.84, 1.04, 1.28, 1.64};}
   default: { stop("'a_size' is invalid"); std::vector<double> {0.0}; }
   }
+  return std::vector<double> {std::numeric_limits<double>::lowest(),  std::numeric_limits<double>::max()};
 }
 
 //' Transforms a time series into the char array using SAX and the normal alphabet.

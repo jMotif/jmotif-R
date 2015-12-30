@@ -92,7 +92,7 @@ Rcpp::DataFrame find_discords_brute_force(NumericVector ts, int w_size, int disc
 //
 // HOT-SAX
 //
-Rcpp::DataFrame find_discords_hot_sax(NumericVector ts, int w_size, int paa_size,
+Rcpp::DataFrame find_discords_hotsax(NumericVector ts, int w_size, int paa_size,
                                       int a_size, double n_threshold, int discords_num);
 
 //
@@ -202,6 +202,7 @@ int armaRand();
 // internal high performance computing
 //
 std::vector<double> _alphabet_to_cuts(int a_size);
+double _mean(std::vector<double> *ts, int *start, int *end);
 std::vector<double> _znorm(std::vector<double> ts, double threshold);
 std::vector<double> _paa(std::vector<double> ts, int paa_num);
 double _euclidean_dist(std::vector<double>* seq1, std::vector<double>* seq2);

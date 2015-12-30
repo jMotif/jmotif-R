@@ -9,26 +9,64 @@ public:
   int rule_id;
   int start;
   int end;
-  int cover;
+  double cover;
 };
 
 struct sort_intervals {
   bool operator()(const RuleInterval &left,
                 const RuleInterval &right) {
-    return left.cover < right.cover;
+    // Rcout << " sorting " << left.cover << ", " << right.cover << std::endl;
+    return (left.cover < right.cover);
   }
 };
 
 double normalized_distance(int start1, int end1, int start2, int end2, std::vector<double> *series){
   double res = 0;
   int count = 0;
-  int length = std::min(end1-start1,end2-start2);
-  for(int i=0; i<length; i++){
-    res = res + (series->at(start1+i) - series->at(start2+i)) *
-      (series->at(start1+i) - series->at(start2+i));
-    count++;
+  int len1 = end1 - start1;
+  int len2 = end2 - start2;
+  if(len1 == len2){
+    for(int i=0; i<len1; i++){
+      res = res + (series->at(start1+i) - series->at(start2+i)) *
+                        (series->at(start1+i) - series->at(start2+i));
+      count++;
+    }
+    return sqrt(res) / (double) count;
   }
-  return sqrt(res) / (double) count;
+  int min_length = std::min(len1, len2);
+  if(len1 == min_length){
+    std::vector<double> subseries(len2);
+    for(int i=0; i<len2; i++){
+      subseries[i] = series->at(start2+i);
+    }
+    std::vector<double> subseries_paa = _paa(subseries, len1);
+    for(int i=0; i<len1; i++){
+      res = res + (series->at(start1+i) - subseries_paa[i]) *
+        (series->at(start1+i) - subseries_paa[i]);
+      count++;
+    }
+    return sqrt(res) / (double) count;
+  } else {
+    std::vector<double> subseries(len1);
+    for(int i=0; i<len1; i++){
+      subseries[i] = series->at(start1+i);
+    }
+    std::vector<double> subseries_paa = _paa(subseries, len2);
+    for(int i=0; i<len2; i++){
+      res = res + (subseries_paa[i] - series->at(start2+i)) *
+        (subseries_paa[i] - series->at(start2+i));
+      count++;
+    }
+    return sqrt(res) / (double) count;
+  }
+}
+
+double _mean(std::vector<int> *ts, int *start, int *end){
+  int sum = 0;
+  for(int i=*start; i<*end; i++){
+    sum = sum + ts->at(i);
+  }
+  return (double) sum / (double) (*end - *start);
 }
 
 rra_discord_record find_best_rra_discord(std::vector<double> *ts, int w_size,
@@ -52,6 +90,8 @@ rra_discord_record find_best_rra_discord(std::vector<double> *ts, int w_size,
   for(int i = 0; i < intervals->size(); i++){
 
     RuleInterval c_interval = intervals->at(i);
+
+    // Rcout << c_interval.rule_id << ", " << c_interval.cover << std::endl;
 
     auto find = global_visited_positions->find(c_interval.start);
     if(find != global_visited_positions->end()){
@@ -231,7 +271,7 @@ Rcpp::DataFrame find_discords_rra(NumericVector series, int w_size, int paa_size
     i++;
   }
   sort( indexes.begin(), indexes.end() );
-  Rcout << "  there are " << indexes.size() << " SAX words..." << std::endl;
+  // Rcout << "  there are " << indexes.size() << " SAX words..." << std::endl;
 
   // now compose the string
   //
@@ -244,7 +284,7 @@ Rcpp::DataFrame find_discords_rra(NumericVector series, int w_size, int paa_size
   // grammar
   //
   std::map<int, RuleRecord> grammar = _str_to_repair_grammar(sax_str);
-  Rcout << "  there are " << grammar.size() << " RePair rules including R0..." << std::endl;
+  // Rcout << "  there are " << grammar.size() << " RePair rules including R0..." << std::endl;
 
   // making intervals and ranking by the rule use
   // meanwhile build the coverage curve
@@ -262,6 +302,7 @@ Rcpp::DataFrame find_discords_rra(NumericVector series, int w_size, int paa_size
       //
       int start = indexes[t_start];
       int end = indexes[t_end] + w_size;
+      // Rcout << start << "_" << end << std::endl;
       // Rcout << " * rule interval " << start << " " << end << std::endl;
       for(int i=start; i<end; ++i){ // rule coverage
         coverage_array[i] = coverage_array[i] + 1;
@@ -275,8 +316,8 @@ Rcpp::DataFrame find_discords_rra(NumericVector series, int w_size, int paa_size
     }
   }
 
-  Rcout << "  there are " << intervals.size() <<
-    " rule intervals to consider..." << std::endl;
+  // Rcout << "  there are " << intervals.size() <<
+  //  " rule intervals to consider..." << std::endl;
   // we need to examine the coverage curve for continous zero intervals and mark those
   //
   int start = -1;
@@ -294,14 +335,22 @@ Rcpp::DataFrame find_discords_rra(NumericVector series, int w_size, int paa_size
       ri.rule_id=-1;
       intervals.push_back(ri);
       in_interval = false;
-      Rcout << " zero coverage from " << start << " to " << i << std::endl;
+      // Rcout << " zero coverage from " << start << " to " << i << std::endl;
     }
   }
-  Rcout << "  there are " << intervals.size() <<
-    " rule intervals including non-covered..." << std::endl;
+  // Rcout << "  there are " << intervals.size() <<
+  //   " rule intervals including non-covered..." << std::endl;
+
+  for(auto it=intervals.begin(); it !=intervals.end(); ++it){
+    it->cover = _mean(&coverage_array, &it->start, &it->end);
+  }
 
   // sort the intervals rare < frequent
   std::sort(intervals.begin(), intervals.end(), sort_intervals());
+
+  // for(auto it=intervals.begin(); it !=intervals.end(); ++it){
+    // Rcout << ".. " << it->cover << std::endl;
+  // }
 
   // from here on we'll be calling find best discord...
   std::unordered_set<int> global_visited_positions;
@@ -335,6 +384,7 @@ Rcpp::DataFrame find_discords_rra(NumericVector series, int w_size, int paa_size
   std::vector<int> rule_ids;
   std::vector<int> starts;
   std::vector<int> ends;
+  std::vector<int> lengths;
   std::vector<double > nn_distances;
 
 
@@ -342,6 +392,7 @@ Rcpp::DataFrame find_discords_rra(NumericVector series, int w_size, int paa_size
     rule_ids.push_back(it->rule);
     starts.push_back(it->start);
     ends.push_back(it->end);
+    lengths.push_back(it->end - it->start);
     nn_distances.push_back(it->nn_distance);
   }
 
@@ -350,6 +401,7 @@ Rcpp::DataFrame find_discords_rra(NumericVector series, int w_size, int paa_size
     Named("rule_id") = rule_ids,
     Named("start") = starts,
     Named("end") = ends,
+    Named("length") = lengths,
     Named("nn_distance") = nn_distances
   );
 

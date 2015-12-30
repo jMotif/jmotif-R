@@ -32,7 +32,6 @@ NumericVector znorm(NumericVector ts, double threshold  = 0.01) {
   return wrap(_znorm(Rcpp::as< std::vector<double> >(ts), threshold));
 }
 
-
 std::vector<double> _znorm(std::vector<double> ts, double threshold) {
 
   double sum = std::accumulate(std::begin(ts), std::end(ts), 0.0);

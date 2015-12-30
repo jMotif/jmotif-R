@@ -45,9 +45,9 @@ BEGIN_RCPP
     return __result;
 END_RCPP
 }
-// find_discords_hot_sax
-Rcpp::DataFrame find_discords_hot_sax(NumericVector ts, int w_size, int paa_size, int a_size, double n_threshold, int discords_num);
-RcppExport SEXP jmotif_find_discords_hot_sax(SEXP tsSEXP, SEXP w_sizeSEXP, SEXP paa_sizeSEXP, SEXP a_sizeSEXP, SEXP n_thresholdSEXP, SEXP discords_numSEXP) {
+// find_discords_hotsax
+Rcpp::DataFrame find_discords_hotsax(NumericVector ts, int w_size, int paa_size, int a_size, double n_threshold, int discords_num);
+RcppExport SEXP jmotif_find_discords_hotsax(SEXP tsSEXP, SEXP w_sizeSEXP, SEXP paa_sizeSEXP, SEXP a_sizeSEXP, SEXP n_thresholdSEXP, SEXP discords_numSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
@@ -57,7 +57,7 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< int >::type a_size(a_sizeSEXP);
     Rcpp::traits::input_parameter< double >::type n_threshold(n_thresholdSEXP);
     Rcpp::traits::input_parameter< int >::type discords_num(discords_numSEXP);
-    __result = Rcpp::wrap(find_discords_hot_sax(ts, w_size, paa_size, a_size, n_threshold, discords_num));
+    __result = Rcpp::wrap(find_discords_hotsax(ts, w_size, paa_size, a_size, n_threshold, discords_num));
     return __result;
 END_RCPP
 }
