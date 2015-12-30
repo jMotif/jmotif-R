@@ -4,7 +4,7 @@ using namespace Rcpp ;
 #include <jmotif.h>
 //
 
-discord_record find_best_discord_hot_sax(std::vector<double>* ts, int w_size,
+discord_record find_best_discord_hotsax(std::vector<double>* ts, int w_size,
           std::unordered_map<std::string, std::vector<int>>* word2indexes,
           std::multimap<int, std::string>* ordered_words, VisitRegistry* globalRegistry) {
 
@@ -130,12 +130,12 @@ discord_record find_best_discord_hot_sax(std::vector<double>* ts, int w_size,
 //' HOT SAX: Efficiently finding the most unusual time series subsequence.
 //' Proceeding ICDM '05 Proceedings of the Fifth IEEE International Conference on Data Mining
 //' @examples
-//' discords = find_discords_hot_sax(ecg0606, 100, 4, 4, 0.01, 1)
+//' discords = find_discords_hotsax(ecg0606, 100, 4, 4, 0.01, 1)
 //' plot(ecg0606, type = "l", col = "cornflowerblue", main = "ECG 0606")
 //' lines(x=c(discords[1,2]:(discords[1,2]+100)),
 //'    y=ecg0606[discords[1,2]:(discords[1,2]+100)], col="red")
 // [[Rcpp::export]]
-Rcpp::DataFrame find_discords_hot_sax(NumericVector ts, int w_size, int paa_size,
+Rcpp::DataFrame find_discords_hotsax(NumericVector ts, int w_size, int paa_size,
                                       int a_size, double n_threshold, int discords_num) {
 
   std::vector<double> series = Rcpp::as< std::vector<double> > (ts);
@@ -184,7 +184,7 @@ Rcpp::DataFrame find_discords_hot_sax(NumericVector ts, int w_size, int paa_size
   int discord_counter = 0;
   while(discord_counter < discords_num){
 
-    discord_record rec = find_best_discord_hot_sax(&series,
+    discord_record rec = find_best_discord_hotsax(&series,
                             w_size, &word2indexes, &ordered_words, &registry);
 
     if(rec.nn_distance == 0 || rec.index == -1){ break; }

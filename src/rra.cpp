@@ -9,13 +9,14 @@ public:
   int rule_id;
   int start;
   int end;
-  int cover;
+  double cover;
 };
 
 struct sort_intervals {
   bool operator()(const RuleInterval &left,
                 const RuleInterval &right) {
-    return left.cover < right.cover;
+    // Rcout << " sorting " << left.cover << ", " << right.cover << std::endl;
+    return (left.cover < right.cover);
   }
 };
 
@@ -60,6 +61,14 @@ double normalized_distance(int start1, int end1, int start2, int end2, std::vect
   }
 }
 
+double _mean(std::vector<int> *ts, int *start, int *end){
+  int sum = 0;
+  for(int i=*start; i<*end; i++){
+    sum = sum + ts->at(i);
+  }
+  return (double) sum / (double) (*end - *start);
+}
+
 rra_discord_record find_best_rra_discord(std::vector<double> *ts, int w_size,
       std::map<int, RuleRecord> *grammar, std::vector<int> *indexes,
       std::vector<RuleInterval> *intervals,
@@ -81,6 +90,8 @@ rra_discord_record find_best_rra_discord(std::vector<double> *ts, int w_size,
   for(int i = 0; i < intervals->size(); i++){
 
     RuleInterval c_interval = intervals->at(i);
+
+    // Rcout << c_interval.rule_id << ", " << c_interval.cover << std::endl;
 
     auto find = global_visited_positions->find(c_interval.start);
     if(find != global_visited_positions->end()){
@@ -330,8 +341,16 @@ Rcpp::DataFrame find_discords_rra(NumericVector series, int w_size, int paa_size
   // Rcout << "  there are " << intervals.size() <<
   //   " rule intervals including non-covered..." << std::endl;
 
+  for(auto it=intervals.begin(); it !=intervals.end(); ++it){
+    it->cover = _mean(&coverage_array, &it->start, &it->end);
+  }
+
   // sort the intervals rare < frequent
   std::sort(intervals.begin(), intervals.end(), sort_intervals());
+
+  // for(auto it=intervals.begin(); it !=intervals.end(); ++it){
+    // Rcout << ".. " << it->cover << std::endl;
+  // }
 
   // from here on we'll be calling find best discord...
   std::unordered_set<int> global_visited_positions;
@@ -365,6 +384,7 @@ Rcpp::DataFrame find_discords_rra(NumericVector series, int w_size, int paa_size
   std::vector<int> rule_ids;
   std::vector<int> starts;
   std::vector<int> ends;
+  std::vector<int> lengths;
   std::vector<double > nn_distances;
 
 
@@ -372,6 +392,7 @@ Rcpp::DataFrame find_discords_rra(NumericVector series, int w_size, int paa_size
     rule_ids.push_back(it->rule);
     starts.push_back(it->start);
     ends.push_back(it->end);
+    lengths.push_back(it->end - it->start);
     nn_distances.push_back(it->nn_distance);
   }
 
@@ -380,6 +401,7 @@ Rcpp::DataFrame find_discords_rra(NumericVector series, int w_size, int paa_size
     Named("rule_id") = rule_ids,
     Named("start") = starts,
     Named("end") = ends,
+    Named("length") = lengths,
     Named("nn_distance") = nn_distances
   );
 
