@@ -44,13 +44,6 @@ NumericVector subseries(NumericVector ts, int start, int end) {
   return res;
 }
 
-int count_spaces(std::string *s) {
-  int count = 0;
-  for (int i = 0; i < s->size(); i++)
-    if (s->at(i) == ' ') count++;
-    return count;
-}
-
 //
 // random generator wrapper
 //
