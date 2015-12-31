@@ -195,16 +195,16 @@ NumericVector col_means(NumericMatrix m);
 //
 NumericVector subseries(NumericVector ts, int start, int end);
 //
-int count_spaces(std::string *s);
-//
 int armaRand();
 
 // internal high performance computing
 //
 std::vector<double> _alphabet_to_cuts(int a_size);
+int _count_spaces(std::string *s);
 double _mean(std::vector<double> *ts, int *start, int *end);
 std::vector<double> _znorm(std::vector<double> ts, double threshold);
 std::vector<double> _paa(std::vector<double> ts, int paa_num);
+std::vector<double> _paa2(std::vector<double> ts, int paa_num);
 double _euclidean_dist(std::vector<double>* seq1, std::vector<double>* seq2);
 //
 std::string _series_to_string(std::vector<double> ts, int a_size);

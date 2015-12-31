@@ -340,7 +340,7 @@ std::map<int, RuleRecord> _str_to_repair_grammar(std::string s){
     for(std::vector<int>::iterator oi = rr.rule_occurrences.begin();
         oi != rr.rule_occurrences.end(); ++oi) {
       rr.rule_intervals.push_back(std::make_pair(*oi,
-                *oi + count_spaces(&rr.expanded_rule_string)));
+                *oi + _count_spaces(&rr.expanded_rule_string)));
     }
     res.insert(std::make_pair(it->first, rr));
   }
@@ -378,7 +378,7 @@ Rcpp::List str_to_repair_grammar(CharacterVector str){
     Rcpp::CharacterVector expanded_rule_string = it->second.expanded_rule_string;
     Rcpp::NumericVector rule_interval_starts = Rcpp::wrap(it->second.rule_occurrences);
     Rcpp::NumericVector rule_interval_ends = rule_interval_starts +
-      count_spaces(&it->second.expanded_rule_string);
+      _count_spaces(&it->second.expanded_rule_string);
 
     res[it->first] = List::create(
       _["rule_name"]  = rule_name,
