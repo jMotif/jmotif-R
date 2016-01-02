@@ -2,7 +2,7 @@
 % Please edit documentation in R/RcppExports.R
 \name{znorm}
 \alias{znorm}
-\title{Z-normalizes a time series by subtracting the mean value and dividing by the standard deviation value.}
+\title{Z-normalizes a time series by subtracting its mean and dividing by the standard deviation.}
 \usage{
 znorm(ts, threshold = 0.01)
 }
@@ -10,10 +10,10 @@ znorm(ts, threshold = 0.01)
 \item{ts}{a time series to process.}
 
 \item{threshold}{a z-normalization threshold value, if the input time series' standard deviation is
-found less than this value, the procedure is not applied, so the noise would not get overamplified.}
+found less than this value, the procedure is not applied, so the "noise" would not get overamplified.}
 }
 \description{
-Z-normalizes a time series by subtracting the mean value and dividing by the standard deviation value.
+Z-normalizes a time series by subtracting its mean and dividing by the standard deviation.
 }
 \examples{
 x = seq(0, pi*4, 0.02)
