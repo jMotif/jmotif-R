@@ -280,8 +280,7 @@ Rcpp::DataFrame bags_to_tfidf(Rcpp::List data) {
   return df;
 }
 
-//' Computes a cosine similarity values between a bag of words and a set of
-//' TF-IDF weight vectors.
+//' Computes the cosine distance value between a bag of words and a set of TF-IDF weight vectors.
 //'
 //' @param data the list containing a word-bag and the TF-IDF object.
 //' @useDynLib jmotif

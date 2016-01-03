@@ -3,8 +3,8 @@ using namespace Rcpp ;
 //
 #include <jmotif.h>
 #include <math.h>
-#include <iomanip>
-#include <iostream>
+// #include <iomanip>
+// #include <iostream>
 //
 //' Computes a Piecewise Aggregate Approximation (PAA) for a time series.
 //'
