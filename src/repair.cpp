@@ -362,8 +362,10 @@ std::map<int, RuleRecord> _str_to_repair_grammar(std::string s){
 // [[Rcpp::export]]
 Rcpp::List str_to_repair_grammar(CharacterVector str){
 
+  // convert the string
   std::string s = Rcpp::as<std::string>(str);
 
+  // run the c++ implementation
   std::map<int, RuleRecord> rules = _str_to_repair_grammar(s);
 
   // make results

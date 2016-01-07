@@ -267,8 +267,7 @@ bags_to_tfidf <- function(data) {
     .Call('jmotif_bags_to_tfidf', PACKAGE = 'jmotif', data)
 }
 
-#' Computes a cosine similarity values between a bag of words and a set of
-#' TF-IDF weight vectors.
+#' Computes the cosine distance value between a bag of words and a set of TF-IDF weight vectors.
 #'
 #' @param data the list containing a word-bag and the TF-IDF object.
 #' @useDynLib jmotif
