@@ -30,6 +30,8 @@ NumericVector znorm(NumericVector ts, double threshold  = 0.01) {
   return wrap(_znorm(Rcpp::as< std::vector<double> >(ts), threshold));
 }
 
+// this is the main implementation, above is the wrapper
+//
 std::vector<double> _znorm(std::vector<double> ts, double threshold) {
 
   double sum = std::accumulate(std::begin(ts), std::end(ts), 0.0);
@@ -37,8 +39,7 @@ std::vector<double> _znorm(std::vector<double> ts, double threshold) {
   // Rcout << " mean2 " << mean << "\n";
 
   std::vector<double> diff(ts.size());
-  std::transform(ts.begin(), ts.end(), diff.begin(),
-                 std::bind2nd(std::minus<double>(), mean));
+  std::transform(ts.begin(), ts.end(), diff.begin(), std::bind2nd(std::minus<double>(), mean));
   double sq_sum = std::inner_product(diff.begin(), diff.end(), diff.begin(), 0.0);
   double stdev = std::sqrt(sq_sum / (ts.size()-1));
   // Rcout << " stdev2 " << stdev << "\n";

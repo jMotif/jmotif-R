@@ -25,6 +25,8 @@ double euclidean_dist(NumericVector seq1, NumericVector seq2) {
   }
 }
 
+// this a faster version for the internal use
+//
 double _euclidean_dist(std::vector<double>* seq1, std::vector<double>* seq2) {
   double res = 0;
   for(int i=0; i<seq1->size(); i++){
