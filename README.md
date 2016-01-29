@@ -42,10 +42,14 @@ In Proc. ICDM (2005)
 [8] Pavel Senin, Jessica Lin , Xing Wang, Tim Oates, Sunil Gandhi, Arnold P. Boedihardjo, Crystal Chen, Susan Frankenstein, [*Time series anomaly discovery with grammar-based compression.*](http://openproceedings.org/2015/conf/edbt/paper-155.pdf), In Proc. of The International Conference on Extending Database Technology, EDBT 15.
 
 
-#### 0.0 Installation
+#### 0.0 Installation from latest sources
     install.packages("devtools")
     library(devtools)
     install_github('jMotif/jmotif-R')
+    
+to use the library, simply load it into R environment:
+
+    library(jmotif)
 
 #### 1.0 z-Normalization
 Z-normalization (`znorm(ts, threshold)`) is a common in time series pattern mining preprocessing step proposed by Goldin & Kannelakis whose goal is to allow the downstream analyses to focus on the time series structural similarities/differences instead of the signal amplitude.
