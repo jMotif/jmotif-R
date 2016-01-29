@@ -1,3 +1,5 @@
+library(jmotif)
+
 ecg <- ecg0606
 
 require(ggplot2)
