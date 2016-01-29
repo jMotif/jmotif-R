@@ -1,4 +1,4 @@
-### R (Rcpp) implementation of:
+### R package "jmotif", provides an implementation of:
  * **[PAA](https://github.com/jMotif/jmotif-R#20-piecewise-aggregate-approximation-ie-paa)**, i.e., Piecewise Aggregate Approximation
  * **[SAX](https://github.com/jMotif/jmotif-R#30-sax-transform)**, i.e., Symbolic Aggregate approXimation
  * **[HOT-SAX](https://github.com/jMotif/jmotif-R#70-hot-sax-algorithm-for-time-series-discord-discovery)**, an algorithm for the exact time series discord discovery
