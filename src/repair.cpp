@@ -24,12 +24,15 @@ std::map<int, RuleRecord> _str_to_repair_grammar(std::string s){
 
   // global to the function data structure
   std::vector<Token> R0; // this is the R0 tokens sequence
+  R0.reserve(_count_spaces(&s));
+
   std::map<int, Rule> rules; // the grammar rules dictionary
   rules.insert(std::make_pair(0, Rule(0, "\0", "\0"))); // insert the R0 placeholder
+
   std::map<std::string, int> digrams_map; // digram counts map
   std::vector< std::pair<std::string, int> > digrams_vector; // digram - count pairs
 
-  // tokenizer variables
+  // tokenizer variables and counters
   std::string old_token;
   std::string token;
   int token_counter = 0;
