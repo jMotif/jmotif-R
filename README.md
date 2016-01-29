@@ -1,12 +1,20 @@
-### R (Rcpp) implementation of SAX, HOT-SAX, VSM, and SAX-VSM
+### R (Rcpp) implementation of:
+ * **[PAA](https://github.com/jMotif/jmotif-R#20-piecewise-aggregate-approximation-ie-paa)**, i.e., Piecewise Aggregate Approximation
+ * **[SAX](https://github.com/jMotif/jmotif-R#30-sax-transform)**, i.e., Symbolic Aggregate approXimation
+ * **[HOT-SAX](https://github.com/jMotif/jmotif-R#70-hot-sax-algorithm-for-time-series-discord-discovery)**, an algorithm for the exact time series discord discovery
+ * **[VSM](https://github.com/jMotif/jmotif-R#52-tfidf-weighting)**, i.e., Vector Space Model
+ * **[SAX-VSM](https://github.com/jMotif/jmotif-R#70-hot-sax-algorithm-for-time-series-discord-discovery)**, and algorithm for interpretable time series classification (with parameters optimization)
+ * **[RePair](https://github.com/jMotif/jmotif-R#70-grammatical-inference-with-repair)**, an algorithm for grammatical inference
+ * **[rule density curve](https://github.com/jMotif/jmotif-R#80-rule-density-curve)**, an efficient technique for an approximate time series anomaly discovery
+ * **RRA** (Rare Rule Anomaly), an algorithm for the exact time series discord discovery
 
 [![Build Status](https://travis-ci.org/jMotif/jmotif-R.svg?branch=master)](https://travis-ci.org/jMotif/jmotif-R)
 [![codecov.io](http://codecov.io/github/jMotif/jmotif-R/coverage.svg?branch=master)](http://codecov.io/github/jMotif/jmotif-R?branch=master)
 [![CRAN](http://www.r-pkg.org/badges/version/jmotif)](http://cran.rstudio.com/package=jmotif)
-[![License](http://img.shields.io/:license-gpl2-green.svg)](http://www.gnu.org/licenses/gpl-2.0.html)
+[![License](http://img.shields.io/:license-gpl2-green.svg)](http://dplwww.gnu.org/licenses/gpl-2.0.html)
 [![Downloads](http://cranlogs.r-pkg.org/badges/jmotif?color=brightgreen)](https://github.com/jMotif/jmotif-R)
 
-Implements a set of R functions for time series pattern mining based on Symbolic Aggregate approXimation, i.e. SAX. 
+Implements a set of R functions for time series pattern mining based on Symbolic Aggregate approXimation (i.e., SAX) and Vector Space Model (i.e., VSM) -- which makes SAX-VSM! 
 
 Specifically, this library implements the full stack of tools needed for SAX-VSM [5] -- an algorithm for interpretable time series classification and characteristic patterns discovery -- among which are the time series z-Normalization [1], PAA [2], SAX [3], and VSM [4]. In addition, implements HOT-SAX -- the time series discord (time series anomaly) discovery algorithm [6].
 
@@ -30,6 +38,11 @@ Data Mining (ICDM), 2013 IEEE 13th International Conference on, pp.1175,1180, 7-
 [6] Keogh, E., Lin, J., Fu, A.,
 [*HOT SAX: Efficiently finding the most unusual time series subsequence*](http://www.cs.ucr.edu/~eamonn/HOT%20SAX%20%20long-ver.pdf),
 In Proc. ICDM (2005)
+
+[7] N.J. Larsson and A. Moffat. [*Offline dictionary-based compression.*](http://ieeexplore.ieee.org/xpl/login.jsp?tp=&arnumber=755679), In Data Compression Conference, 1999.
+
+[8] Pavel Senin, Jessica Lin , Xing Wang, Tim Oates, Sunil Gandhi, Arnold P. Boedihardjo, Crystal Chen, Susan Frankenstein, [*Time series anomaly discovery with grammar-based compression.*](http://openproceedings.org/2015/conf/edbt/paper-155.pdf), In Proc. of The International Conference on Extending Database Technology, EDBT 15.
+
 
 #### 0.0 Installation
     install.packages("devtools")
@@ -101,8 +114,6 @@ The figure below illustrates the PAA+SAX procedure: 8 points time series is conv
 Another common way to use SAX is to apply the procedure to sliding window-extracted subseries (`sax_via_window(ts, win_size, paa_size, alp_size, nr_strategy, n_threshold)`). This technique is used in SAX-VSM, where it unables the conversion of a time series into the word bags. Note, the use of a numerosity reduction strategy.
 
 #### 5.0 SAX-VSM classifier
-While the parameters optimization sampler discussed in our paper is yet to be coded, the current code provides a reference implementation of SAX-VSM classification and a characteristic patterns dicovery framework.
-
 I use the one of [standard UCR time series datasets](http://www.cs.ucr.edu/~eamonn/time_series_data/) to illustrate the implemented approach. The Cylinder-Bell-Funnel dataset (Saito, N: *Local feature extraction and its application using a library of bases.* PhD thesis, Yale University (1994)) consists of three time series classes. The dataset is embedded into the `jmotif` library:  
 
     # load Cylinder-Bell-Funnel data
@@ -244,7 +255,166 @@ Using the weighted patterns obtained at the previous step and the cosine similar
     #
     which((labels_test != labels_predicted))
 
-#### 6.0 HOT-SAX algorithm for time series discord discovery
+#### 6.0 SAX-VSM discretization parameters optimization
+Here I shall show how the classification task discretization parameters optimization can be done with third-party libraries, specifically [nloptr](https://cran.r-project.org/web/packages/nloptr/) which implements DIRECT and [cvTools](https://cran.r-project.org/web/packages/cvTools/) which facilitates CV process. But not forget the magic of [plyr](https://github.com/hadley/plyr)!!! So here is the code:
+
+    library(plyr)
+    library(cvTools)
+    library(nloptr)
+
+    # the cross-validation error function
+    # uses the following global variables
+    #   1) nfolds -- specifies folds for the cross-validation
+    #                if equal to the number of instances, then it is
+    #                LOOCV
+    #
+    cverror <- function(x) {
+
+      # the vector x suppos to contain reational values for the
+      # discretization parameters
+      #
+      w = round(x[1], digits = 0)
+      p = round(x[2], digits = 0)
+      a = round(x[3], digits = 0)
+
+      # few local vars to simplify the process
+      m <- length(train_labels)
+      c <- length(unique(train_labels))
+      folds <- cvFolds(m, K = nfolds, type = "random")
+
+      # saving the error for each folds in this array
+      errors <- list()
+
+      # cross-valiadtion business
+      for (i in c(1:nfolds)) {
+
+        # define data sets
+        set_test <- which(folds$which == i)
+        set_train <- setdiff(1:m, set_test)
+
+        # compute the TF-IDF vectors
+        bags <- alply(unique(train_labels),1,function(x){x})
+        for (j in 1:c) {
+          ll <- which(train_labels[set_train] == unique(train_labels)[j])
+          bags[[unique(train_labels)[j]]] <-
+            manyseries_to_wordbag( (train_data[set_train, ])[ll,], w, p, a, "exact", 0.01)
+        }
+        tfidf = bags_to_tfidf(bags)
+
+        # compute the eror
+        labels_predicted <- rep(-1, length(set_test))
+        labels_test <- train_labels[set_test]
+        data_test <- train_data[set_test,]
+
+        for (j in c(1:length(labels_predicted))) {
+          bag=NA
+          if (length(labels_predicted)>1) {
+            bag = series_to_wordbag(data_test[j,], w, p, a, "exact", 0.01)
+          } else {
+            bag = series_to_wordbag(data_test, w, p, a, "exact", 0.01)
+          }
+          cosines = cosine_sim(list("bag" = bag, "tfidf" = tfidf))
+          if (!any(is.na(cosines$cosines))) {
+            labels_predicted[j] = which(cosines$cosines == max(cosines$cosines))
+          }
+        }
+
+        # the actual error value
+        error = length(which((labels_test != labels_predicted))) / length(labels_test)
+        errors[i] <- error
+      }
+
+      # output the mean cross-validation error as the result
+      err = mean(laply(errors,function(x){x}))
+      print(paste(w,p,a, " -> ", err))
+      err
+    }
+
+    # define the data for CV
+    train_data <- CBF[["data_train"]]
+    train_labels <- CBF[["labels_train"]]
+    nfolds = 15
+
+    # perform the parameters optimization
+    S <- directL(cverror, c(10,2,2), c(120,60,12),
+                 nl.info = TRUE, control = list(xtol_rel = 1e-8, maxeval = 10))
+
+The optimization process goes as follows:
+
+    [1] "65 31 7  ->  1"
+    [1] "65 31 7  ->  1"
+    [1] "65 31 7  ->  1"
+    [1] "28 31 7  ->  1"
+    [1] "102 31 7  ->  1"
+    [1] "65 12 7  ->  0.366666666666667"
+    [1] "65 50 7  ->  1"
+    [1] "65 31 4  ->  1"
+    [1] "65 31 10  ->  1"
+    [1] "28 12 7  ->  0.833333333333333"
+    [1] "102 12 7  ->  0.666666666666667"
+    [1] "65 12 4  ->  0"
+
+    Call:
+    nloptr(x0 = x0, eval_f = fn, lb = lower, ub = upper, opts = opts)
+    Minimization using NLopt version 2.4.2 
+
+    NLopt solver status: 5 ( NLOPT_MAXEVAL_REACHED: Optimization stopped because maxeval (above) was 
+    reached. )
+
+    Number of Iterations....: 10 
+    Termination conditions:  stopval: -Inf xtol_rel: 1e-08 maxeval: 10 ftol_rel: 0 ftol_abs: 0 
+    Number of inequality constraints:  0 
+    Number of equality constraints:    0 
+    Current value of objective function:  0 
+    Current value of controls: 65 11.66667 3.666667
+
+At this point S contains the best SAX parameters which were found using 10 DIRECT iterations, which we can use for the classification of the test data:
+
+    w = round(S$par[1], digits = 0)
+    p = round(S$par[2], digits = 0)
+    a = round(S$par[3], digits = 0)
+
+    # compute the TF-IDF vectors
+    #
+    bags <- alply(unique(train_labels),1,function(x){x})
+    for (j in 1:length(unique(train_labels))) {
+      ll <- which(train_labels == unique(train_labels)[j])
+      bags[[unique(train_labels)[j]]] <-
+        manyseries_to_wordbag( train_data[ll,], w, p, a, "exact", 0.01)
+    }
+    tfidf = bags_to_tfidf(bags)
+
+    # classify the test data
+    #
+    labels_predicted = rep(-1, length(CBF[["labels_test"]]))
+    labels_test = CBF[["labels_test"]]
+    data_test = CBF[["data_test"]]
+    for (i in c(1:length(data_test[,1]))) {
+      print(paste(i))
+      series = data_test[i,]
+      bag = series_to_wordbag(series, w, p, a, "exact", 0.01)
+      cosines = cosine_sim(list("bag"=bag, "tfidf" = tfidf))
+      if (!any(is.na(cosines$cosines))) {
+        labels_predicted[i] = which(cosines$cosines == max(cosines$cosines))
+      }
+    }
+
+    # compute the classification error
+    #
+    error = length(which((labels_test != labels_predicted))) / length(labels_test)
+    error
+
+    # findout which time series were misclassified
+    #
+    which((labels_test != labels_predicted))
+    par(mfrow=c(3,1))
+    plot(data_test[316,], type="l")
+    plot(data_test[589,], type="l")
+    plot(data_test[860,], type="l")
+    
+which shows us that one instance of each of the classes was misclassified....
+
+#### 7.0 HOT-SAX algorithm for time series discord discovery
 Given a time series _T_, its subsequence _C_  is called *discord* if it has the largest Euclidean distance to its nearest non-self match. Thus, time series discord is a subsequence within a time series that is _maximally different_ to all the rest of subsequences in the time series, and therefore naturaly captures the most unusual subsequence within the time series.
 
 The library embeds the ECG0606 dataset taken from [PHYSIONET FTP](http://physionet.org/physiobank/database/qtdb/). The raw data was transformed with their `rdsamp` utility 
@@ -307,3 +477,104 @@ It is easy to sort discord by the nearest neighbor distance:
     4   0.4437060     1566
     5   0.4177020      188
 
+#### 7.0 Grammatical inference with RePair
+RePair is a dictionary-based compression method proposed in 1999 by Larsson and Moffat. In contrast with Sequitur, Repair is an *off-line algorithm* that requires the whole input sequence to be accessible before building a grammar. Similar to Sequitur, RePair also can be utilized as a grammar-based compressor able to discover a compact grammar that generates the text. It is a remarkably simple algorithm which is known for its very fast decompression. 
+
+In short, RePair performs a recursive pairing step -- finding the most frequent pair of symbols in the input sequence and replacing it with a new symbol -- until every pair appears only once.
+
+As noted by the authors, when compared with online compression algorithms, the disadvantage of Repair having to store a large message in memory for processing is *illusory* when compared with storing the growing dictionary of an online compressor, as the incremental dictionary-based algorithms maintain an equally large message in memory as a part of the dictionary.
+
+Here is an example of RePair grammar for the input string containing an anomaly (`xxx`). Note that none of the grammar rules includes the anomalous terminal symbol.
+
+    Grammar rule        Expanded grammar rule                        Occurrence in R0
+    R0 -> R4 xxx R4     abc abc cba cba bac xxx abc abc cba cba bac  
+    R1 -> abc abc       abc abc                                      2-3, 8-9
+    R2 -> cba cba       cba cba                                      0-1, 6-7
+    R3 -> R1 R2         abc abc cba cba                              0-3, 6-9
+    R4 -> R3 bac        abc abc cba cba bac                          0-4, 6-10
+
+Calling RePair implementation in jmotif-R 
+
+    grammar <- str_to_repair_grammar("abc abc cba cba bac xxx abc abc cba cba bac")
+    
+produces a list of data frames, each of which contains the RePair grammar rule information. For example the first rule of the grammar (second list element):
+
+    > str(grammar[[2]])
+    List of 5
+     $ rule_name           : chr "R1"
+     $ rule_string         : chr "cba cba"
+     $ expanded_rule_string: chr "cba cba"
+     $ rule_interval_starts: num [1:2] 2 8
+     $ rule_interval_ends  : num [1:2] 3 9
+
+#### 8.0 Rule density curve
+As we have discussed in our work, SAX opens door for many high-level string algorithms aplication to the problem of patterns mining in time series. Specifically in [[8](http://csdl.ics.hawaii.edu/techreports/2014/14-05/14-05.pdf)], we have shown useful properties of grammatical compression (i.e., algorithmic complexity) when applied to the problem of recurrent and anomalous pattern discovery.
+
+Jmotif-R implements RePair [7] algoithm for grammar induction, which can be used to build the rule density curve enabling highly efficient approximate time series anomaly discovery.
+
+I use the same ECG0606 dataset in this example:
+
+    ecg <- ecg0606
+    
+    require(ggplot2)
+    df=data.frame(time=c(1:length(ecg)),value=ecg)
+    p1 <- ggplot(df, aes(time, value)) + geom_line(lwd=1.1,color="blue1") + theme_classic() +
+      ggtitle("Dataset ECG qtdb 0606 [701-3000]") +
+      theme(plot.title = element_text(size = rel(1.5)), 
+        axis.title.x = element_blank(),axis.title.y=element_blank(),
+        axis.ticks.y=element_blank(),axis.text.y=element_blank())
+    p1
+    
+and use RePar implementation to build the gramar curve:
+
+    # discretization parameters
+    w=100
+    p=8
+    a=8
+
+    # discretize the data 
+    ecg_sax <- sax_via_window(ecg, w, p, a, "none", 0.01)
+    
+    # get the string representation of time series
+    ecg_str <- paste(ecg_sax, collapse=" ")
+    
+    # infer the grammar
+    ecg_grammar <- str_to_repair_grammar(ecg_str)   
+
+    # initialize the density curve
+    density_curve = rep(0,length(ecg))
+    
+    # account for all the rule intervals
+    for(i in 2:length(ecg_grammar)){
+        rule = ecg_grammar[[i]]
+        for(j in 1:length(rule$rule_interval_starts)){
+            xs = rule$rule_interval_starts[j]
+            xe = rule$rule_interval_ends[j] + w
+            density_curve[xs:xe] <- density_curve[xs:xe] + 1;
+        }
+    }
+    
+    # see global minimas
+    which(density_curve==min(density_curve))
+    # [1]   1   2   3   4   5   6   7   8   9  10  11  12  13  14  15  16  17  18  19  20  21  22  23  24
+    # [25]  25  26  27  28  29  30 444 445 446 447 448 449 450 451 452 453 454 455 456 457 458 459 460 461
+    # [49] 462 463 464 465 466 467 468 469 470 471 472 473 474 475 476
+    min_values = data.frame(x=c(444:476),y=rep(0,(476-443)))
+    
+    # plot the curve
+    density_df=data.frame(time=c(1:length(density_curve)),value=density_curve)
+    shade <- rbind(c(0,0), density_df, c(2229,0))
+    names(shade)<-c("x","y")
+    p2 <- ggplot(density_df, aes(x=time,y=value)) +
+        geom_line(col="cyan2") + theme_classic() +
+        geom_polygon(data = shade, aes(x, y), fill="cyan", alpha=0.5) +
+        ggtitle("RePair rules density for (w=100,p=8,a=8)") +
+        theme(plot.title = element_text(size = rel(1.5)), axis.title.x = element_blank(),
+        axis.title.y=element_blank(), axis.ticks.y=element_blank(),axis.text.y=element_blank())+
+        geom_line(data=min_values,aes(x,y),lwd=2,col="red")
+    p2
+    
+    grid.arrange(p1, p2, ncol=1)
+    
+
+![RePair rules density](https://raw.githubusercontent.com/jMotif/jmotif-R/master/inst/site/ecg_0606_repair_density.png)
