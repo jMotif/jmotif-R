@@ -63,14 +63,14 @@ cverror <- function(x) {
 
 }
 
-train_data <- CBF[["data_train"]]
-train_labels <- CBF[["labels_train"]]
+train_data = CBF[["data_train"]]
+train_labels = CBF[["labels_train"]]
 nfolds <- 30
 S <- directL(cverror, rep(c(10, 2, 2)), rep(c(120, 60, 12)),
              nl.info = TRUE, control = list(xtol_rel = 1e-8, maxeval = 30))
 
-train_data <- Gun_Point[["data_train"]]
-train_labels <- Gun_Point[["labels_train"]]
+train_data = Gun_Point[["data_train"]]
+train_labels = Gun_Point[["labels_train"]]
 nfolds <- 50
 S <- directL(cverror, rep(c(10, 2, 2)), rep(c(140, 50, 12)),
              nl.info = TRUE, control = list(xtol_rel = 1e-8, maxeval = 30))
