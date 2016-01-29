@@ -1,4 +1,4 @@
-X <- c(-1, -2, -1, 0, 2, 1, 1, 0)
+X = c(-1, -2, -1, 0, 2, 1, 1, 0)
 Xscaled <- X / 100
 
 test_that("testing ZNorm computation", {
