@@ -71,6 +71,9 @@ std::map<int, RuleRecord> _str_to_repair_grammar(std::string s){
   // sort the frequencies vector
   std::sort(digrams_vector.begin(), digrams_vector.end(), sort_pred());
 
+  // remove the entries wich below 2, to shorten time for sorting, etc
+
+
   // Rcout << "\n\nsorted vec:\n=================" << std::endl;
   // for (std::vector<std::pair<std::string,int> >::iterator it = digrams_vector.begin();
   //      it != digrams_vector.end(); ++it) Rcout << it->first << " " << it->second << std::endl;
@@ -365,8 +368,10 @@ std::map<int, RuleRecord> _str_to_repair_grammar(std::string s){
 // [[Rcpp::export]]
 Rcpp::List str_to_repair_grammar(CharacterVector str){
 
+  // convert the string
   std::string s = Rcpp::as<std::string>(str);
 
+  // run the c++ implementation
   std::map<int, RuleRecord> rules = _str_to_repair_grammar(s);
 
   // make results
