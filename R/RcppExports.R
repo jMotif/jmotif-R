@@ -342,18 +342,6 @@ is_equal_mindist <- function(a, b) {
     .Call('jmotif_is_equal_mindist', PACKAGE = 'jmotif', a, b)
 }
 
-#' Computes the column means for a matrix.
-#'
-#' @param m a matrix to process.
-#' @useDynLib jmotif
-#' @export
-#' @examples
-#' x = matrix(rnorm(100), ncol=10)
-#' col_means(x)
-col_means <- function(m) {
-    .Call('jmotif_col_means', PACKAGE = 'jmotif', m)
-}
-
 #' Extracts a subseries.
 #'
 #' @param ts the input timeseries (0-based, left inclusive).
@@ -370,9 +358,10 @@ subseries <- function(ts, start, end) {
 
 #' Z-normalizes a time series by subtracting its mean and dividing by the standard deviation.
 #'
-#' @param ts a time series to process.
-#' @param threshold a z-normalization threshold value, if the input time series' standard deviation is
-#' found less than this value, the procedure is not applied, so the "noise" would not get overamplified.
+#' @param ts the input time series.
+#' @param threshold the z-normalization threshold value, if the input time series' standard
+#' deviation will be found less than this value, the procedure will not be applied,
+#' so the "under-threshold-noise" would not get amplified.
 #' @useDynLib jmotif
 #' @export
 #' @references Dina Goldin and Paris Kanellakis,

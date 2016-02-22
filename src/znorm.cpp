@@ -2,12 +2,14 @@
 using namespace Rcpp ;
 //
 #include <jmotif.h>
+//
 
 //' Z-normalizes a time series by subtracting its mean and dividing by the standard deviation.
 //'
-//' @param ts a time series to process.
-//' @param threshold a z-normalization threshold value, if the input time series' standard deviation is
-//' found less than this value, the procedure is not applied, so the "noise" would not get overamplified.
+//' @param ts the input time series.
+//' @param threshold the z-normalization threshold value, if the input time series' standard
+//' deviation will be found less than this value, the procedure will not be applied,
+//' so the "under-threshold-noise" would not get amplified.
 //' @useDynLib jmotif
 //' @export
 //' @references Dina Goldin and Paris Kanellakis,

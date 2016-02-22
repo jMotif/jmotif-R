@@ -277,17 +277,6 @@ BEGIN_RCPP
     return __result;
 END_RCPP
 }
-// col_means
-NumericVector col_means(NumericMatrix m);
-RcppExport SEXP jmotif_col_means(SEXP mSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject __result;
-    Rcpp::RNGScope __rngScope;
-    Rcpp::traits::input_parameter< NumericMatrix >::type m(mSEXP);
-    __result = Rcpp::wrap(col_means(m));
-    return __result;
-END_RCPP
-}
 // subseries
 NumericVector subseries(NumericVector ts, int start, int end);
 RcppExport SEXP jmotif_subseries(SEXP tsSEXP, SEXP startSEXP, SEXP endSEXP) {

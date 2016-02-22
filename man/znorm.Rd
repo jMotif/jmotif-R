@@ -7,10 +7,11 @@
 znorm(ts, threshold = 0.01)
 }
 \arguments{
-\item{ts}{a time series to process.}
+\item{ts}{the input time series.}
 
-\item{threshold}{a z-normalization threshold value, if the input time series' standard deviation is
-found less than this value, the procedure is not applied, so the "noise" would not get overamplified.}
+\item{threshold}{the z-normalization threshold value, if the input time series' standard
+deviation will be found less than this value, the procedure will not be applied,
+so the "under-threshold-noise" would not get amplified.}
 }
 \description{
 Z-normalizes a time series by subtracting its mean and dividing by the standard deviation.

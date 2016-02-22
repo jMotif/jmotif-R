@@ -2,7 +2,6 @@
 
 export(alphabet_to_cuts)
 export(bags_to_tfidf)
-export(col_means)
 export(cosine_dist)
 export(cosine_sim)
 export(early_abandoned_dist)
