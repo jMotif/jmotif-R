@@ -17,9 +17,9 @@ tfidf <- bags_to_tfidf(ll)
 test_that("test tfidf #1", {
 
   example <- log(1 + 3) * log(2 / 1)
-  expect_equal(example, tfidf[tfidf$words == "example",3])
+  expect_equal(example, tfidf[tfidf$words == "example", 3])
 
   a <- log(1 + 2) * log(2 / 1)
-  expect_equal(a, tfidf[tfidf$words == "a",2])
+  expect_equal(a, tfidf[tfidf$words == "a", 2])
 
 })

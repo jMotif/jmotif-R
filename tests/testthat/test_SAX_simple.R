@@ -32,11 +32,11 @@ dats2_14_10 <- "bbdeeffhijjfbb"
 
 test_that("points to letters, i.e. SAX, CPP #3", {
   str2_10_11 <- paste( matrix(unlist(sax_by_chunking(dat2, 10, 11, 0.01)),
-                             nrow = 10, byrow = T)[,1], collapse = "")
+                             nrow = 10, byrow = T)[, 1], collapse = "")
   str2_14_10 <- paste( matrix(unlist(sax_by_chunking(dat2, 14, 10, 0.01)),
-                             nrow = 14, byrow = T)[,1], collapse = "")
+                             nrow = 14, byrow = T)[, 1], collapse = "")
   str2_9_7 <- paste( matrix(unlist(sax_by_chunking(dat2, 9, 7, 0.01)),
-                           nrow = 9, byrow = T)[,1], collapse = "")
+                           nrow = 9, byrow = T)[, 1], collapse = "")
   expect_equal(str2_10_11, dats2_10_11)
   expect_equal(str2_14_10, dats2_14_10)
   expect_equal(str2_9_7, dats2_9_7)
