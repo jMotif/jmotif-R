@@ -310,7 +310,7 @@ Rcpp::DataFrame find_discords_rra(NumericVector series, int w_size, int paa_size
       rr.rule_id = it->first;
       rr.start = start;
       rr.end = end;
-      // ********************* rr.cover = it->second.rule_use; // a shortcut
+      rr.cover = it->second->rule_use; // a shortcut
       intervals.push_back(rr);
     }
   }

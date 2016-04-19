@@ -139,6 +139,8 @@ std::unordered_map<int, rule_record*> _str_to_repair_grammar(std::string s) {
     if(r->first->is_guard()){ // in case the symbol is a guard
       repair_guard* ptr = static_cast<repair_guard*>( r->first );
       ss << ptr->get_expanded_string();
+      // note the use
+      ptr->r->rule_use++;
     } else {
       repair_symbol* ptr = r->first;
       ss << ptr->to_string();
@@ -147,6 +149,8 @@ std::unordered_map<int, rule_record*> _str_to_repair_grammar(std::string s) {
     if(r->second->is_guard()){ // in case the symbol is a guard
       repair_guard* ptr = static_cast<repair_guard*>( r->second );
       ss << ptr->get_expanded_string();
+      // note the use
+      ptr->r->rule_use++;
     } else {
       repair_symbol* ptr = r->second;
       ss << ptr->to_string();
