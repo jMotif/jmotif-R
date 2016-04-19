@@ -6,6 +6,6 @@ test_that("RePair test #1", {
 
   expect_equal("R4 xxx R4", grammar[[1]]$rule_string)
 
-  expect_equal("R3 bac", grammar[[5]]$rule_string)
+  expect_equal("R3", grammar[[4]]$rule_string)
 
 })

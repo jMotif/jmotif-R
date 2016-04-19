@@ -2,7 +2,7 @@
 % Please edit documentation in R/RcppExports.R
 \name{find_discords_rra}
 \alias{find_discords_rra}
-\title{Finds a discord with HOT-SAX.}
+\title{Finds a discord with RRA.}
 \usage{
 find_discords_rra(series, w_size, paa_size, a_size, nr_strategy, n_threshold,
   discords_num)
@@ -23,7 +23,7 @@ find_discords_rra(series, w_size, paa_size, a_size, nr_strategy, n_threshold,
 \item{discords_num}{the number of discords to report.}
 }
 \description{
-Finds a discord with HOT-SAX.
+Finds a discord with RRA.
 }
 \examples{
 discords = find_discords_rra(ecg0606, 100, 4, 4, "exact", 0.01, 1)

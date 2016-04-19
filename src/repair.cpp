@@ -1,36 +1,24 @@
-#include <RcppArmadillo.h>
-using namespace Rcpp ;
-//
 #include <jmotif.h>
-#include <stdlib.h>
+using namespace Rcpp;
 
-// this is the digram priority queue sorter
-//
-struct sort_pred {
-  bool operator()(const std::pair<std::string,int> &left,
-                const std::pair<std::string,int> &right) {
-    return left.second < right.second;
-  }
-};
+std::unordered_map<int, rule_record*> _str_to_repair_grammar(std::string s) {
 
-// Runs the repair on a string.
-std::map<int, RuleRecord> _str_to_repair_grammar(std::string s){
+  int str_length = _count_spaces(&s);
 
-  // Rcout << "input string \'" << s << "\'\n making a digram table...\n";
+  // the grammar keeper
+  std::map<int, repair_rule*> grammar;
 
   // define the objects we are working with
   std::string delimiter = " ";
   s.append(delimiter);
 
-  // global to the function data structure
-  std::vector<Token> R0; // this is the R0 tokens sequence
-  R0.reserve(_count_spaces(&s));
+  // the input string as a vector...
+  // this will get transformed into the final R0 eventually
+  std::vector<repair_symbol_record*> r0; // this is the R0 tokens sequence
+  r0.reserve(str_length);
 
-  std::map<int, Rule> rules; // the grammar rules dictionary
-  rules.insert(std::make_pair(0, Rule(0, "\0", "\0"))); // insert the R0 placeholder
-
-  std::map<std::string, int> digrams_map; // digram counts map
-  std::vector< std::pair<std::string, int> > digrams_vector; // digram - count pairs
+  // the digrams table
+  std::unordered_map<std::string, std::vector<int>> digram_table;
 
   // tokenizer variables and counters
   std::string old_token;
@@ -39,322 +27,462 @@ std::map<int, RuleRecord> _str_to_repair_grammar(std::string s){
   int pos = 0;
   while ((pos = s.find(delimiter)) != std::string::npos) {
 
+    // extract the token
     token = s.substr(0, pos);
     // Rcout << "current token: " << token << std::endl;
-    R0.push_back( Token(token, token_counter) );
 
-    if (!old_token.empty()) {
-      std::string d_str = old_token + " " + token;
-      // Rcout << "new digram: " << d_str << std::endl;
-      if (digrams_map.find(d_str) == digrams_map.end()){
-        digrams_map.insert(std::make_pair(d_str, 1));
+    // create the symbol
+    repair_symbol* rs = new repair_symbol( token, token_counter );
+    // wrap the symbol into the record
+    repair_symbol_record* rec = new repair_symbol_record( rs );
+    r0.emplace_back( rec ); // and place into the work string
+
+    if(token_counter > 0){ // if symbol has been already added, work out digrams
+
+      // create the digram
+      std::string digram_str = old_token + " " + token;
+      // Rcout << " . new digram: " << d_str << std::endl;
+
+      // save the digram occurrence
+      if (digram_table.find(digram_str) == digram_table.end()){
+        std::vector<int> occurrences;
+        occurrences.push_back(token_counter - 1);
+        digram_table.insert(std::make_pair(digram_str, occurrences));
       }else{
-        digrams_map[d_str]++;
+        digram_table[digram_str].push_back(token_counter - 1);
       }
-    }
 
+      r0[token_counter - 1]->next = rec;
+      rec->prev = r0[token_counter - 1];
+    } // if digram needs to be created
+
+    // do the input string housekeeping
     s.erase(0, pos + delimiter.length());
     old_token = token;
     token_counter++;
   }
 
-  // all digrams are accounted for... print their state
-  // Rcout << "\n\nthe digrams table\n=================" << std::endl;
-  // for(std::map<std::string, int>::iterator it = digrams_map.begin(); it != digrams_map.end(); ++it) {
-  //   Rcout << it->first << " " << it->second << std::endl;
-  // }
-
-  // initialize the fake priority queue which is the vector of pairs
-  for(auto it = digrams_map.begin(); it != digrams_map.end(); ++it) {
-    digrams_vector.push_back(std::make_pair(it->first, it->second) ); // frequencies vec new element
-  }
-  // sort the frequencies vector
-  std::sort(digrams_vector.begin(), digrams_vector.end(), sort_pred());
-
-  // remove the entries wich below 2, to shorten time for sorting, etc
-
-
-  // Rcout << "\n\nsorted vec:\n=================" << std::endl;
-  // for (std::vector<std::pair<std::string,int> >::iterator it = digrams_vector.begin();
-  //      it != digrams_vector.end(); ++it) Rcout << it->first << " " << it->second << std::endl;
-  // Rcout << '\n';
-
-  // Rcout << "\n\nstarting Re-Pair on the string:\n=================" << std::endl;
-  // Rcout << "R0 -> ";
-  // for (std::vector<Token>::iterator it = R0.begin(); it != R0.end(); ++it) Rcout << it->payload << " ";
-  // Rcout << std::endl;
-
-  // start the main re-pair loop which continues until all the digrams have a frequency less than 2
-  std::pair<std::string,int> top_digram = digrams_vector.back();
-  while(top_digram.second > 1){
-
-    // Rcout << "working with " << top_digram.first << " of freq " << top_digram.second << std::endl;
-
-    // remove this digram
-    std::string digram_str = top_digram.first;
-    int digram_freq = top_digram.second;
-    int space_idx = digram_str.find_first_of(" ", 0);
-    std::string p = digram_str.substr(0, space_idx);
-    std::string n = digram_str.substr(space_idx+1, digram_str.size());
-    digrams_vector.pop_back(); // **************** removes the digram token from the table *********
-
-    // create the new rule
-    int rule_id = rules.size();
-    Rule r(rule_id, digram_str, "\0");
-
-    // update the rule use, if found
-    if(p[0]=='R'){
-      int rule_id = atoi(p.substr(1,p.size()-1).c_str());
-      rules[rule_id].rule_use++;
-      // Rcout << digram_str << " " << p << " updating " << rule_id << std::endl;
-    }
-    if(n[0]=='R'){
-      int rule_id = atoi(n.substr(1,n.size()-1).c_str());
-      rules[rule_id].rule_use++;
-      // Rcout << digram_str << " " << n << " updating " << rule_id << std::endl;
-    }
-
-    // do a pass over the R0 substituting the digram string with R#
-    int start = 0;
-    int end = R0.size() - 1;
-    int cp = start + 1;
-    while(cp <= end){
-
-      if(R0[cp-1].payload == p && R0[cp].payload == n) { // if the digram has been found
-
-        // Rcout << "hit @ " << cp-1 << "\n";
-
-        // update the first digram's token with the rule [cp-1]
-        R0[cp-1] = Guard(r, R0[cp-1].str_idx);
-        r.occurrences.push_back(R0[cp-1].str_idx);
-        // and remove its second token
-        R0.erase(R0.begin() + cp); // ******* removes the token at [cp] *******
-        // update limits
-        end = end - 1;
-
-        // update digrams count table
-        // Rcout << "  * decr. count of " << digram_str << ": " << digrams_map[digram_str] << " to ";
-        digrams_map[digram_str]--;
-        // Rcout << digrams_map[digram_str] << std::endl;
-
-        // if not at the very beginning
-        if(cp-1 > 0) {
-
-          // update the NEW left digram
-          std::string left_str = R0[cp-2].payload + " " + R0[cp-1].payload;
-          if (digrams_map.find(left_str) == digrams_map.end()){
-            digrams_map.insert(std::make_pair(left_str, 1));
-            // Rcout << "  added a digram: " << left_str << ":1" << std::endl;
-          }else{
-            // Rcout << "  incr. count for a digram " << left_str << " from " << digrams_map[left_str];
-            digrams_map[left_str]++;
-            // Rcout << " to " << digrams_map[left_str] << std::endl;
-          }
-
-          // update the OLD left digram
-          std::string old_left =  R0[cp-2].payload + " " + p;
-          // Rcout << "  decr. count for a digram " << old_left << " from " << digrams_map[old_left];
-          digrams_map[old_left]--;
-          // Rcout << " to " << digrams_map[old_left] << std::endl;
-          if(0 == digrams_map[old_left]){
-            // Rcout << "  removing digram: " << old_left << std::endl;
-            digrams_map.erase(old_left);
-          }
-
-        }
-
-        // if not at the very end
-        if(cp <= end) {
-
-          // update the NEW right digram
-          std::string right_str = R0[cp-1].payload + " " + R0[cp].payload;
-          if (digrams_map.find(right_str) == digrams_map.end()){
-            digrams_map.insert(std::make_pair(right_str, 1));
-            // Rcout << "  added a digram: " << right_str << ":1" << std::endl;
-          }else{
-            // Rcout << "  incr. count for a digram " << right_str << " from " << digrams_map[right_str];
-            digrams_map[right_str]++;
-            // Rcout << " to " << digrams_map[right_str] << std::endl;
-          }
-
-          // update the OLD right digram
-          std::string old_right =  n + " " + R0[cp].payload;
-          // Rcout << "  decr. count for a digram " << old_right << " from " << digrams_map[old_right];
-          digrams_map[old_right]--;
-          // Rcout << " to " << digrams_map[old_right] << std::endl;
-          if(0 == digrams_map[old_right]){
-            // Rcout << "  removing digram: " << old_right << std::endl;
-            digrams_map.erase(old_right);
-          }
-
-        }
-
-        // need to reshuffle frequencies
-        // Rcout << "\n\nvec before corrections:\n=================" << std::endl;
-        // for (std::vector<std::pair<std::string,int> >::iterator it = digrams_vector.begin();
-        //              it != digrams_vector.end(); ++it)
-        // Rcout << it->first << " " << it->second << std::endl;
-        // Rcout << '\n';
-
-        // std::vector<int> elements_to_delete;
-        // for (int i = 0; i< digrams_vector.size(); ++i){
-        //  std::map<std::string, int>::iterator im =  digrams_map.find(digrams_vector[i].first);
-        //   if(digrams_map.end() == im){
-        //     Rcout << "  a digram " << digrams_vector[i].first <<
-        //       " is in the vec but not map, cleaning elm at " << i << std::endl;
-        //     elements_to_delete.push_back(i);
-        //   } else {
-        //     Rcout << "  updating vector counts for a digram " << digrams_vector[i].first <<
-        //        " from " << digrams_vector[i].second << " to " << im->second << std::endl;
-        //     digrams_vector[i].second = im->second;
-        //   }
-        // }
-        // Rcout << "\n\nvec after corrections:\n=================" << std::endl;
-        // for (std::vector<std::pair<std::string,int> >::iterator it = digrams_vector.begin();
-        //      it != digrams_vector.end(); ++it)
-        //   Rcout << it->first << " " << it->second << std::endl;
-        // Rcout << '\n';
-        // for (int i=elements_to_delete.size()-1; i>=0; --i){
-        //   Rcout << "   deleting vector element at " << elements_to_delete[i] << ", i.e. " <<
-        //     digrams_vector[elements_to_delete[i]].first << ":" << digrams_vector[elements_to_delete[i]].second <<
-        //       std::endl;
-        //   digrams_vector.erase(digrams_vector.begin() + elements_to_delete[i]);
-        // }
-
-        // Rcout << "\n\nvec after corrections:\n=================" << std::endl;
-        // for (std::vector<std::pair<std::string,int> >::iterator it = digrams_vector.begin();
-        //      it != digrams_vector.end(); ++it)
-        // Rcout << it->first << " " << it->second << std::endl;
-        // Rcout << '\n';
-        // Rcout << "  *** working digram " << digram_str << ":" << digrams_map[digram_str] << std::endl;
-
-        // if this was the last instance
-        if(digrams_map[digram_str]==0){
-          // Rcout << "  breaking the digram substitute loop and erasing dd" << std::endl;
-          auto im =  digrams_map.find(digram_str);
-          digrams_map.erase(digram_str);
-          cp = end + 1; // this shall break the outer loop
-        }
-
-        // all digrams are accounted for, re-populate the priority queue
-        digrams_vector.clear();
-        digrams_vector.reserve(digrams_map.size());
-        for(auto it = digrams_map.begin();
-            it != digrams_map.end(); ++it) {
-          digrams_vector.push_back(std::make_pair(it->first, it->second) );
-        }
-
-      } else {
-        cp++; // continue with the search
-      }
-
-    } // while cp <= end
-
-    rules.insert(std::make_pair(r.id, r));
-
-    // Rcout << "\n\nthe digrams table\n=================" << std::endl;
-    // for(std::map<std::string, int>::iterator it = digrams_map.begin();
-    // it != digrams_map.end(); ++it) {
-    // Rcout << it->first << " " << it->second << std::endl;
-    // }
-
-    // Rcout << "\n\nsorted vec:\n=================" << std::endl;
-    // for (std::vector<std::pair<std::string,int> >::iterator it = digrams_vector.begin();
-    // it != digrams_vector.end(); ++it)
-    // Rcout << it->first << " " << it->second << std::endl;
-    // Rcout << '\n';
-
-    // Rcout << "R0 -> ";
-    // for (std::vector<Token>::iterator it = R0.begin();
-    // it != R0.end(); ++it)
-    // Rcout << it->payload << " ";
-    // Rcout << std::endl;
-
-    // sort the priority queue
-    std::sort(digrams_vector.begin(), digrams_vector.end(), sort_pred());
-    // and select the new digram to work with
-    top_digram = digrams_vector.back();
-  }
-
-  // re-populate R0 according to the rules table
-  std::string new_r0 = "";
-  for (std::vector<Token>::iterator it = R0.begin(); it != R0.end(); ++it) new_r0.append(it->payload + " ");
-  new_r0.erase(new_r0.length()-1, new_r0.length());
-  rules[0].rule_string = new_r0;
-
-  // print the grammar
-  //   Rcout << "\n\nInput: " << str << "\n\nInferred Grammar:\n";
-  //   for(std::map<int, Rule>::iterator it = rules.begin(); it != rules.end(); ++it) {
-  //   Rcout << it->second;
-  //   for(std::vector<int>::iterator ito = it->second.occurrences.begin();
-  //       ito != it->second.occurrences.end(); ++ito) {
-  //     Rcout << *ito << ", ";
-  //   }
-  //   Rcout << std::endl;
-  //   }
+  // DEBUG:: walk over the R0
+  //   Rcout << "\nthe R0: ";
+  //   repair_symbol_record* ptr = r0[0];
+  //   do {
+  //     Rcout << ptr->payload->payload << " ";
+  //     ptr = ptr->next;
+  //   } while(ptr != nullptr);
   //   Rcout << std::endl;
 
-  // trying to expand the rules
+  // DEBUG:: all digrams are accounted for... print their state
+//   Rcout << "\nthe digrams table\n=================" << std::endl;
+//   for(std::unordered_map<std::string, std::vector<int>>::iterator it = digram_table.begin();
+//       it != digram_table.end(); ++it) {
+//     Rcout << it->first << " [";
+//     for (auto i = it->second.begin(); i != it->second.end(); ++i)
+//       Rcout << *i << ", ";
+//     Rcout << "]" << std::endl;
+//   }
+
+  // populate the priority queue and the index -> digram record map
+  repair_priority_queue digram_queue;
+  for(std::unordered_map<std::string, std::vector<int>>::iterator it = digram_table.begin();
+      it != digram_table.end(); ++it) {
+    if(it->second.size() > 1) {
+      repair_digram* digram = new repair_digram( it->first, it->second.size() );
+      digram_queue.enqueue(digram);
+    }
+  }
+
+  // DEBUG:: all digrams are pushed to the queue, see those
+//   Rcout << "\nthe digrams queue\n=================" << std::endl;
+//   Rcout << digram_queue.to_string() << std::endl;
+
+
+  /// the main loop begins...
+  //  1.0 pop the digram from the queue
+  //  2.0 process it by creating a rule and substituting occurrences
+  //  3.0. go to #1
   //
-  for(std::map<int, Rule>::iterator it = rules.begin(); it != rules.end(); ++it) {
-    it->second.expanded_rule_string = it->second.rule_string;
-  }
-  bool seen_r = true;
-  while(seen_r){
-    seen_r = false;
-    for(std::map<int, Rule>::iterator it = rules.begin(); it != rules.end(); ++it) {
-      std::string pre_expanded = it->second.expanded_rule_string;
-      int pos = 0;
-      // Rcout << "pre-expanded: " << pre_expanded << "\n";
-      while ((pos = pre_expanded.find("R", pos)) != std::string::npos) {
-        int space_pos = pre_expanded.find(" ", pos);
-        if(space_pos == std::string::npos){
-          space_pos = pre_expanded.length();
-        }
-        int rule_id = atoi(pre_expanded.substr(pos+1, space_pos-pos-1).c_str());
-        // Rcout << pre_expanded.substr(pos, space_pos-pos) << " @ " << pos << ", rule " << rule_id << "\n";
-        pre_expanded.erase(pos, space_pos-pos);
-        std::string replacement = rules[rule_id].expanded_rule_string;
-        pre_expanded.insert(pos, replacement);
-        pos = pos + replacement.length();
+  int i=0;
+  repair_digram* entry = digram_queue.dequeue();
+  while (entry != nullptr) {
+
+    // first, get all the digram's occurrences
+    std::vector<int> occurrences;
+    occurrences.reserve(entry->freq);
+
+    // the digram entry from the master table
+    std::unordered_map<std::string, std::vector<int>>::iterator it =
+      digram_table.find(entry->digram);
+
+    // DEBUG:: a digram info message
+//     Rcout <<"\n *** popped digram: " << it->first << " [";
+    for (auto i = it->second.begin(); i != it->second.end(); ++i) {
+//       Rcout << *i << ", ";
+      occurrences.push_back(*i);
+    }
+//     Rcout << "]" << std::endl;
+
+    // work on the NEW RULE construction
+    repair_symbol_record* first_symbol = r0[it->second[0]];
+    repair_symbol_record* second_symbol = first_symbol->next; // make sure we don't use an index
+    // Rcout << " *** the initial digram instance " << std::endl;
+    // Rcout << " *** " << first->payload->payload << " @" << first->payload->str_index;
+    // Rcout << " *** " << second->payload->payload << " @" << second->payload->str_index <<
+    // std::endl;
+
+    repair_rule* r = new repair_rule();
+    r->id = grammar.size() + 1;
+    r->first = first_symbol->payload; // first string
+    r->second = second_symbol->payload; // second string
+
+    // figure out the rule's expanded string
+    std::stringstream ss;
+    if(r->first->is_guard()){ // in case the symbol is a guard
+      repair_guard* ptr = static_cast<repair_guard*>( r->first );
+      ss << ptr->get_expanded_string();
+    } else {
+      repair_symbol* ptr = r->first;
+      ss << ptr->to_string();
+    }
+    ss << " ";
+    if(r->second->is_guard()){ // in case the symbol is a guard
+      repair_guard* ptr = static_cast<repair_guard*>( r->second );
+      ss << ptr->get_expanded_string();
+    } else {
+      repair_symbol* ptr = r->second;
+      ss << ptr->to_string();
+    }
+    r->expanded_rule_string = ss.str();
+    grammar.insert(std::pair<int, repair_rule*>(r->id, r)); // voila
+
+    // DEBUG:: the new rule info
+//     Rcout << "  ** the rule: " << r->get_rule_string() << " -> " <<
+//        r->expanded_rule_string << std::endl;
+
+    // we keep track of all newly created digrams
+    std::unordered_set<std::string> new_digrams;
+
+    // digram occurrences processing, iterating over each position...
+    while(!occurrences.empty()){
+
+      // secure the current index
+      int occ = occurrences[occurrences.size()-1];
+      occurrences.pop_back();
+
+      // Rcout << "    ** processing the digram occurrence at " << occ << std::endl;
+
+      // save the positions we work with
+      repair_symbol_record* curr_sym = r0[occ];
+      repair_symbol_record* next_sym = curr_sym->next;
+      repair_symbol* old_first = curr_sym->payload;
+//       Rcout << "    ** sym1: "
+//             << curr_sym->payload->to_string() << " @" << curr_sym->payload->str_index
+//             << " sym2: "
+//             << next_sym->payload->to_string() << " @" << next_sym->payload->str_index
+// << std::endl;
+
+      // make up a guard for the rule
+      repair_guard* guard = new repair_guard(r, occ);
+      r->occurrences.push_back(occ);
+
+      // alter the R0 by placing the guard...
+      curr_sym->payload = guard;
+      // Rcout << "    ** placed guard at " << occ << ": " << guard->to_string() << std::endl;
+
+      // and fixing the OLE NEXT symbol link
+      repair_symbol_record* next_not_null = next_sym->next;
+      curr_sym->next = next_not_null;
+      if( nullptr != next_not_null ){
+        next_not_null->prev = curr_sym;
+//         Rcout << "    ** next not null at " << next_not_null->payload->str_index << ", "
+//               << next_not_null->payload->to_string() << std::endl;
       }
-      // Rcout << "post-expanded " << pre_expanded << "\n";
-      it->second.expanded_rule_string = pre_expanded;
-      if(pre_expanded.find("R") != std::string::npos) {
-        seen_r = true;
+//       else {
+//         Rcout << "    ** next is NULL" << std::endl;
+//       }
+
+      // and fixing the OLE prev symbol link
+      repair_symbol_record* prev_not_null = curr_sym->prev;
+      curr_sym->prev = prev_not_null;
+      if(nullptr!=prev_not_null){
+        prev_not_null->next = curr_sym;
+//         Rcout << "  *** prev not null at " << prev_not_null->payload->str_index << ": "
+//               << prev_not_null->payload->to_string() << std::endl;
+      }
+//       else {
+//         Rcout << "  *** prev is NULL" << std::endl;
+//       }
+
+      // ### now need to fix the OLE left digram
+      // ###
+      if(occ > 0 && nullptr!=prev_not_null){
+        // Rcout << " *** fixing old left digram: ";
+
+        std::string ole_left_digram = prev_not_null->payload->to_string() + " "
+        + old_first->to_string();
+        // Rcout << ole_left_digram << std::endl;
+
+        std::unordered_map<std::string, std::vector<int>>::iterator it =
+          digram_table.find(ole_left_digram);
+        int new_freq = it->second.size() - 1;
+        // Rcout << "  *** old occurrences: ";
+//         for (auto i = it->second.begin(); i != it->second.end(); ++i)
+//           Rcout << *i << ' ';
+//         Rcout << std::endl;
+
+        // clean up the specific index in the occurrences array
+        it->second.erase(std::remove(it->second.begin(), it->second.end(),
+                   prev_not_null->payload->str_index), it->second.end());
+//         Rcout << "  *** new occurrences: ";
+//         for (auto i = it->second.begin(); i != it->second.end(); ++i)
+//           Rcout << *i << ' ';
+//         Rcout << std::endl;
+
+        // take a look if the digram is actually the one we work with...
+        if (0 == ole_left_digram.compare(entry->digram)) {
+          // Rcout << "  ***** the old digram is like the new one, cleaning up ..." << std::endl;
+          // Rcout << "  *** old ext. loop: ";
+          // for (auto i = occurrences.begin(); i != occurrences.end(); ++i) Rcout << *i << ' ';
+          // Rcout << std::endl;
+          occurrences.erase(std::remove(occurrences.begin(), occurrences.end(),
+                       prev_not_null->payload->str_index), occurrences.end());
+          // Rcout << "  *** new ext. loop: ";
+          // for (auto i = occurrences.begin(); i != occurrences.end(); ++i) Rcout << *i << ' ';
+          // Rcout << std::endl;
+        }
+        digram_queue.update_digram_frequency(&ole_left_digram, new_freq);
+
+        // if it was the last entry...
+        if (0 == new_freq) {
+          // Rcout << "  *** since new freq is 0, cleaning up ..." << std::endl;
+          digram_table.erase(ole_left_digram);
+          new_digrams.erase(ole_left_digram);
+        }
+
+        // and place the new digram entry
+        std::string new_left_digram = prev_not_null->payload->to_string() + " " + r->get_rule_string();
+        // Rcout << "  *** the new left digram shall be : " << new_left_digram << std::endl;
+        // see the new freq..
+        // save the digram occurrence
+        if (digram_table.find(new_left_digram) == digram_table.end()){
+          std::vector<int> occurrences;
+          occurrences.push_back(prev_not_null->payload->str_index);
+          digram_table.insert(std::make_pair(new_left_digram, occurrences));
+        }else{
+          digram_table[new_left_digram].push_back(prev_not_null->payload->str_index);
+        }
+
+        new_digrams.emplace(new_left_digram);
+      }
+
+      // walk over the R0
+//       Rcout << "\nthe R0: ";
+//       ptr = r0[0];
+//       do {
+//         Rcout << ptr->payload->payload << " ";
+//         ptr = ptr->next;
+//       } while(ptr != nullptr);
+//       Rcout << std::endl;
+//       Rcout << "\nthe digrams table\n=================" << std::endl;
+//       for(std::unordered_map<std::string, std::vector<int>>::iterator it = digram_table.begin();
+//           it != digram_table.end(); ++it) {
+        // Rcout << it->first << " [";
+//         for (auto i = it->second.begin(); i != it->second.end(); ++i)
+//           Rcout << *i << ", ";
+//         Rcout << "]" << std::endl;
+      // }
+      // all digrams are pushed to the queue, see those
+//       Rcout << "\nthe digrams queue\n=================" << std::endl;
+//       Rcout << digram_queue.to_string() << std::endl;
+
+      // ### now need to fix the OLE RIGHT digram
+      // ###
+      if(occ < r0.size() - 2 && nullptr != next_not_null){
+
+        // Rcout << " *** fixing old right digram: ";
+
+        std::string ole_right_digram = next_sym->payload->to_string() + " "
+        + next_not_null->payload->to_string();
+        // Rcout << ole_right_digram << std::endl;
+
+        // Rcout << "  **++** after second: " << next_not_null->payload->to_string() ;
+        // Rcout << std::endl;
+
+        std::unordered_map<std::string, std::vector<int>>::iterator it =
+          digram_table.find(ole_right_digram);
+
+        int new_freq = it->second.size() - 1;
+        // Rcout << "  *** old occurrences: ";
+//         for (auto i = it->second.begin(); i != it->second.end(); ++i)
+//           Rcout << *i << ' ';
+//         Rcout << std::endl;
+
+        // clean up the specific index in the occurrences array
+//         Rcout << " **++* erasing  " << next_sym->payload->to_string() << " @" <<
+//           next_sym->payload->str_index << std::endl;
+        it->second.erase(std::remove(it->second.begin(), it->second.end(),
+                      next_sym->payload->str_index), it->second.end());
+//         Rcout << "  *** new occurrences: ";
+//         for (auto i = it->second.begin(); i != it->second.end(); ++i)
+//           Rcout << *i << ' ';
+//         Rcout << std::endl;
+
+        // take a look if the digram is actually the one we work with...
+        if (0 == ole_right_digram.compare(entry->digram)) {
+//           Rcout << "  ***** the old digram is like the new one, cleaning up ..." << std::endl;
+//           Rcout << "  *** old ext. loop: ";
+//           for (auto i = occurrences.begin(); i != occurrences.end(); ++i) Rcout << *i << ' ';
+//           Rcout << std::endl;
+          occurrences.erase(std::remove(occurrences.begin(), occurrences.end(),
+                       next_sym->payload->str_index), occurrences.end());
+//           Rcout << "  *** new ext. loop: ";
+//           for (auto i = occurrences.begin(); i != occurrences.end(); ++i) Rcout << *i << ' ';
+//           Rcout << std::endl;
+        }
+        digram_queue.update_digram_frequency(&ole_right_digram, new_freq);
+
+        // if it was the last entry...
+        if (0 == new_freq) {
+          // Rcout << "  *** since new freq is 0, cleaning up ..." << std::endl;
+          digram_table.erase(ole_right_digram);
+          new_digrams.erase(ole_right_digram);
+        }
+
+        // and place the new digram entry
+        std::string new_right_digram = r->get_rule_string() + " " + next_not_null->payload->to_string();
+        // Rcout << "  *** the new right digram shall be : " << new_right_digram << std::endl;
+        // see the new freq..
+        // save the digram occurrence
+        if (digram_table.find(new_right_digram) == digram_table.end()){
+          std::vector<int> occurrences;
+          occurrences.push_back(curr_sym->payload->str_index);
+          digram_table.insert(std::make_pair(new_right_digram, occurrences));
+        }else{
+          digram_table[new_right_digram].push_back(curr_sym->payload->str_index);
+        }
+
+        new_digrams.emplace(new_right_digram);
+
+      }
+
+    }
+    // clean up the digram we have worked with ...
+    //
+    digram_table.erase(entry->digram);
+
+    // update the priority queue with new digrams ...
+    //
+//     Rcout << "  *** new digrams size " << new_digrams.size() << " : ";
+//     for(std::string s : new_digrams)
+//       Rcout << s << ' ';
+//     Rcout << std::endl;
+
+    for (std::string st : new_digrams) {
+      // Rcout << "  *** checking on new digram " << st  << std::endl;
+      if(digram_table[st].size() > 1){
+        if(digram_queue.contains_digram(&st)){
+          // Rcout << "gotta update ... " << std::endl;
+          digram_queue.update_digram_frequency(&st, digram_table[st].size());
+        } else {
+          // Rcout << "adding a digram ... " << std::endl;
+          repair_digram* digram = new repair_digram( st, digram_table[st].size() );
+          digram_queue.enqueue(digram);
+        }
       }
     }
+
+
+    // walk over the R0
+//     Rcout << "\n*** XXXXXX end of the loop ****\nR0: ";
+//     repair_symbol_record* ptr = r0[0];
+//     do {
+//       Rcout << ptr->payload->payload << " ";
+//       ptr = ptr->next;
+//     } while(ptr != nullptr);
+//     Rcout << std::endl;
+//     Rcout << "\nthe digrams table\n=================" << std::endl;
+//     for(std::unordered_map<std::string, std::vector<int>>::iterator it = digram_table.begin();
+//         it != digram_table.end(); ++it) {
+//       Rcout << it->first << " [";
+//       for (auto i = it->second.begin(); i != it->second.end(); ++i)
+//         Rcout << *i << ", ";
+//       Rcout << "]" << std::endl;
+//     }
+    // all digrams are pushed to the queue, see those
+//     Rcout << "\nthe digrams queue\n=================" << std::endl;
+//     Rcout << digram_queue.to_string() << std::endl;
+
+
+    entry = digram_queue.dequeue();
+
+      i++;
   }
 
-  // print the grammar with expansion
-  // Rcout << "\n\nFull Grammar:\n";
-  // for(std::map<int, Rule>::iterator it = rules.begin(); it != rules.end(); ++it) {
-  // Rcout << it->second << std::endl;
-  // }
-  // Rcout << std::endl;rule_str
+  // make up the R0
+  std::stringstream ss;
+  repair_symbol_record* ptr = r0[0];
+  while(ptr != nullptr) {
+    ss << ptr->payload->payload;
+    ptr = ptr->next;
+    if(ptr != nullptr){  ss << " "; }
+  };
+
+  Rcout << "\n\nthe R0\n=================\n";
+  Rcout << ss.str() << std::endl;
+
+  Rcout << "\nthe digrams table\n=================" << std::endl;
+  for(std::unordered_map<std::string, std::vector<int>>::iterator it = digram_table.begin();
+      it != digram_table.end(); ++it) {
+    Rcout << it->first << " [";
+    for (auto i = it->second.begin(); i != it->second.end(); ++i)
+      Rcout << *i << ", ";
+    Rcout << "]" << std::endl;
+  }
+
+  // all digrams are pushed to the queue, see those
+  Rcout << "\nthe digrams queue\n=================" << std::endl;
+  Rcout << digram_queue.to_string() << std::endl;
+
+  Rcout << "\nthe Grammar\n=================" << std::endl;
+  for(std::map<int, repair_rule*>::iterator it = grammar.begin();
+      it != grammar.end(); ++it) {
+    Rcout << it->second->get_rule_string() << " : "
+          << it->second->get_rule_string() << " : "
+          << it->second->expanded_rule_string << " [";
+    for (auto i = it->second->occurrences.begin(); i != it->second->occurrences.end(); ++i)
+      Rcout << *i << ", ";
+    Rcout << "]" << std::endl;
+  }
 
   // make results
-  std::map<int, RuleRecord> res;
+  std::unordered_map<int, rule_record*> res;
 
-  for(std::map<int, Rule>::iterator it = rules.begin(); it != rules.end(); ++it) {
-    RuleRecord rr;
-    rr.rule_id = it->first;
-    rr.rule_string = it->second.rule_string;
-    rr.expanded_rule_string = it->second.expanded_rule_string;
-    rr.rule_use = it->second.rule_use;
-    rr.rule_occurrences = it->second.occurrences;
-    for(std::vector<int>::iterator oi = rr.rule_occurrences.begin();
-        oi != rr.rule_occurrences.end(); ++oi) {
-      rr.rule_intervals.push_back(std::make_pair(*oi,
-                *oi + _count_spaces(&rr.expanded_rule_string)));
+  // the R0
+  rule_record* rec0 = new rule_record();
+  rec0->rule_id = 0;
+  rec0->rule_string = ss.str();
+  rec0->expanded_rule_string = s;
+  rec0->rule_occurrences.push_back(-1);
+  rec0->rule_intervals.push_back(std::make_pair(0, str_length));
+  res.emplace(std::make_pair(0, rec0));
+
+  // the rest of the grammar
+  for(std::map<int, repair_rule*>::iterator it = grammar.begin();
+      it != grammar.end(); ++it) {
+    rule_record* rr = new rule_record();
+    rr->rule_id = it->first;
+    rr->rule_string = it->second->get_rule_string();
+    rr->expanded_rule_string = it->second->expanded_rule_string;
+    rr->rule_occurrences = it->second->occurrences;
+    for(std::vector<int>::iterator oi = rr->rule_occurrences.begin();
+        oi != rr->rule_occurrences.end(); ++oi) {
+      rr->rule_intervals.push_back(std::make_pair(*oi,
+          *oi + _count_spaces(&rr->expanded_rule_string)));
     }
-    res.insert(std::make_pair(it->first, rr));
+    res.emplace(std::make_pair(it->first, rr));
   }
 
   return res;
-
 }
-
 
 //' Runs the repair on a string.
 //'
@@ -372,21 +500,24 @@ Rcpp::List str_to_repair_grammar(CharacterVector str){
   std::string s = Rcpp::as<std::string>(str);
 
   // run the c++ implementation
-  std::map<int, RuleRecord> rules = _str_to_repair_grammar(s);
+  std::unordered_map<int, rule_record*> rules = _str_to_repair_grammar(s);
 
   // make results
   Rcpp::List res(rules.size());
-  for(std::map<int, RuleRecord>::iterator it = rules.begin(); it != rules.end(); ++it) {
+
+  for(int i = 0; i < rules.size(); ++i) {
+
+    std::unordered_map<int, rule_record*>::iterator it = rules.find(i);
 
     std::stringstream ss;
-    ss << it->second.rule_id;
+    ss << it->second->rule_id;
     Rcpp::CharacterVector rule_name = "R" + ss.str();
 
-    Rcpp::CharacterVector rule_string = it->second.rule_string;
-    Rcpp::CharacterVector expanded_rule_string = it->second.expanded_rule_string;
-    Rcpp::NumericVector rule_interval_starts = Rcpp::wrap(it->second.rule_occurrences);
+    Rcpp::CharacterVector rule_string = it->second->rule_string;
+    Rcpp::CharacterVector expanded_rule_string = it->second->expanded_rule_string;
+    Rcpp::NumericVector rule_interval_starts = Rcpp::wrap(it->second->rule_occurrences);
     Rcpp::NumericVector rule_interval_ends = rule_interval_starts +
-      _count_spaces(&it->second.expanded_rule_string);
+      _count_spaces(&it->second->expanded_rule_string);
 
     res[it->first] = List::create(
       _["rule_name"]  = rule_name,
@@ -395,10 +526,10 @@ Rcpp::List str_to_repair_grammar(CharacterVector str){
       _["rule_interval_starts"] = rule_interval_starts,
       _["rule_interval_ends"] = rule_interval_ends
     ) ;
+
   }
 
   return res;
 
 }
 // library(jmotif); str_to_repair_grammar("abc abc cba cba bac xxx abc abc cba cba bac")
-

@@ -99,92 +99,141 @@ Rcpp::DataFrame find_discords_hotsax(NumericVector ts, int w_size, int paa_size,
 // REPAIR
 //
 
-// Tokens are used in the R0
+// the basic work string token
 //
-class Token {
+class repair_symbol {
 public:
-  int str_idx;
   std::string payload;
-  Token(){
-    str_idx = -1;
+  int str_index;
+  repair_symbol() { // a generic constructor
+    str_index = -1;
   };
-  Token(std::string s, int idx){
-    payload = s;
-    str_idx = idx;
-  };
-//   std::ostream& operator<<(std::ostream &strm, const Token &t) {
-//     return strm << "T(" << t.payload << " @ " << t.str_idx << ")";
-//   };
+  repair_symbol(const std::string str, int index); // a more advance constructor
+  virtual bool is_guard(){ // if this is a guard? no... overriden in Guard
+    return false;
+  }
+  std::string to_string(){ // get the payload
+    return std::string(payload);
+  }
 };
 
-// Rules build up the rules table, i.e. the grammar
+// the symbol (token) wrapper for the string data structure0
 //
-class Rule {
+class repair_symbol_record {
+public:
+  repair_symbol* payload;
+  repair_symbol_record* prev;
+  repair_symbol_record* next;
+  repair_symbol_record( repair_symbol* symbol );
+};
+
+// the grammar rule
+//
+class repair_rule {
 public:
   int id;
   int rule_use;
-  std::string rule_string;
+  repair_symbol* first;
+  repair_symbol* second;
   std::string expanded_rule_string;
   std::vector<int> occurrences;
-  Rule(){
-    id = -1;
-    rule_use = 0;
-    rule_string = "\0";
-    expanded_rule_string = "\0";
+  repair_rule(){
+    id = -1; rule_use = 0; first = nullptr; second = nullptr;
   };
-  Rule(int r_id, std::string rule_str, std::string expanded_rule_str){
-    id = r_id;
-    rule_use = 0;
-    rule_string = rule_str;
-    expanded_rule_string = expanded_rule_str;
-  };
-  std::string ruleString(){
-    std::stringstream ss;
-    ss << id;
-    return "R" + ss.str();
-  };
-//   std::ostream& operator<<(std::ostream &strm, const Rule &d) {
-//     return strm << "R" << d.id << "\t" << d.rule_string << "\t" << d.expanded_rule_string;
-//   };
+  std::string get_rule_string();
 };
 
-
-// Guards are the placeholders for tokens
+// the guard symbol: a special symbol that holds the rule
 //
-class Guard: public Token {
+class repair_guard: public repair_symbol {
 public:
-  Rule r;
-  Guard(Rule rule, int idx){
+  repair_rule* r;
+  repair_guard();
+  repair_guard(repair_rule* rule, int idx){
     r = rule;
-    payload = r.ruleString();
-    str_idx = idx;
-  };
+    payload = r->get_rule_string();
+    str_index = idx;
+  }
+  bool is_guard(){
+    return true;
+  }
+  std::string get_expanded_string(){
+    return r->expanded_rule_string;
+  }
 };
 
-// Rule records make the REPAIR output
 //
-class RuleRecord {
+// the priority queue elements...
+//
+class repair_digram {
 public:
-  int rule_id;
-  std::string rule_string;
-  std::string expanded_rule_string;
-  int rule_use;
-  std::vector<int> rule_occurrences;
-  std::vector<std::pair<int,int>> rule_intervals;
+  std::string digram;
+  int freq;
+  repair_digram(const std::string str, int index);
 };
 
-std::map<int, RuleRecord> _str_to_repair_grammar(std::string s);
-Rcpp::List str_to_repair_grammar(CharacterVector str);
+class repair_pqueue_node {
+public:
+  repair_pqueue_node* prev;
+  repair_pqueue_node* next;
+  repair_digram* payload;
+  repair_pqueue_node() {
+    payload = nullptr;
+    prev = nullptr;
+    next = nullptr;
+  }
+  repair_pqueue_node(repair_digram* d) {
+    payload = d;
+    prev = nullptr;
+    next = nullptr;
+  }
+};
+
+class repair_priority_queue {
+public:
+  repair_pqueue_node* queue_head;
+  std::unordered_map<std::string, repair_pqueue_node*> nodes;
+  repair_priority_queue() {
+    queue_head = nullptr;
+    std::unordered_map<std::string, repair_pqueue_node*> nodes;
+  }
+  repair_digram* enqueue( repair_digram* digram );
+  repair_digram* dequeue();
+  repair_digram* peek();
+  repair_digram* get(std::string *digram_string);
+  repair_digram* update_digram_frequency(std::string *digram_string, int new_value);
+  bool contains_digram(std::string *digram_string);
+  std::vector<repair_digram> to_array();
+  void remove_node(repair_pqueue_node* node);
+  std::string to_string();
+};
 
 //
 // RRA
 //
+class rule_record {
+public:
+  int rule_id;
+  std::string rule_string;
+  std::string expanded_rule_string;
+  std::vector<int> rule_occurrences;
+  std::vector<std::pair<int, int>> rule_intervals;
+  rule_record() {
+    rule_id = -1;
+    std::vector<std::pair<int, int>> rule_intervals;
+  }
+};
+
 struct rra_discord_record {
   int rule;
   int start;
   int end;
   double nn_distance;
 };
+
+std::unordered_map<int, rule_record*> _str_to_repair_grammar(std::string s);
+Rcpp::List str_to_repair_grammar(CharacterVector str);
+
 Rcpp::DataFrame find_discords_rra(NumericVector series, int w_size, int paa_size,
   int a_size, CharacterVector nr_strategy, double n_threshold = 0.01, int discords_num = 3);
 

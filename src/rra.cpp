@@ -70,7 +70,7 @@ double _mean(std::vector<int> *ts, int *start, int *end){
 }
 
 rra_discord_record find_best_rra_discord(std::vector<double> *ts, int w_size,
-      std::map<int, RuleRecord> *grammar, std::vector<int> *indexes,
+      std::unordered_map<int, rule_record*> *grammar, std::vector<int> *indexes,
       std::vector<RuleInterval> *intervals,
       std::unordered_set<int> *global_visited_positions){
 
@@ -120,7 +120,7 @@ rra_discord_record find_best_rra_discord(std::vector<double> *ts, int w_size,
     //    ", best so far dist " << bestSoFarDistance << std::endl;
 
     if(c_interval.rule_id>0){
-      auto this_rule_occurrences = grammar->at(c_interval.rule_id).rule_intervals;
+      auto this_rule_occurrences = grammar->at(c_interval.rule_id)->rule_intervals;
       // Rcout << "   going to iterate over " << this_rule_occurrences.size() <<
       //  " rule occurrences first " << std::endl;
       for(auto it=this_rule_occurrences.begin(); it !=this_rule_occurrences.end(); ++it) {
@@ -161,7 +161,6 @@ rra_discord_record find_best_rra_discord(std::vector<double> *ts, int w_size,
       //Rcout << std::endl;
 
       // init the visit array
-      int visitCounter = 0;
       int cIndex = 0;
       for (int j = 0; j < intervals->size(); j++) {
         RuleInterval interval = intervals->at(j);
@@ -231,7 +230,7 @@ rra_discord_record find_best_rra_discord(std::vector<double> *ts, int w_size,
   return res;
 }
 
-//' Finds a discord with HOT-SAX.
+//' Finds a discord with RRA.
 //'
 //' @param series the input timeseries.
 //' @param w_size the sliding window size.
@@ -283,7 +282,7 @@ Rcpp::DataFrame find_discords_rra(NumericVector series, int w_size, int paa_size
 
   // grammar
   //
-  std::map<int, RuleRecord> grammar = _str_to_repair_grammar(sax_str);
+  std::unordered_map<int, rule_record*> grammar = _str_to_repair_grammar(sax_str);
   // Rcout << "  there are " << grammar.size() << " RePair rules including R0..." << std::endl;
 
   // making intervals and ranking by the rule use
@@ -295,7 +294,7 @@ Rcpp::DataFrame find_discords_rra(NumericVector series, int w_size, int paa_size
     if(0 == it->first){
       continue;
     }
-    for(auto rit = (it->second).rule_intervals.begin(); rit != (it->second).rule_intervals.end(); ++rit) {
+    for(auto rit = (it->second)->rule_intervals.begin(); rit != (it->second)->rule_intervals.end(); ++rit) {
       int t_start = rit->first;
       int t_end = rit->second;
       // start and end here is for the string tokens, not for time series points
@@ -311,7 +310,7 @@ Rcpp::DataFrame find_discords_rra(NumericVector series, int w_size, int paa_size
       rr.rule_id = it->first;
       rr.start = start;
       rr.end = end;
-      rr.cover = it->second.rule_use; // a shortcut
+      // ********************* rr.cover = it->second.rule_use; // a shortcut
       intervals.push_back(rr);
     }
   }

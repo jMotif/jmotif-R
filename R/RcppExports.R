@@ -98,7 +98,7 @@ str_to_repair_grammar <- function(str) {
     .Call('jmotif_str_to_repair_grammar', PACKAGE = 'jmotif', str)
 }
 
-#' Finds a discord with HOT-SAX.
+#' Finds a discord with RRA.
 #'
 #' @param series the input timeseries.
 #' @param w_size the sliding window size.
