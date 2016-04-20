@@ -218,10 +218,10 @@ public:
   std::string expanded_rule_string;
   std::vector<int> rule_occurrences;
   std::vector<std::pair<int, int>> rule_intervals;
-  int rule_use;
+  // int rule_use;
   rule_record() {
     rule_id = -1;
-    rule_use = 0;
+    // rule_use = 0;
     std::vector<std::pair<int, int>> rule_intervals;
   }
 };

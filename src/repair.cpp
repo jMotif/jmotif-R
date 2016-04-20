@@ -140,7 +140,7 @@ std::unordered_map<int, rule_record*> _str_to_repair_grammar(std::string s) {
       repair_guard* ptr = static_cast<repair_guard*>( r->first );
       ss << ptr->get_expanded_string();
       // note the use
-      ptr->r->rule_use++;
+      // ptr->r->rule_use++;
     } else {
       repair_symbol* ptr = r->first;
       ss << ptr->to_string();
@@ -150,7 +150,7 @@ std::unordered_map<int, rule_record*> _str_to_repair_grammar(std::string s) {
       repair_guard* ptr = static_cast<repair_guard*>( r->second );
       ss << ptr->get_expanded_string();
       // note the use
-      ptr->r->rule_use++;
+      // ptr->r->rule_use++;
     } else {
       repair_symbol* ptr = r->second;
       ss << ptr->to_string();
@@ -430,32 +430,32 @@ std::unordered_map<int, rule_record*> _str_to_repair_grammar(std::string s) {
     if(ptr != nullptr){  ss << " "; }
   };
 
-  Rcout << "\n\nthe R0\n=================\n";
-  Rcout << ss.str() << std::endl;
+//   Rcout << "\n\nthe R0\n=================\n";
+//   Rcout << ss.str() << std::endl;
 
-  Rcout << "\nthe digrams table\n=================" << std::endl;
-  for(std::unordered_map<std::string, std::vector<int>>::iterator it = digram_table.begin();
-      it != digram_table.end(); ++it) {
-    Rcout << it->first << " [";
-    for (auto i = it->second.begin(); i != it->second.end(); ++i)
-      Rcout << *i << ", ";
-    Rcout << "]" << std::endl;
-  }
+  // Rcout << "\nthe digrams table\n=================" << std::endl;
+//   for(std::unordered_map<std::string, std::vector<int>>::iterator it = digram_table.begin();
+//       it != digram_table.end(); ++it) {
+//     Rcout << it->first << " [";
+//     for (auto i = it->second.begin(); i != it->second.end(); ++i)
+//       Rcout << *i << ", ";
+//     Rcout << "]" << std::endl;
+//   }
 
   // all digrams are pushed to the queue, see those
-  Rcout << "\nthe digrams queue\n=================" << std::endl;
-  Rcout << digram_queue.to_string() << std::endl;
-
-  Rcout << "\nthe Grammar\n=================" << std::endl;
-  for(std::map<int, repair_rule*>::iterator it = grammar.begin();
-      it != grammar.end(); ++it) {
-    Rcout << it->second->get_rule_string() << " : "
-          << it->second->get_rule_string() << " : "
-          << it->second->expanded_rule_string << " [";
-    for (auto i = it->second->occurrences.begin(); i != it->second->occurrences.end(); ++i)
-      Rcout << *i << ", ";
-    Rcout << "]" << std::endl;
-  }
+//   Rcout << "\nthe digrams queue\n=================" << std::endl;
+//   Rcout << digram_queue.to_string() << std::endl;
+//
+//   Rcout << "\nthe Grammar\n=================" << std::endl;
+//   for(std::map<int, repair_rule*>::iterator it = grammar.begin();
+//       it != grammar.end(); ++it) {
+//     Rcout << it->second->get_rule_string() << " : "
+//           << it->second->get_rule_string() << " : "
+//           << it->second->expanded_rule_string << " [";
+//     for (auto i = it->second->occurrences.begin(); i != it->second->occurrences.end(); ++i)
+//       Rcout << *i << ", ";
+//     Rcout << "]" << std::endl;
+//   }
 
   // make results
   std::unordered_map<int, rule_record*> res;

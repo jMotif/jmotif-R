@@ -3,8 +3,10 @@ using namespace Rcpp ;
 //
 #include <jmotif.h>
 #include <limits>
+#include <chrono>
+#include <ctime>
 
-class RuleInterval {
+class rule_interval {
 public:
   int rule_id;
   int start;
@@ -13,8 +15,8 @@ public:
 };
 
 struct sort_intervals {
-  bool operator()(const RuleInterval &left,
-                const RuleInterval &right) {
+  bool operator()(const rule_interval &left,
+                const rule_interval &right) {
     // Rcout << " sorting " << left.cover << ", " << right.cover << std::endl;
     return (left.cover < right.cover);
   }
@@ -71,7 +73,7 @@ double _mean(std::vector<int> *ts, int *start, int *end){
 
 rra_discord_record find_best_rra_discord(std::vector<double> *ts, int w_size,
       std::unordered_map<int, rule_record*> *grammar, std::vector<int> *indexes,
-      std::vector<RuleInterval> *intervals,
+      std::vector<rule_interval> *intervals,
       std::unordered_set<int> *global_visited_positions){
 
   std::vector<int> visit_array(ts->size(), -1);
@@ -89,7 +91,7 @@ rra_discord_record find_best_rra_discord(std::vector<double> *ts, int w_size,
   // outer loop over all intervals
   for(int i = 0; i < intervals->size(); i++){
 
-    RuleInterval c_interval = intervals->at(i);
+    rule_interval c_interval = intervals->at(i);
 
     // Rcout << c_interval.rule_id << ", " << c_interval.cover << std::endl;
 
@@ -119,35 +121,32 @@ rra_discord_record find_best_rra_discord(std::vector<double> *ts, int w_size,
     //   " for rule " << c_interval.rule_id <<
     //    ", best so far dist " << bestSoFarDistance << std::endl;
 
-    if(c_interval.rule_id>0){
-      auto this_rule_occurrences = grammar->at(c_interval.rule_id)->rule_intervals;
-      // Rcout << "   going to iterate over " << this_rule_occurrences.size() <<
-      //  " rule occurrences first " << std::endl;
-      for(auto it=this_rule_occurrences.begin(); it !=this_rule_occurrences.end(); ++it) {
-        int start = indexes->at(it->first);
-        auto found = visited_locations.find(start);
-        if (found == visited_locations.end()) {
-          visited_locations.insert(start);
-          int end = indexes->at(it->second) + w_size;
-          // Rcout << "    examining a candidate at " << start << "-" <<
-          //  end << std::endl;
-          double dist = normalized_distance(c_interval.start, c_interval.end,
-                                            start, end, ts);
-          // keep track of best so far distance
-          if (dist < nn_distance) {
-            // Rcout << "    better nn distance found " << dist << std::endl;
-            nn_distance = dist;
-          }
-          if (dist < bestSoFarDistance) {
-            // Rcout << "    dist " << dist <<
-            //   " is less than best so far, breaking off the search" << std::endl;
-            do_random_search = false;
-            break;
-          }
-
-        } else {
-          continue;
+    auto this_rule_occurrences = grammar->at(c_interval.rule_id)->rule_intervals;
+    // Rcout << "   going to iterate over " << this_rule_occurrences.size() <<
+    //  " rule occurrences first " << std::endl;
+    for(auto it=this_rule_occurrences.begin(); it !=this_rule_occurrences.end(); ++it) {
+      int start = indexes->at(it->first);
+      auto found = visited_locations.find(start);
+      if (found == visited_locations.end()) {
+        visited_locations.insert(start);
+        int end = indexes->at(it->second) + w_size;
+        // Rcout << "    examining a candidate at " << start << "-" <<
+        //  end << std::endl;
+        double dist = normalized_distance(c_interval.start, c_interval.end,
+                                          start, end, ts);
+        // keep track of best so far distance
+        if (dist < nn_distance) {
+          // Rcout << "    better nn distance found " << dist << std::endl;
+          nn_distance = dist;
         }
+        if (dist < bestSoFarDistance) {
+          Rcout << "   R " << c_interval.rule_id << ", dist " << dist <<
+            " is less than best so far, breaking off the search" << std::endl;
+          do_random_search = false;
+          break;
+        }
+      } else {
+        continue;
       }
     }
 
@@ -163,7 +162,7 @@ rra_discord_record find_best_rra_discord(std::vector<double> *ts, int w_size,
       // init the visit array
       int cIndex = 0;
       for (int j = 0; j < intervals->size(); j++) {
-        RuleInterval interval = intervals->at(j);
+        rule_interval interval = intervals->at(j);
         auto found = visited_locations.find(interval.start);
         if (found == visited_locations.end()) {
           visit_array[cIndex] = j;
@@ -186,7 +185,7 @@ rra_discord_record find_best_rra_discord(std::vector<double> *ts, int w_size,
       // while there are unvisited locations
       while (cIndex >= 0) {
 
-        RuleInterval randomInterval = intervals->at(visit_array[cIndex]);
+        rule_interval randomInterval = intervals->at(visit_array[cIndex]);
         cIndex--;
 
         // Rcout << "    random candidate " << randomInterval.start << "-" <<
@@ -254,11 +253,24 @@ Rcpp::DataFrame find_discords_rra(NumericVector series, int w_size, int paa_size
   int a_size, CharacterVector nr_strategy, double n_threshold,
   int discords_num){
 
+  // *****
+  std::chrono::time_point<std::chrono::system_clock> tstart0, tstart, tend;
+  tstart0 = std::chrono::system_clock::now();
+  tstart = std::chrono::system_clock::now();
+
   std::vector<double> ts = Rcpp::as<std::vector<double>>(series);
   std::vector<int> visit_array(ts.size(), -1);
 
   std::unordered_map<int, std::string> sax_map = _sax_via_window(
     ts, w_size, paa_size, a_size, Rcpp::as<std::string>(nr_strategy), n_threshold);
+
+  // ****
+  tend = std::chrono::system_clock::now();
+  std::chrono::duration<double> elapsed_seconds = tend - tstart;
+  std::cout << "sax conversion: " << elapsed_seconds.count() << "s\n";
+
+  // *****
+  tstart = std::chrono::system_clock::now();
 
   // sax_map maps time-series positions to corresponding SAX words
   // to compose the string we need to order keys
@@ -280,19 +292,33 @@ Rcpp::DataFrame find_discords_rra(NumericVector series, int w_size, int paa_size
   }
   sax_str.erase( sax_str.end()-1 );
 
+  // ****
+  tend = std::chrono::system_clock::now();
+  elapsed_seconds = tend - tstart;
+  std::cout << "sax string composition: " << elapsed_seconds.count() << "s\n";
+
   // grammar
   //
+  // *****
+  tstart = std::chrono::system_clock::now();
   std::unordered_map<int, rule_record*> grammar = _str_to_repair_grammar(sax_str);
+  // ****
+  tend = std::chrono::system_clock::now();
+  elapsed_seconds = tend - tstart;
+  std::cout << "grammar inferred in: " << elapsed_seconds.count() << "s\n";
   // Rcout << "  there are " << grammar.size() << " RePair rules including R0..." << std::endl;
+
+  // *****
+  tstart = std::chrono::system_clock::now();
 
   // making intervals and ranking by the rule use
   // meanwhile build the coverage curve
   //
-  std::vector<RuleInterval> intervals;
+  std::vector<rule_interval> intervals;
   std::vector<int> coverage_array(ts.size(), 0);
   for(auto it = grammar.begin(); it != grammar.end(); ++it) {
     if(0 == it->first){
-      continue;
+      continue; // skip R0
     }
     for(auto rit = (it->second)->rule_intervals.begin(); rit != (it->second)->rule_intervals.end(); ++rit) {
       int t_start = rit->first;
@@ -306,16 +332,15 @@ Rcpp::DataFrame find_discords_rra(NumericVector series, int w_size, int paa_size
       for(int i=start; i<end; ++i){ // rule coverage
         coverage_array[i] = coverage_array[i] + 1;
       }
-      RuleInterval rr;
+      rule_interval rr;
       rr.rule_id = it->first;
       rr.start = start;
       rr.end = end;
-      rr.cover = it->second->rule_use; // a shortcut
+      // rr.cover = it->second->rule_use; // a shortcut
       intervals.push_back(rr);
     }
   }
-
-  // Rcout << "  there are " << intervals.size() <<
+   // Rcout << "  there are " << intervals.size() <<
   //  " rule intervals to consider..." << std::endl;
   // we need to examine the coverage curve for continous zero intervals and mark those
   //
@@ -327,7 +352,7 @@ Rcpp::DataFrame find_discords_rra(NumericVector series, int w_size, int paa_size
       in_interval = true;
     }
     if (coverage_array[i] > 0 && in_interval) {
-      RuleInterval ri;
+      rule_interval ri;
       ri.cover=0;
       ri.start = start;
       ri.end=i;
@@ -347,9 +372,14 @@ Rcpp::DataFrame find_discords_rra(NumericVector series, int w_size, int paa_size
   // sort the intervals rare < frequent
   std::sort(intervals.begin(), intervals.end(), sort_intervals());
 
-  // for(auto it=intervals.begin(); it !=intervals.end(); ++it){
-    // Rcout << ".. " << it->cover << std::endl;
-  // }
+  // ****
+  tend = std::chrono::system_clock::now();
+  elapsed_seconds = tend - tstart;
+  std::cout << "intervals built in: " << elapsed_seconds.count() << "s\n";
+  elapsed_seconds = tend - tstart0;
+  std::cout << "total preprocessing: " << elapsed_seconds.count() << "s, intervals: " <<
+    intervals.size() << "\n";
+
 
   // from here on we'll be calling find best discord...
   std::unordered_set<int> global_visited_positions;
