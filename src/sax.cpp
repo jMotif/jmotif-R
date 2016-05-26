@@ -19,24 +19,59 @@ using namespace Rcpp ;
 NumericVector alphabet_to_cuts(int a_size) {
   switch(a_size){
   case 2: {return NumericVector::create(R_NegInf,  0.00);}
-  case 3: {return NumericVector::create(R_NegInf, -0.43,  0.43);}
-  case 4: {return NumericVector::create(R_NegInf, -0.67,  0.00,  0.67);}
-  case 5: {return NumericVector::create(R_NegInf, -0.84, -0.25,  0.25,  0.84);}
-  case 6: {return NumericVector::create(R_NegInf, -0.97, -0.43,  0.00,  0.43,  0.97);}
-  case 7: {return NumericVector::create(R_NegInf, -1.07, -0.57, -0.18,  0.18,  0.57,  1.07);}
-  case 8: {return NumericVector::create(R_NegInf, -1.15, -0.67, -0.32,  0.00,  0.32,  0.67,  1.15);}
-  case 9: {return NumericVector::create(R_NegInf, -1.22, -0.76, -0.43, -0.14,  0.14,  0.43,  0.76,  1.22);}
-  case 10: {return NumericVector::create(R_NegInf, -1.28, -0.84, -0.52, -0.25,  0.00,  0.25,  0.52,  0.84,  1.28);}
-  case 11: {return NumericVector::create(R_NegInf, -1.34, -0.91, -0.60, -0.35, -0.11,  0.11,  0.35,  0.60,  0.91, 1.34);}
-  case 12: {return NumericVector::create(R_NegInf, -1.38, -0.97, -0.67, -0.43, -0.21,  0.00,  0.21,  0.43,  0.67, 0.97, 1.38);}
-  case 13: {return NumericVector::create(R_NegInf, -1.43, -1.02, -0.74, -0.50, -0.29, -0.10,  0.10,  0.29,  0.50, 0.74, 1.02, 1.43);}
-  case 14: {return NumericVector::create(R_NegInf, -1.47, -1.07, -0.79, -0.57, -0.37, -0.18,  0.00,  0.18,  0.37, 0.57, 0.79, 1.07, 1.47);}
-  case 15: {return NumericVector::create(R_NegInf, -1.50, -1.11, -0.84, -0.62, -0.43, -0.25, -0.08,  0.08,  0.25, 0.43, 0.62, 0.84, 1.11, 1.5);}
-  case 16: {return NumericVector::create(R_NegInf, -1.53, -1.15, -0.89, -0.67, -0.49, -0.32, -0.16,  0.00,  0.16, 0.32, 0.49, 0.67, 0.89, 1.15, 1.53);}
-  case 17: {return NumericVector::create(R_NegInf, -1.56, -1.19, -0.93, -0.72, -0.54, -0.38, -0.22, -0.07,  0.07, 0.22, 0.38, 0.54, 0.72, 0.93, 1.19, 1.56);}
-  case 18: {return NumericVector::create(R_NegInf, -1.59, -1.22, -0.97, -0.76, -0.59, -0.43, -0.28, -0.14,  0.00, 0.14, 0.28, 0.43, 0.59, 0.76, 0.97, 1.22, 1.59);}
-  case 19: {return NumericVector::create(R_NegInf, -1.62, -1.25, -1.00, -0.80, -0.63, -0.48, -0.34, -0.20, -0.07, 0.07, 0.20, 0.34, 0.48, 0.63, 0.80, 1.00, 1.25, 1.62);}
-  case 20: {return NumericVector::create(R_NegInf, -1.64, -1.28, -1.04, -0.84, -0.67, -0.52, -0.39, -0.25, -0.13, 0.00, 0.13, 0.25, 0.39, 0.52, 0.67, 0.84, 1.04, 1.28, 1.64);}
+  case 3: {return NumericVector::create(R_NegInf, -0.4307273, 0.4307273);}
+  case 4: {return NumericVector::create(R_NegInf, -0.6744898, 0, 0.6744898);}
+  case 5: {return NumericVector::create(R_NegInf, -0.841621233572914, -0.2533471031358,
+        0.2533471031358, 0.841621233572914);}
+  case 6: {return NumericVector::create(R_NegInf, -0.967421566101701, -0.430727299295457, 0,
+        0.430727299295457, 0.967421566101701);}
+  case 7: {return NumericVector::create(R_NegInf, -1.06757052387814, -0.565948821932863,
+        -0.180012369792705, 0.180012369792705, 0.565948821932863, 1.06757052387814);}
+  case 8: {return NumericVector::create(R_NegInf, -1.15034938037601, -0.674489750196082, -0.318639363964375,
+        0, 0.318639363964375, 0.674489750196082, 1.15034938037601);}
+  case 9: {return NumericVector::create(R_NegInf, -1.22064034884735, -0.764709673786387, -0.430727299295457,
+        -0.139710298881862, 0.139710298881862, 0.430727299295457, 0.764709673786387,
+        1.22064034884735);}
+  case 10: {return NumericVector::create(R_NegInf, -1.2815515655446, -0.841621233572914, -0.524400512708041,
+         -0.2533471031358, 0, 0.2533471031358, 0.524400512708041, 0.841621233572914, 1.2815515655446);}
+  case 11: {return NumericVector::create(R_NegInf, -1.33517773611894, -0.908457868537385,
+         -0.604585346583237, -0.348755695517045, -0.114185294321428, 0.114185294321428,
+         0.348755695517045, 0.604585346583237, 0.908457868537385, 1.33517773611894);}
+  case 12: {return NumericVector::create(R_NegInf, -1.38299412710064, -0.967421566101701,
+         -0.674489750196082, -0.430727299295457, -0.210428394247925, 0, 0.210428394247925,
+         0.430727299295457, 0.674489750196082, 0.967421566101701, 1.38299412710064);}
+  case 13: {return NumericVector::create(R_NegInf, -1.42607687227285, -1.0200762327862, -0.736315917376129,
+         -0.502402223373355, -0.293381232121193, -0.0965586152896391, 0.0965586152896394,
+         0.293381232121194, 0.502402223373355, 0.73631591737613, 1.0200762327862, 1.42607687227285);}
+  case 14: {return NumericVector::create(R_NegInf, -1.46523379268552, -1.06757052387814, -0.791638607743375,
+         -0.565948821932863, -0.36610635680057, -0.180012369792705, 0, 0.180012369792705,
+         0.36610635680057, 0.565948821932863, 0.791638607743375, 1.06757052387814, 1.46523379268552);}
+  case 15: {return NumericVector::create(R_NegInf, -1.50108594604402, -1.11077161663679, -0.841621233572914,
+         -0.622925723210088, -0.430727299295457, -0.2533471031358, -0.0836517339071291,
+         0.0836517339071291, 0.2533471031358, 0.430727299295457, 0.622925723210088, 0.841621233572914,
+         1.11077161663679, 1.50108594604402);}
+  case 16: {return NumericVector::create(R_NegInf, -1.53412054435255, -1.15034938037601, -0.887146559018876,
+         -0.674489750196082, -0.488776411114669, -0.318639363964375, -0.157310684610171, 0,
+         0.157310684610171, 0.318639363964375, 0.488776411114669, 0.674489750196082, 0.887146559018876,
+         1.15034938037601, 1.53412054435255);}
+  case 17: {return NumericVector::create(R_NegInf, -1.5647264713618, -1.18683143275582, -0.928899491647271,
+         -0.721522283982343, -0.541395085129088, -0.377391943828554, -0.223007830940367,
+         -0.0737912738082727, 0.0737912738082727, 0.223007830940367, 0.377391943828554,
+         0.541395085129088, 0.721522283982343, 0.928899491647271, 1.18683143275582, 1.5647264713618);}
+  case 18: {return NumericVector::create(R_NegInf, -1.59321881802305, -1.22064034884735, -0.967421566101701,
+         -0.764709673786387, -0.589455797849779, -0.430727299295457, -0.282216147062508,
+         -0.139710298881862, 0, 0.139710298881862, 0.282216147062508, 0.430727299295457,
+         0.589455797849779, 0.764709673786387, 0.967421566101701, 1.22064034884735, 1.59321881802305);}
+  case 19: {return NumericVector::create(R_NegInf, -1.61985625863827, -1.25211952026522, -1.00314796766253,
+         -0.8045963803603, -0.633640000779701, -0.47950565333095, -0.336038140371823,
+         -0.199201324789267, -0.0660118123758407, 0.0660118123758406, 0.199201324789267,
+         0.336038140371823, 0.47950565333095, 0.633640000779701, 0.8045963803603, 1.00314796766253,
+         1.25211952026522, 1.61985625863827);}
+  case 20: {return NumericVector::create(R_NegInf, -1.64485362695147, -1.2815515655446, -1.03643338949379,
+         -0.841621233572914, -0.674489750196082, -0.524400512708041, -0.385320466407568,
+         -0.2533471031358, -0.125661346855074, 0, 0.125661346855074, 0.2533471031358,
+         0.385320466407568, 0.524400512708041, 0.674489750196082, 0.841621233572914, 1.03643338949379,
+         1.2815515655446, 1.64485362695147);}
   default: { stop("'a_size' is invalid"); return NumericVector::create(0.0); }
   }
   return NumericVector::create(R_NegInf, R_PosInf);
@@ -45,24 +80,72 @@ NumericVector alphabet_to_cuts(int a_size) {
 std::vector<double> _alphabet_to_cuts(int a_size) {
   switch(a_size){
   case 2: {return std::vector<double> {std::numeric_limits<double>::lowest(),  0.00};}
-  case 3: {return std::vector<double> {std::numeric_limits<double>::lowest(), -0.43,  0.43};}
-  case 4: {return std::vector<double> {std::numeric_limits<double>::lowest(), -0.67,  0.00,  0.67};}
-  case 5: {return std::vector<double> {std::numeric_limits<double>::lowest(), -0.84, -0.25,  0.25,  0.84};}
-  case 6: {return std::vector<double> {std::numeric_limits<double>::lowest(), -0.97, -0.43,  0.00,  0.43,  0.97};}
-  case 7: {return std::vector<double> {std::numeric_limits<double>::lowest(), -1.07, -0.57, -0.18,  0.18,  0.57,  1.07};}
-  case 8: {return std::vector<double> {std::numeric_limits<double>::lowest(), -1.15, -0.67, -0.32,  0.00,  0.32,  0.67,  1.15};}
-  case 9: {return std::vector<double> {std::numeric_limits<double>::lowest(), -1.22, -0.76, -0.43, -0.14,  0.14,  0.43,  0.76,  1.22};}
-  case 10: {return std::vector<double> {std::numeric_limits<double>::lowest(), -1.28, -0.84, -0.52, -0.25,  0.00,  0.25,  0.52,  0.84,  1.28};}
-  case 11: {return std::vector<double> {std::numeric_limits<double>::lowest(), -1.34, -0.91, -0.60, -0.35, -0.11,  0.11,  0.35,  0.60,  0.91, 1.34};}
-  case 12: {return std::vector<double> {std::numeric_limits<double>::lowest(), -1.38, -0.97, -0.67, -0.43, -0.21,  0.00,  0.21,  0.43,  0.67, 0.97, 1.38};}
-  case 13: {return std::vector<double> {std::numeric_limits<double>::lowest(), -1.43, -1.02, -0.74, -0.50, -0.29, -0.10,  0.10,  0.29,  0.50, 0.74, 1.02, 1.43};}
-  case 14: {return std::vector<double> {std::numeric_limits<double>::lowest(), -1.47, -1.07, -0.79, -0.57, -0.37, -0.18,  0.00,  0.18,  0.37, 0.57, 0.79, 1.07, 1.47};}
-  case 15: {return std::vector<double> {std::numeric_limits<double>::lowest(), -1.50, -1.11, -0.84, -0.62, -0.43, -0.25, -0.08,  0.08,  0.25, 0.43, 0.62, 0.84, 1.11, 1.5};}
-  case 16: {return std::vector<double> {std::numeric_limits<double>::lowest(), -1.53, -1.15, -0.89, -0.67, -0.49, -0.32, -0.16,  0.00,  0.16, 0.32, 0.49, 0.67, 0.89, 1.15, 1.53};}
-  case 17: {return std::vector<double> {std::numeric_limits<double>::lowest(), -1.56, -1.19, -0.93, -0.72, -0.54, -0.38, -0.22, -0.07,  0.07, 0.22, 0.38, 0.54, 0.72, 0.93, 1.19, 1.56};}
-  case 18: {return std::vector<double> {std::numeric_limits<double>::lowest(), -1.59, -1.22, -0.97, -0.76, -0.59, -0.43, -0.28, -0.14,  0.00, 0.14, 0.28, 0.43, 0.59, 0.76, 0.97, 1.22, 1.59};}
-  case 19: {return std::vector<double> {std::numeric_limits<double>::lowest(), -1.62, -1.25, -1.00, -0.80, -0.63, -0.48, -0.34, -0.20, -0.07, 0.07, 0.20, 0.34, 0.48, 0.63, 0.80, 1.00, 1.25, 1.62};}
-  case 20: {return std::vector<double> {std::numeric_limits<double>::lowest(), -1.64, -1.28, -1.04, -0.84, -0.67, -0.52, -0.39, -0.25, -0.13, 0.00, 0.13, 0.25, 0.39, 0.52, 0.67, 0.84, 1.04, 1.28, 1.64};}
+  case 3: {return std::vector<double> {std::numeric_limits<double>::lowest(), -0.4307273, 0.4307273};}
+  case 4: {return std::vector<double> {std::numeric_limits<double>::lowest(), -0.6744898, 0, 0.6744898};}
+  case 5: {return std::vector<double> {std::numeric_limits<double>::lowest(), -0.841621233572914,
+                                       -0.2533471031358, 0.2533471031358, 0.841621233572914};}
+  case 6: {return std::vector<double> {std::numeric_limits<double>::lowest(), -0.967421566101701,
+                                       -0.430727299295457, 0, 0.430727299295457, 0.967421566101701};}
+  case 7: {return std::vector<double> {std::numeric_limits<double>::lowest(), -1.06757052387814,
+       -0.565948821932863, -0.180012369792705, 0.180012369792705, 0.565948821932863, 1.06757052387814};}
+  case 8: {return std::vector<double> {std::numeric_limits<double>::lowest(), -1.15034938037601,
+                                       -0.674489750196082, -0.318639363964375,
+       0, 0.318639363964375, 0.674489750196082, 1.15034938037601};}
+  case 9: {return std::vector<double> {std::numeric_limits<double>::lowest(), -1.22064034884735,
+                                       -0.764709673786387, -0.430727299295457,
+       -0.139710298881862, 0.139710298881862, 0.430727299295457, 0.764709673786387,
+       1.22064034884735};}
+  case 10: {return std::vector<double> {std::numeric_limits<double>::lowest(), -1.2815515655446,
+                                        -0.841621233572914, -0.524400512708041,
+        -0.2533471031358, 0, 0.2533471031358, 0.524400512708041, 0.841621233572914, 1.2815515655446};}
+  case 11: {return std::vector<double> {std::numeric_limits<double>::lowest(), -1.33517773611894,
+                                        -0.908457868537385,
+        -0.604585346583237, -0.348755695517045, -0.114185294321428, 0.114185294321428,
+        0.348755695517045, 0.604585346583237, 0.908457868537385, 1.33517773611894};}
+  case 12: {return std::vector<double> {std::numeric_limits<double>::lowest(), -1.38299412710064,
+                                        -0.967421566101701,
+        -0.674489750196082, -0.430727299295457, -0.210428394247925, 0, 0.210428394247925,
+        0.430727299295457, 0.674489750196082, 0.967421566101701, 1.38299412710064};}
+  case 13: {return std::vector<double> {std::numeric_limits<double>::lowest(), -1.42607687227285,
+                                        -1.0200762327862, -0.736315917376129,
+        -0.502402223373355, -0.293381232121193, -0.0965586152896391, 0.0965586152896394,
+        0.293381232121194, 0.502402223373355, 0.73631591737613, 1.0200762327862, 1.42607687227285};}
+  case 14: {return std::vector<double> {std::numeric_limits<double>::lowest(), -1.46523379268552,
+                                        -1.06757052387814, -0.791638607743375,
+        -0.565948821932863, -0.36610635680057, -0.180012369792705, 0, 0.180012369792705,
+        0.36610635680057, 0.565948821932863, 0.791638607743375, 1.06757052387814, 1.46523379268552};}
+  case 15: {return std::vector<double> {std::numeric_limits<double>::lowest(), -1.50108594604402,
+                                        -1.11077161663679, -0.841621233572914,
+        -0.622925723210088, -0.430727299295457, -0.2533471031358, -0.0836517339071291,
+        0.0836517339071291, 0.2533471031358, 0.430727299295457, 0.622925723210088, 0.841621233572914,
+        1.11077161663679, 1.50108594604402};}
+  case 16: {return std::vector<double> {std::numeric_limits<double>::lowest(), -1.53412054435255,
+                                        -1.15034938037601, -0.887146559018876,
+        -0.674489750196082, -0.488776411114669, -0.318639363964375, -0.157310684610171, 0,
+        0.157310684610171, 0.318639363964375, 0.488776411114669, 0.674489750196082, 0.887146559018876,
+        1.15034938037601, 1.53412054435255};}
+  case 17: {return std::vector<double> {std::numeric_limits<double>::lowest(), -1.5647264713618,
+                                        -1.18683143275582, -0.928899491647271,
+        -0.721522283982343, -0.541395085129088, -0.377391943828554, -0.223007830940367,
+        -0.0737912738082727, 0.0737912738082727, 0.223007830940367, 0.377391943828554,
+        0.541395085129088, 0.721522283982343, 0.928899491647271, 1.18683143275582, 1.5647264713618};}
+  case 18: {return std::vector<double> {std::numeric_limits<double>::lowest(), -1.59321881802305,
+                                        -1.22064034884735, -0.967421566101701,
+        -0.764709673786387, -0.589455797849779, -0.430727299295457, -0.282216147062508,
+        -0.139710298881862, 0, 0.139710298881862, 0.282216147062508, 0.430727299295457,
+        0.589455797849779, 0.764709673786387, 0.967421566101701, 1.22064034884735, 1.59321881802305};}
+  case 19: {return std::vector<double> {std::numeric_limits<double>::lowest(), -1.61985625863827,
+                                        -1.25211952026522, -1.00314796766253,
+        -0.8045963803603, -0.633640000779701, -0.47950565333095, -0.336038140371823,
+        -0.199201324789267, -0.0660118123758407, 0.0660118123758406, 0.199201324789267,
+        0.336038140371823, 0.47950565333095, 0.633640000779701, 0.8045963803603, 1.00314796766253,
+        1.25211952026522, 1.61985625863827};}
+  case 20: {return std::vector<double> {std::numeric_limits<double>::lowest(), -1.64485362695147,
+                                        -1.2815515655446, -1.03643338949379,
+        -0.841621233572914, -0.674489750196082, -0.524400512708041, -0.385320466407568,
+        -0.2533471031358, -0.125661346855074, 0, 0.125661346855074, 0.2533471031358,
+        0.385320466407568, 0.524400512708041, 0.674489750196082, 0.841621233572914, 1.03643338949379,
+        1.2815515655446, 1.64485362695147};}
   default: { stop("'a_size' is invalid"); std::vector<double> {0.0}; }
   }
   return std::vector<double> {std::numeric_limits<double>::lowest(),  std::numeric_limits<double>::max()};
@@ -155,6 +238,8 @@ std::unordered_map<int, std::string> _sax_via_window(
     std::string nr_strategy, double n_threshold) {
 
   std::unordered_map<int, std::string> idx2word;
+  bool strategy_exact = is_equal_str("exact", nr_strategy);
+  bool strategy_mindist = is_equal_str("mindist", nr_strategy);
 
   std::string old_str;
 
@@ -172,10 +257,10 @@ std::unordered_map<int, std::string> _sax_via_window(
     std::string curr_str = _series_to_string(subSection, a_size);
 
     if (!(old_str.empty())) {
-      if ("exact"==nr_strategy && old_str==curr_str) {
+      if (strategy_exact && old_str==curr_str) {
         continue;
       }
-      else if ("mindist"==nr_strategy && is_equal_mindist(old_str, curr_str) ) {
+      else if (strategy_mindist && is_equal_mindist(old_str, curr_str) ) {
         continue;
       }
     }
@@ -205,46 +290,65 @@ std::unordered_map<int, std::string> _sax_via_window(
 //' Finding motifs in time series.
 //' In Proc. of the 2nd Workshop on Temporal Data Mining (pp. 53-68). (2002)
 // [[Rcpp::export]]
-std::map<int, CharacterVector> sax_via_window(
+std::map<int, std::string> sax_via_window(
     NumericVector ts, int w_size, int paa_size, int a_size,
     CharacterVector nr_strategy, double n_threshold) {
 
-  // Rcout << "ts of length " << ts.length();
-  // Rcout << ", win " << w_size;
-  // Rcout << ", paa " << paa_size;
-  // Rcout << ", a " << a_size;
-  // Rcout << ", nr_strategy '" << nr_strategy << "'";
-  // Rcout << ", n_th " << n_threshold << "\n";
+  std::vector<double> series = Rcpp::as< std::vector<double> > (ts);
+  bool strategy_exact = is_equal_str("exact", nr_strategy);
+  bool strategy_mindist = is_equal_str("mindist", nr_strategy);
 
-  std::map<int, CharacterVector> idx2word;
+  std::map<int, std::string> idx2word;
 
-  CharacterVector old_str("");
+  // std::ofstream bw("test_outR.txt");
 
-  for (int i = 0; i <= ts.length() - w_size; i++) {
+  std::string old_str("");
+
+  for (int i = 0; i <= series.size() - w_size; i++) {
 
     NumericVector subSection = subseries(ts, i, i + w_size);
+    std::vector<double>::const_iterator first = series.begin() + i;
+    std::vector<double>::const_iterator last = series.begin() + i + w_size;
+    std::vector<double> sub_section(first, last);
 
-    subSection = znorm(subSection, n_threshold);
+    // bw << i << "\t[" ;
+    // for (auto i = subSection.begin(); i != subSection.end(); ++i)
+    //   bw << *i << ',';
+    // bw << "]\t" ;
 
-    subSection = paa(subSection, paa_size);
+    sub_section = _znorm(sub_section, n_threshold);
 
-    CharacterVector curr_str = series_to_string(subSection, a_size);
+    sub_section = _paa(sub_section, paa_size);
+    // bw << "[" ;
+    // for (auto i = subSection.begin(); i != subSection.end(); ++i)
+    //   bw << *i << ',';
+    // bw << "]\t" ;
+
+    std::string curr_str = _series_to_string(sub_section, a_size);
+    // bw << curr_str << "\t" ;
 
     if (!(0 == old_str.length())) {
-      if ( is_equal_str("exact", nr_strategy)
-             && is_equal_str(old_str, curr_str) ) {
+      if ( strategy_exact
+             && old_str == curr_str ) {
+        // std::cout << std::endl;
+        // bw << "skipped\n" ;
         continue;
       }
-      else if (is_equal_str("mindist", nr_strategy)
+      else if (strategy_mindist
                  && is_equal_mindist(old_str, curr_str) ) {
+        // std::cout << std::endl;
         continue;
       }
     }
 
-    idx2word.insert(std::make_pair(i,curr_str));
+    idx2word.insert(std::make_pair(i, curr_str));
 
     old_str = curr_str;
+
+    // std::cout << " " << curr_str << std::endl;
+    // bw << "kept\n" ;
   }
+  // bw.close();
   return idx2word;
 }
 

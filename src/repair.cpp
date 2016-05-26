@@ -1,16 +1,27 @@
 #include <jmotif.h>
 using namespace Rcpp;
+//
+#include <iomanip>
+#include <chrono>
+#include <ctime>
+
+#include <string>
+#include <iostream>
+#include <sstream>
 
 std::unordered_map<int, rule_record*> _str_to_repair_grammar(std::string s) {
-
-  int str_length = _count_spaces(&s);
-
-  // the grammar keeper
-  std::map<int, repair_rule*> grammar;
 
   // define the objects we are working with
   std::string delimiter = " ";
   s.append(delimiter);
+
+  int str_length = _count_spaces(&s);
+
+  std::clock_t c_start0 = std::clock();
+  // Rcout << "input string of " << str_length << " tokens \n";
+
+  // the grammar keeper
+  std::map<int, repair_rule*> grammar;
 
   // the input string as a vector...
   // this will get transformed into the final R0 eventually
@@ -21,14 +32,12 @@ std::unordered_map<int, rule_record*> _str_to_repair_grammar(std::string s) {
   std::unordered_map<std::string, std::vector<int>> digram_table;
 
   // tokenizer variables and counters
+  std::stringstream ss_input(s);
   std::string old_token;
   std::string token;
   int token_counter = 0;
-  int pos = 0;
-  while ((pos = s.find(delimiter)) != std::string::npos) {
+  while (std::getline(ss_input, token, ' ')) {
 
-    // extract the token
-    token = s.substr(0, pos);
     // Rcout << "current token: " << token << std::endl;
 
     // create the symbol
@@ -56,30 +65,28 @@ std::unordered_map<int, rule_record*> _str_to_repair_grammar(std::string s) {
       rec->prev = r0[token_counter - 1];
     } // if digram needs to be created
 
-    // do the input string housekeeping
-    s.erase(0, pos + delimiter.length());
     old_token = token;
     token_counter++;
   }
 
   // DEBUG:: walk over the R0
-  //   Rcout << "\nthe R0: ";
-  //   repair_symbol_record* ptr = r0[0];
-  //   do {
-  //     Rcout << ptr->payload->payload << " ";
-  //     ptr = ptr->next;
-  //   } while(ptr != nullptr);
-  //   Rcout << std::endl;
+  //  Rcout << "\nthe R0: ";
+  //  repair_symbol_record* ptr = r0[0];
+  //  do {
+  //    Rcout << ptr->payload->payload << " ";
+  //    ptr = ptr->next;
+  //  } while(ptr != nullptr);
+  //  Rcout << std::endl;
 
   // DEBUG:: all digrams are accounted for... print their state
-//   Rcout << "\nthe digrams table\n=================" << std::endl;
-//   for(std::unordered_map<std::string, std::vector<int>>::iterator it = digram_table.begin();
-//       it != digram_table.end(); ++it) {
-//     Rcout << it->first << " [";
-//     for (auto i = it->second.begin(); i != it->second.end(); ++i)
-//       Rcout << *i << ", ";
-//     Rcout << "]" << std::endl;
-//   }
+  // Rcout << "\nthe digrams table\n=================" << std::endl;
+  // for(std::unordered_map<std::string, std::vector<int>>::iterator it = digram_table.begin();
+  //     it != digram_table.end(); ++it) {
+  //   Rcout << it->first << " [";
+  //   for (auto i = it->second.begin(); i != it->second.end(); ++i)
+  //     Rcout << *i << ", ";
+  //   Rcout << "]" << std::endl;
+  // }
 
   // populate the priority queue and the index -> digram record map
   repair_priority_queue digram_queue;
@@ -92,8 +99,8 @@ std::unordered_map<int, rule_record*> _str_to_repair_grammar(std::string s) {
   }
 
   // DEBUG:: all digrams are pushed to the queue, see those
-//   Rcout << "\nthe digrams queue\n=================" << std::endl;
-//   Rcout << digram_queue.to_string() << std::endl;
+  // Rcout << "\nthe digrams queue\n=================" << std::endl;
+  // Rcout << digram_queue.to_string() << std::endl;
 
 
   /// the main loop begins...
@@ -114,19 +121,19 @@ std::unordered_map<int, rule_record*> _str_to_repair_grammar(std::string s) {
       digram_table.find(entry->digram);
 
     // DEBUG:: a digram info message
-//     Rcout <<"\n *** popped digram: " << it->first << " [";
+    // Rcout <<"\n *** popped a digram: " << it->first << " [";
     for (auto i = it->second.begin(); i != it->second.end(); ++i) {
-//       Rcout << *i << ", ";
-      occurrences.push_back(*i);
+    //   Rcout << *i << ", ";
+       occurrences.push_back(*i);
     }
-//     Rcout << "]" << std::endl;
+    // Rcout << "]" << std::endl;
 
     // work on the NEW RULE construction
     repair_symbol_record* first_symbol = r0[it->second[0]];
     repair_symbol_record* second_symbol = first_symbol->next; // make sure we don't use an index
-    // Rcout << " *** the initial digram instance " << std::endl;
-    // Rcout << " *** " << first->payload->payload << " @" << first->payload->str_index;
-    // Rcout << " *** " << second->payload->payload << " @" << second->payload->str_index <<
+    // Rcout << "   * the very first digram instance " << std::endl;
+    // Rcout << "   * " << first_symbol->payload->payload << " @" << first_symbol->payload->str_index;
+    // Rcout << "   * " << second_symbol->payload->payload << " @" << second_symbol->payload->str_index <<
     // std::endl;
 
     repair_rule* r = new repair_rule();
@@ -159,11 +166,13 @@ std::unordered_map<int, rule_record*> _str_to_repair_grammar(std::string s) {
     grammar.insert(std::pair<int, repair_rule*>(r->id, r)); // voila
 
     // DEBUG:: the new rule info
-//     Rcout << "  ** the rule: " << r->get_rule_string() << " -> " <<
-//        r->expanded_rule_string << std::endl;
+    // Rcout << " *** created the rule: " << r->get_rule_string() << " -> "
+    //       << r->expanded_rule_string << std::endl;
 
     // we keep track of all newly created digrams
     std::unordered_set<std::string> new_digrams;
+
+    // Rcout << " *** starting occurrences loop ..." << std::endl;
 
     // digram occurrences processing, iterating over each position...
     while(!occurrences.empty()){
@@ -178,11 +187,11 @@ std::unordered_map<int, rule_record*> _str_to_repair_grammar(std::string s) {
       repair_symbol_record* curr_sym = r0[occ];
       repair_symbol_record* next_sym = curr_sym->next;
       repair_symbol* old_first = curr_sym->payload;
-//       Rcout << "    ** sym1: "
-//             << curr_sym->payload->to_string() << " @" << curr_sym->payload->str_index
-//             << " sym2: "
-//             << next_sym->payload->to_string() << " @" << next_sym->payload->str_index
-// << std::endl;
+      // Rcout << "    ** sym1: "
+      //       << curr_sym->payload->to_string() << " @" << curr_sym->payload->str_index
+      //       << " sym2: "
+      //       << next_sym->payload->to_string() << " @" << next_sym->payload->str_index
+      //       << std::endl;
 
       // make up a guard for the rule
       repair_guard* guard = new repair_guard(r, occ);
@@ -197,24 +206,24 @@ std::unordered_map<int, rule_record*> _str_to_repair_grammar(std::string s) {
       curr_sym->next = next_not_null;
       if( nullptr != next_not_null ){
         next_not_null->prev = curr_sym;
-//         Rcout << "    ** next not null at " << next_not_null->payload->str_index << ", "
-//               << next_not_null->payload->to_string() << std::endl;
+        // Rcout << "    ** next not null at " << next_not_null->payload->str_index << ", "
+        //       << next_not_null->payload->to_string() << std::endl;
       }
-//       else {
-//         Rcout << "    ** next is NULL" << std::endl;
-//       }
+      // else {
+      //   Rcout << "    ** next is NULL" << std::endl;
+      // }
 
       // and fixing the OLE prev symbol link
       repair_symbol_record* prev_not_null = curr_sym->prev;
       curr_sym->prev = prev_not_null;
       if(nullptr!=prev_not_null){
         prev_not_null->next = curr_sym;
-//         Rcout << "  *** prev not null at " << prev_not_null->payload->str_index << ": "
-//               << prev_not_null->payload->to_string() << std::endl;
+        // Rcout << "   ** prev not null at " << prev_not_null->payload->str_index << ": "
+        //       << prev_not_null->payload->to_string() << std::endl;
       }
-//       else {
-//         Rcout << "  *** prev is NULL" << std::endl;
-//       }
+      // else {
+      //   Rcout << "   ** prev is NULL" << std::endl;
+      // }
 
       // ### now need to fix the OLE left digram
       // ###
@@ -229,17 +238,17 @@ std::unordered_map<int, rule_record*> _str_to_repair_grammar(std::string s) {
           digram_table.find(ole_left_digram);
         int new_freq = it->second.size() - 1;
         // Rcout << "  *** old occurrences: ";
-//         for (auto i = it->second.begin(); i != it->second.end(); ++i)
-//           Rcout << *i << ' ';
-//         Rcout << std::endl;
+        // for (auto i = it->second.begin(); i != it->second.end(); ++i)
+        //   Rcout << *i << ' ';
+        // Rcout << std::endl;
 
         // clean up the specific index in the occurrences array
         it->second.erase(std::remove(it->second.begin(), it->second.end(),
                    prev_not_null->payload->str_index), it->second.end());
-//         Rcout << "  *** new occurrences: ";
-//         for (auto i = it->second.begin(); i != it->second.end(); ++i)
-//           Rcout << *i << ' ';
-//         Rcout << std::endl;
+        // Rcout << "  *** new occurrences: ";
+        // for (auto i = it->second.begin(); i != it->second.end(); ++i)
+        //   Rcout << *i << ' ';
+        // Rcout << std::endl;
 
         // take a look if the digram is actually the one we work with...
         if (0 == ole_left_digram.compare(entry->digram)) {
@@ -258,6 +267,7 @@ std::unordered_map<int, rule_record*> _str_to_repair_grammar(std::string s) {
         // if it was the last entry...
         if (0 == new_freq) {
           // Rcout << "  *** since new freq is 0, cleaning up ..." << std::endl;
+          if(ole_left_digram == "dbbc R439"){ Rcout << "ERASING (ole left digram) dbbc R439" << std::endl;}
           digram_table.erase(ole_left_digram);
           new_digrams.erase(ole_left_digram);
         }
@@ -279,24 +289,24 @@ std::unordered_map<int, rule_record*> _str_to_repair_grammar(std::string s) {
       }
 
       // walk over the R0
-//       Rcout << "\nthe R0: ";
-//       ptr = r0[0];
-//       do {
-//         Rcout << ptr->payload->payload << " ";
-//         ptr = ptr->next;
-//       } while(ptr != nullptr);
-//       Rcout << std::endl;
-//       Rcout << "\nthe digrams table\n=================" << std::endl;
-//       for(std::unordered_map<std::string, std::vector<int>>::iterator it = digram_table.begin();
-//           it != digram_table.end(); ++it) {
-        // Rcout << it->first << " [";
-//         for (auto i = it->second.begin(); i != it->second.end(); ++i)
-//           Rcout << *i << ", ";
-//         Rcout << "]" << std::endl;
+      // Rcout << "\nthe R0: ";
+      // ptr = r0[0];
+      // do {
+      //   Rcout << ptr->payload->payload << " ";
+      //   ptr = ptr->next;
+      // } while(ptr != nullptr);
+      // Rcout << std::endl;
+      // Rcout << "\nthe digrams table\n=================" << std::endl;
+      // for(std::unordered_map<std::string, std::vector<int>>::iterator it = digram_table.begin();
+      //     it != digram_table.end(); ++it) {
+      //   Rcout << it->first << " [";
+      //   for (auto i = it->second.begin(); i != it->second.end(); ++i)
+      //     Rcout << *i << ", ";
+      //   Rcout << "]" << std::endl;
       // }
       // all digrams are pushed to the queue, see those
-//       Rcout << "\nthe digrams queue\n=================" << std::endl;
-//       Rcout << digram_queue.to_string() << std::endl;
+      // Rcout << "\nthe digrams queue\n=================" << std::endl;
+      // Rcout << digram_queue.to_string() << std::endl;
 
       // ### now need to fix the OLE RIGHT digram
       // ###
@@ -316,31 +326,31 @@ std::unordered_map<int, rule_record*> _str_to_repair_grammar(std::string s) {
 
         int new_freq = it->second.size() - 1;
         // Rcout << "  *** old occurrences: ";
-//         for (auto i = it->second.begin(); i != it->second.end(); ++i)
-//           Rcout << *i << ' ';
-//         Rcout << std::endl;
+        // for (auto i = it->second.begin(); i != it->second.end(); ++i)
+        //   Rcout << *i << ' ';
+        // Rcout << std::endl;
 
         // clean up the specific index in the occurrences array
-//         Rcout << " **++* erasing  " << next_sym->payload->to_string() << " @" <<
-//           next_sym->payload->str_index << std::endl;
+        // Rcout << " **++* erasing  " << next_sym->payload->to_string() << " @" <<
+        //   next_sym->payload->str_index << std::endl;
         it->second.erase(std::remove(it->second.begin(), it->second.end(),
                       next_sym->payload->str_index), it->second.end());
-//         Rcout << "  *** new occurrences: ";
-//         for (auto i = it->second.begin(); i != it->second.end(); ++i)
-//           Rcout << *i << ' ';
-//         Rcout << std::endl;
+        // Rcout << "  *** new occurrences: ";
+        // for (auto i = it->second.begin(); i != it->second.end(); ++i)
+        //   Rcout << *i << ' ';
+        // Rcout << std::endl;
 
         // take a look if the digram is actually the one we work with...
         if (0 == ole_right_digram.compare(entry->digram)) {
-//           Rcout << "  ***** the old digram is like the new one, cleaning up ..." << std::endl;
-//           Rcout << "  *** old ext. loop: ";
-//           for (auto i = occurrences.begin(); i != occurrences.end(); ++i) Rcout << *i << ' ';
-//           Rcout << std::endl;
+        // Rcout << "  ***** the old digram is like the new one, cleaning up ..." << std::endl;
+        // Rcout << "  *** old ext. loop: ";
+        // for (auto i = occurrences.begin(); i != occurrences.end(); ++i) Rcout << *i << ' ';
+        // Rcout << std::endl;
           occurrences.erase(std::remove(occurrences.begin(), occurrences.end(),
                        next_sym->payload->str_index), occurrences.end());
-//           Rcout << "  *** new ext. loop: ";
-//           for (auto i = occurrences.begin(); i != occurrences.end(); ++i) Rcout << *i << ' ';
-//           Rcout << std::endl;
+        // Rcout << "  *** new ext. loop: ";
+        // for (auto i = occurrences.begin(); i != occurrences.end(); ++i) Rcout << *i << ' ';
+        // Rcout << std::endl;
         }
         digram_queue.update_digram_frequency(&ole_right_digram, new_freq);
 
@@ -375,54 +385,57 @@ std::unordered_map<int, rule_record*> _str_to_repair_grammar(std::string s) {
 
     // update the priority queue with new digrams ...
     //
-//     Rcout << "  *** new digrams size " << new_digrams.size() << " : ";
-//     for(std::string s : new_digrams)
-//       Rcout << s << ' ';
-//     Rcout << std::endl;
+    // Rcout << "  *** new digrams size " << new_digrams.size() << " : ";
+    // for(std::string s : new_digrams)
+    //   Rcout << s << ' ';
+    // Rcout << std::endl;
 
     for (std::string st : new_digrams) {
       // Rcout << "  *** checking on new digram " << st  << std::endl;
+      // if (digram_table.find(st) == digram_table.end()){
+      //   Rcout << "  ***XXX new digram " << st  << " not in da table " << std::endl;
+      // }
       if(digram_table[st].size() > 1){
+        // Rcout << "  *** digrams table has an entry for " << st  << std::endl;
         if(digram_queue.contains_digram(&st)){
-          // Rcout << "gotta update ... " << std::endl;
+          // Rcout << "      gotta update the queue entry ... " << std::endl;
           digram_queue.update_digram_frequency(&st, digram_table[st].size());
         } else {
-          // Rcout << "adding a digram ... " << std::endl;
+          // Rcout << "      enqueueing a digram ... " << st << ":" << digram_table[st].size() << std::endl;
           repair_digram* digram = new repair_digram( st, digram_table[st].size() );
           digram_queue.enqueue(digram);
         }
       }
     }
 
-
     // walk over the R0
-//     Rcout << "\n*** XXXXXX end of the loop ****\nR0: ";
-//     repair_symbol_record* ptr = r0[0];
-//     do {
-//       Rcout << ptr->payload->payload << " ";
-//       ptr = ptr->next;
-//     } while(ptr != nullptr);
-//     Rcout << std::endl;
-//     Rcout << "\nthe digrams table\n=================" << std::endl;
-//     for(std::unordered_map<std::string, std::vector<int>>::iterator it = digram_table.begin();
-//         it != digram_table.end(); ++it) {
-//       Rcout << it->first << " [";
-//       for (auto i = it->second.begin(); i != it->second.end(); ++i)
-//         Rcout << *i << ", ";
-//       Rcout << "]" << std::endl;
-//     }
+    // Rcout << "\n*** XXXXXX end of the loop ****\nR0: ";
+    // repair_symbol_record* ptr = r0[0];
+    // do {
+    //   Rcout << ptr->payload->payload << " ";
+    //   ptr = ptr->next;
+    // } while(ptr != nullptr);
+    // Rcout << std::endl;
+    // Rcout << "\nthe digrams table\n=================" << std::endl;
+    // for(std::unordered_map<std::string, std::vector<int>>::iterator it = digram_table.begin();
+    //     it != digram_table.end(); ++it) {
+    //   Rcout << it->first << " [";
+    //   for (auto i = it->second.begin(); i != it->second.end(); ++i)
+    //     Rcout << *i << ", ";
+    //   Rcout << "]" << std::endl;
+    // }
     // all digrams are pushed to the queue, see those
-//     Rcout << "\nthe digrams queue\n=================" << std::endl;
-//     Rcout << digram_queue.to_string() << std::endl;
-
+    // Rcout << "\nthe digrams queue\n=================" << std::endl;
+    // Rcout << digram_queue.to_string() << std::endl;
 
     entry = digram_queue.dequeue();
+    i++;
 
-      i++;
   }
 
   // make up the R0
   std::stringstream ss;
+  // repair_symbol_record*
   repair_symbol_record* ptr = r0[0];
   while(ptr != nullptr) {
     ss << ptr->payload->payload;
@@ -430,32 +443,32 @@ std::unordered_map<int, rule_record*> _str_to_repair_grammar(std::string s) {
     if(ptr != nullptr){  ss << " "; }
   };
 
-//   Rcout << "\n\nthe R0\n=================\n";
-//   Rcout << ss.str() << std::endl;
+  // Rcout << "\n\nthe R0\n=================\n";
+  // Rcout << ss.str() << std::endl;
 
   // Rcout << "\nthe digrams table\n=================" << std::endl;
-//   for(std::unordered_map<std::string, std::vector<int>>::iterator it = digram_table.begin();
-//       it != digram_table.end(); ++it) {
-//     Rcout << it->first << " [";
-//     for (auto i = it->second.begin(); i != it->second.end(); ++i)
-//       Rcout << *i << ", ";
-//     Rcout << "]" << std::endl;
-//   }
+  // for(std::unordered_map<std::string, std::vector<int>>::iterator it = digram_table.begin();
+  //     it != digram_table.end(); ++it) {
+  //   Rcout << it->first << " [";
+  //   for (auto i = it->second.begin(); i != it->second.end(); ++i)
+  //     Rcout << *i << ", ";
+  //   Rcout << "]" << std::endl;
+  // }
 
   // all digrams are pushed to the queue, see those
-//   Rcout << "\nthe digrams queue\n=================" << std::endl;
-//   Rcout << digram_queue.to_string() << std::endl;
-//
-//   Rcout << "\nthe Grammar\n=================" << std::endl;
-//   for(std::map<int, repair_rule*>::iterator it = grammar.begin();
-//       it != grammar.end(); ++it) {
-//     Rcout << it->second->get_rule_string() << " : "
-//           << it->second->get_rule_string() << " : "
-//           << it->second->expanded_rule_string << " [";
-//     for (auto i = it->second->occurrences.begin(); i != it->second->occurrences.end(); ++i)
-//       Rcout << *i << ", ";
-//     Rcout << "]" << std::endl;
-//   }
+  // Rcout << "\nthe digrams queue\n=================" << std::endl;
+  // Rcout << digram_queue.to_string() << std::endl;
+
+  // Rcout << "\nthe Grammar\n=================" << std::endl;
+  // for(std::map<int, repair_rule*>::iterator it = grammar.begin();
+  //     it != grammar.end(); ++it) {
+  //   Rcout << it->second->get_rule_string() << " : "
+  //         << it->second->get_rule_string() << " : "
+  //         << it->second->expanded_rule_string << " [";
+  //   for (auto i = it->second->occurrences.begin(); i != it->second->occurrences.end(); ++i)
+  //     Rcout << *i << ", ";
+  //   Rcout << "]" << std::endl;
+  // }
 
   // make results
   std::unordered_map<int, rule_record*> res;

@@ -191,7 +191,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // sax_via_window
-std::map<int, CharacterVector> sax_via_window(NumericVector ts, int w_size, int paa_size, int a_size, CharacterVector nr_strategy, double n_threshold);
+std::map<int, std::string> sax_via_window(NumericVector ts, int w_size, int paa_size, int a_size, CharacterVector nr_strategy, double n_threshold);
 RcppExport SEXP jmotif_sax_via_window(SEXP tsSEXP, SEXP w_sizeSEXP, SEXP paa_sizeSEXP, SEXP a_sizeSEXP, SEXP nr_strategySEXP, SEXP n_thresholdSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;

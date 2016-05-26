@@ -25,7 +25,7 @@ CharacterVector series_to_chars(NumericVector ts, int a_size);
 //
 CharacterVector series_to_string(NumericVector ts, int a_size);
 //
-std::map<int, CharacterVector> sax_via_window(NumericVector ts, int w_size, int paa_size, int a_size,
+std::map<int, std::string> sax_via_window(NumericVector ts, int w_size, int paa_size, int a_size,
     CharacterVector nr_strategy, double n_threshold);
 //
 std::map<int, CharacterVector> sax_by_chunking(NumericVector ts, int paa_size,
@@ -172,6 +172,9 @@ public:
   repair_digram(const std::string str, int index);
 };
 
+//
+// the priority queue (a dobly-linked list) node
+//
 class repair_pqueue_node {
 public:
   repair_pqueue_node* prev;
@@ -189,15 +192,18 @@ public:
   }
 };
 
+//
+// the priority queue taking care about repair digrams ordering
+//
 class repair_priority_queue {
 public:
-  repair_pqueue_node* queue_head;
-  std::unordered_map<std::string, repair_pqueue_node*> nodes;
+  repair_pqueue_node* queue_head; // queue head pointer
+  std::unordered_map<std::string, repair_pqueue_node*> nodes; // the fastmap <digram> -> <node>
   repair_priority_queue() {
     queue_head = nullptr;
     std::unordered_map<std::string, repair_pqueue_node*> nodes;
   }
-  repair_digram* enqueue( repair_digram* digram );
+  repair_digram* enqueue(repair_digram* digram);
   repair_digram* dequeue();
   repair_digram* peek();
   repair_digram* get(std::string *digram_string);
@@ -206,6 +212,7 @@ public:
   std::vector<repair_digram> to_array();
   void remove_node(repair_pqueue_node* node);
   std::string to_string();
+  bool consistency_check();
 };
 
 //
