@@ -17,7 +17,7 @@ std::unordered_map<int, rule_record*> _str_to_repair_grammar(std::string s) {
 
   int str_length = _count_spaces(&s);
 
-  std::clock_t c_start0 = std::clock();
+  // std::clock_t c_start0 = std::clock();
   // Rcout << "input string of " << str_length << " tokens \n";
 
   // the grammar keeper
