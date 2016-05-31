@@ -152,7 +152,7 @@ Rcpp::DataFrame find_discords_hotsax(NumericVector ts, int w_size, int paa_size,
     std::vector<double> sub_section(first, last);
 
     sub_section = _znorm(sub_section, n_threshold);
-    sub_section = _paa(sub_section, paa_size);
+    sub_section = _paa2(sub_section, paa_size);
     std::string curr_str = _series_to_string(sub_section, a_size);
 
     idx2word.insert(std::make_pair(i, curr_str));
