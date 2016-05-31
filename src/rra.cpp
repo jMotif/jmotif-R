@@ -20,7 +20,7 @@ struct sort_intervals {
   }
 };
 
-double normalized_distance(int start1, int end1, int start2, int end2, std::vector<double> *series){
+double _normalized_distance(int start1, int end1, int start2, int end2, std::vector<double> *series){
 
   double res = 0;
   int count = 0;
@@ -65,7 +65,7 @@ double normalized_distance(int start1, int end1, int start2, int end2, std::vect
   }
 }
 
-double shrinked_distance(int start1, int end1, int start2, int end2, std::vector<double> *series){
+double _shrinked_distance(int start1, int end1, int start2, int end2, std::vector<double> *series){
 
   double res = 0;
   int count = 0;
@@ -104,8 +104,8 @@ rra_discord_record find_best_rra_discord(std::vector<double> *ts, int w_size,
       std::unordered_set<int> *global_visited_positions){
 
   // *****
-  std::chrono::time_point<std::chrono::system_clock> tstart0, tstart, tend;
-  tstart0 = std::chrono::system_clock::now();
+  // std::chrono::time_point<std::chrono::system_clock> tstart0, tstart, tend;
+  // tstart0 = std::chrono::system_clock::now();
   int distance_calls_counter = 0;
 
   std::vector<int> visit_array(ts->size(), -1);
@@ -124,7 +124,7 @@ rra_discord_record find_best_rra_discord(std::vector<double> *ts, int w_size,
   for(int i = 0; i < intervals->size(); i++){
 
     // ****
-    tstart = std::chrono::system_clock::now();
+    // tstart = std::chrono::system_clock::now();
 
     rule_interval c_interval = intervals->at(i);
 
@@ -174,7 +174,7 @@ rra_discord_record find_best_rra_discord(std::vector<double> *ts, int w_size,
         // Rcout << "    examining a candidate at " << start << "-" <<
         //  end << std::endl;
         distance_calls_counter++;
-        double dist = normalized_distance(c_interval.start, c_interval.end,
+        double dist = _normalized_distance(c_interval.start, c_interval.end,
                                           start, end, ts);
         // keep track of best so far distance
         if (dist < nn_distance) {
@@ -240,7 +240,7 @@ rra_discord_record find_best_rra_discord(std::vector<double> *ts, int w_size,
         //  randomInterval.end << ", cindex " << cIndex << std::endl;
 
         distance_calls_counter++;
-        double dist = normalized_distance(c_interval.start, c_interval.end,
+        double dist = _normalized_distance(c_interval.start, c_interval.end,
                         randomInterval.start, randomInterval.end, ts);
         if (dist < bestSoFarDistance) {
           // Rcout << "    dist " << dist <<
@@ -311,9 +311,9 @@ Rcpp::DataFrame find_discords_rra(NumericVector series, int w_size, int paa_size
   int discords_num){
 
   // *****
-  std::chrono::time_point<std::chrono::system_clock> tstart0, tstart, tend;
-  tstart0 = std::chrono::system_clock::now();
-  tstart = std::chrono::system_clock::now();
+  // std::chrono::time_point<std::chrono::system_clock> tstart0, tstart, tend;
+  // tstart0 = std::chrono::system_clock::now();
+  // tstart = std::chrono::system_clock::now();
 
   std::vector<double> ts = Rcpp::as<std::vector<double>>(series);
   std::vector<int> visit_array(ts.size(), -1);
@@ -322,12 +322,10 @@ Rcpp::DataFrame find_discords_rra(NumericVector series, int w_size, int paa_size
     ts, w_size, paa_size, a_size, Rcpp::as<std::string>(nr_strategy), n_threshold);
 
   // ****
-  tend = std::chrono::system_clock::now();
-  std::chrono::duration<double> elapsed_seconds = tend - tstart;
-  Rcout << "  sax conversion: " << elapsed_seconds.count() << "s\n";
-
-  // *****
-  tstart = std::chrono::system_clock::now();
+  // tend = std::chrono::system_clock::now();
+  // std::chrono::duration<double> elapsed_seconds = tend - tstart;
+  // Rcout << "  sax conversion: " << elapsed_seconds.count() << "s\n";
+  // tstart = std::chrono::system_clock::now();
 
   // sax_map maps time-series positions to corresponding SAX words
   // to compose the string we need to order keys
@@ -339,7 +337,7 @@ Rcpp::DataFrame find_discords_rra(NumericVector series, int w_size, int paa_size
     i++;
   }
   sort( indexes.begin(), indexes.end() );
-  Rcout << "  there are " << indexes.size() << " SAX words..." << std::endl;
+  // Rcout << "  there are " << indexes.size() << " SAX words..." << std::endl;
 
   // now compose the string
   //
@@ -350,23 +348,23 @@ Rcpp::DataFrame find_discords_rra(NumericVector series, int w_size, int paa_size
   sax_str.erase( sax_str.end()-1 );
 
   // ****
-  tend = std::chrono::system_clock::now();
-  elapsed_seconds = tend - tstart;
-  Rcout << "  sax string composition: " << elapsed_seconds.count() << "s\n";
+  // tend = std::chrono::system_clock::now();
+  // elapsed_seconds = tend - tstart;
+  // Rcout << "  sax string composition: " << elapsed_seconds.count() << "s\n";
 
   // grammar
   //
   // *****
-  tstart = std::chrono::system_clock::now();
+  // tstart = std::chrono::system_clock::now();
   std::unordered_map<int, rule_record*> grammar = _str_to_repair_grammar(sax_str);
   // ****
-  tend = std::chrono::system_clock::now();
-  elapsed_seconds = tend - tstart;
-  Rcout << "  grammar inferred in: " << elapsed_seconds.count() << "s\n";
-  Rcout << "  there are " << grammar.size() << " RePair rules including R0..." << std::endl;
+  // tend = std::chrono::system_clock::now();
+  // elapsed_seconds = tend - tstart;
+  // Rcout << "  grammar inferred in: " << elapsed_seconds.count() << "s\n";
+  // Rcout << "  there are " << grammar.size() << " RePair rules including R0..." << std::endl;
 
   // *****
-  tstart = std::chrono::system_clock::now();
+  // tstart = std::chrono::system_clock::now();
 
   // making intervals and ranking by the rule use
   // meanwhile build the coverage curve
@@ -429,18 +427,18 @@ Rcpp::DataFrame find_discords_rra(NumericVector series, int w_size, int paa_size
 
 
   // ******
-  tend = std::chrono::system_clock::now();
-  elapsed_seconds = tend - tstart;
-  Rcout << "  there are " << intervals.size() <<" rule intervals inferred in "
-        << elapsed_seconds.count() << std::endl;
-  Rcout << "  top coverage for interval of rule " << intervals[0].rule_id << " starting at "
-        << intervals[0].start << " ending at " << intervals[0].end << " : " << intervals[0].cover
-        << std::endl;
+  // tend = std::chrono::system_clock::now();
+  // elapsed_seconds = tend - tstart;
+  // Rcout << "  there are " << intervals.size() <<" rule intervals inferred in "
+  //       << elapsed_seconds.count() << std::endl;
+  // Rcout << "  top coverage for interval of rule " << intervals[0].rule_id << " starting at "
+  //       << intervals[0].start << " ending at " << intervals[0].end << " : " << intervals[0].cover
+  //       << std::endl;
   int last_idx = intervals.size() - 1;
-  Rcout << "  bottom coverage for interval of rule " << intervals[last_idx].rule_id
-        << " starting at " << intervals[last_idx].start << " ending at " << intervals[last_idx].end
-        << " : " << intervals[last_idx].cover << std::endl;
-  tstart = std::chrono::system_clock::now();
+  // Rcout << "  bottom coverage for interval of rule " << intervals[last_idx].rule_id
+  //       << " starting at " << intervals[last_idx].start << " ending at " << intervals[last_idx].end
+  //       << " : " << intervals[last_idx].cover << std::endl;
+  // tstart = std::chrono::system_clock::now();
 
   // from here on we'll be calling find best discord...
   std::unordered_set<int> global_visited_positions;
@@ -450,7 +448,7 @@ Rcpp::DataFrame find_discords_rra(NumericVector series, int w_size, int paa_size
 
   while(discords.size() < discords_num){
 
-    tstart = std::chrono::system_clock::now();
+    // tstart = std::chrono::system_clock::now();
 
     rra_discord_record d = find_best_rra_discord(&ts, w_size, &grammar,
                               &indexes, &intervals, &global_visited_positions);
@@ -473,10 +471,10 @@ Rcpp::DataFrame find_discords_rra(NumericVector series, int w_size, int paa_size
     }
 
     // *****
-    tend = std::chrono::system_clock::now();
-    elapsed_seconds = tend - tstart;
-    Rcout << "  search for discord " << discords.size() - 1 <<" finished in "
-          << elapsed_seconds.count() << std::endl;
+    // tend = std::chrono::system_clock::now();
+    // elapsed_seconds = tend - tstart;
+    // Rcout << "  search for discord " << discords.size() - 1 <<" finished in "
+    //       << elapsed_seconds.count() << std::endl;
   }
 
 //   tend = std::chrono::system_clock::now();

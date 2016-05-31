@@ -8,6 +8,7 @@ discord_record find_best_discord_hotsax(std::vector<double>* ts, int w_size,
           std::unordered_map<std::string, std::vector<int>>* word2indexes,
           std::multimap<int, std::string>* ordered_words, VisitRegistry* globalRegistry) {
 
+  int distance_calls = 0;
   // searching for the discord
   //
   double best_so_far_distance = 0;
@@ -54,6 +55,8 @@ discord_record find_best_discord_hotsax(std::vector<double>* ts, int w_size,
           std::vector<double> curr_seq(first, last);
 
           double dist = _euclidean_dist(&candidate_seq, &curr_seq);
+          distance_calls++;
+
           if(dist < nnDistance){
             nnDistance = dist;
           }
@@ -83,6 +86,8 @@ discord_record find_best_discord_hotsax(std::vector<double>* ts, int w_size,
             std::vector<double> curr_seq(first, last);
 
             double dist = _euclidean_dist(&candidate_seq, &curr_seq);
+            distance_calls++;
+
             if(dist < nnDistance){
               nnDistance = dist;
             }
@@ -109,6 +114,8 @@ discord_record find_best_discord_hotsax(std::vector<double>* ts, int w_size,
     }
 
   }
+
+  Rcout << "  distance calls: " << distance_calls << std::endl;
 
   struct discord_record res;
   res.index = best_so_far_index;
