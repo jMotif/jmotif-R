@@ -58,7 +58,7 @@ early_abandoned_dist <- function(seq1, seq2, upper_limit) {
 #' HOT SAX: Efficiently finding the most unusual time series subsequence.
 #' Proceeding ICDM '05 Proceedings of the Fifth IEEE International Conference on Data Mining
 #' @examples
-#' discords = find_discords_hotsax(ecg0606, 100, 4, 4, 0.01, 1)
+#' discords = find_discords_hotsax(ecg0606, 100, 3, 3, 0.01, 1)
 #' plot(ecg0606, type = "l", col = "cornflowerblue", main = "ECG 0606")
 #' lines(x=c(discords[1,2]:(discords[1,2]+100)),
 #'    y=ecg0606[discords[1,2]:(discords[1,2]+100)], col="red")

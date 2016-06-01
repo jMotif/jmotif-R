@@ -23,7 +23,7 @@ find_discords_hotsax(ts, w_size, paa_size, a_size, n_threshold, discords_num)
 Finds a discord with HOT-SAX.
 }
 \examples{
-discords = find_discords_hotsax(ecg0606, 100, 4, 4, 0.01, 1)
+discords = find_discords_hotsax(ecg0606, 100, 3, 3, 0.01, 1)
 plot(ecg0606, type = "l", col = "cornflowerblue", main = "ECG 0606")
 lines(x=c(discords[1,2]:(discords[1,2]+100)),
    y=ecg0606[discords[1,2]:(discords[1,2]+100)], col="red")
