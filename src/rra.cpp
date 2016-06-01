@@ -301,7 +301,7 @@ rra_discord_record find_best_rra_discord(std::vector<double> *ts, int w_size,
 //' SAX-VSM: Interpretable Time Series Classification Using SAX and Vector Space Model.,
 //' Data Mining (ICDM), 2013 IEEE 13th International Conference on.
 //' @examples
-//' discords = find_discords_rra(ecg0606, 100, 4, 4, "exact", 0.01, 1)
+//' discords = find_discords_rra(ecg0606, 100, 4, 4, "none", 0.01, 1)
 //' plot(ecg0606, type = "l", col = "cornflowerblue", main = "ECG 0606")
 //' lines(x=c(discords[1,2]:(discords[1,2]+100)),
 //'    y=ecg0606[discords[1,2]:(discords[1,2]+100)], col="red")
