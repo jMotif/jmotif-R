@@ -19,6 +19,6 @@ test_that("find discord with HOT SAX", {
     }
   }
 
-  assertthat::are_equal(sax_string, sub("\\s+$", "", uncompressed_R0))
+  expect_equal(sax_string, sub("\\s+$", "", uncompressed_R0))
 
 })
