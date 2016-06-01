@@ -13,8 +13,6 @@ before_install:
   - sudo ln -sf /usr/bin/gcov-4.8 /usr/bin/gcov
   - mkdir ~/.R
   - echo -e "CC=gcc-4.8 -std=gnu99\nCXX=g++-4.8 -std=c++11\nCXX1X=g++-4.8\n" > ~/.R/Makevars
-  - echo -e "CFLAGS += -g -O2 -Wall -pipe -pedantic -std=gnu99\n" >> ~/.R/Makevars
-  - echo -e "CXXFLAGS += -g -O2 -Wall -pipe -Wno-unused -pedantic\n" >> ~/.R/Makevars
 
 r_github_packages:
   - jimhester/covr
