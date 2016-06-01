@@ -148,7 +148,7 @@ rra_discord_record find_best_rra_discord(std::vector<double> *ts, int w_size,
       markEnd = ts->size();
     }
     for(int j=markStart;j<markEnd;j++){
-      visited_locations.insert(j);
+      visited_locations.emplace(j);
     }
 
     // initialize the distance
@@ -169,7 +169,7 @@ rra_discord_record find_best_rra_discord(std::vector<double> *ts, int w_size,
       int start = indexes->at(it->first);
       auto found = visited_locations.find(start);
       if (found == visited_locations.end()) {
-        visited_locations.insert(start);
+        visited_locations.emplace(start);
         int end = indexes->at(it->second) + w_size;
         // Rcout << "    examining a candidate at " << start << "-" <<
         //  end << std::endl;
@@ -275,7 +275,7 @@ rra_discord_record find_best_rra_discord(std::vector<double> *ts, int w_size,
 
   }
 
-  Rcout << "  distance calls: " << distance_calls_counter << std::endl;
+  Rcout << "  RRA, distance calls: " << distance_calls_counter << std::endl;
 
   rra_discord_record res;
   res.rule = bestSoFarRule;
@@ -398,6 +398,11 @@ Rcpp::DataFrame find_discords_rra(NumericVector series, int w_size, int paa_size
 
   // we need to examine the coverage curve for continous zero intervals and mark those
   //
+  rule_record* rec_zero_cover = new rule_record();
+  rec_zero_cover->rule_id = -1;
+  rec_zero_cover->rule_string = "xxx";
+  rec_zero_cover->expanded_rule_string = "xxx";
+  bool need_placement = false;
   int start = -1;
   bool in_interval = false;
   for (int i = 0; i < coverage_array.size(); i++) {
@@ -406,15 +411,28 @@ Rcpp::DataFrame find_discords_rra(NumericVector series, int w_size, int paa_size
       in_interval = true;
     }
     if (coverage_array[i] > 0 && in_interval) {
+
+      need_placement = true;
+
       rule_interval ri;
       ri.cover=0;
       ri.start = start;
       ri.end=i;
       ri.rule_id=-1;
       intervals.push_back(ri);
+
+      rec_zero_cover->rule_occurrences.push_back(start);
+      rec_zero_cover->rule_intervals.push_back(std::make_pair(start, i));
+
+      intervals.push_back(ri);
+
       in_interval = false;
       // Rcout << " zero coverage from " << start << " to " << i << std::endl;
     }
+  }
+
+  if(need_placement) {
+    grammar.emplace(std::make_pair(-1, rec_zero_cover));
   }
 
   // compute the coverage
@@ -434,7 +452,7 @@ Rcpp::DataFrame find_discords_rra(NumericVector series, int w_size, int paa_size
   // Rcout << "  top coverage for interval of rule " << intervals[0].rule_id << " starting at "
   //       << intervals[0].start << " ending at " << intervals[0].end << " : " << intervals[0].cover
   //       << std::endl;
-  int last_idx = intervals.size() - 1;
+  // int last_idx = intervals.size() - 1;
   // Rcout << "  bottom coverage for interval of rule " << intervals[last_idx].rule_id
   //       << " starting at " << intervals[last_idx].start << " ending at " << intervals[last_idx].end
   //       << " : " << intervals[last_idx].cover << std::endl;
@@ -442,7 +460,7 @@ Rcpp::DataFrame find_discords_rra(NumericVector series, int w_size, int paa_size
 
   // from here on we'll be calling find best discord...
   std::unordered_set<int> global_visited_positions;
-  global_visited_positions.reserve(ts.size());
+  // global_visited_positions.reserve(ts.size());
 
   std::vector<rra_discord_record> discords;
 
@@ -467,7 +485,7 @@ Rcpp::DataFrame find_discords_rra(NumericVector series, int w_size, int paa_size
       markEnd = ts.size();
     }
     for(int j=markStart;j<markEnd;j++){
-      global_visited_positions.insert(j);
+      global_visited_positions.emplace(j);
     }
 
     // *****
