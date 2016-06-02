@@ -36,7 +36,7 @@ which(density_curve == min(density_curve))
 min_values <- data.frame(x = c(444:476), y = rep(0, (476 - 443)))
 
 density_df <- data.frame(time = c(1:length(density_curve)), value = density_curve)
-shade <- rbind(c(0,0), density_df, c(2229,0))
+shade <- rbind(c(0, 0), density_df, c(2229, 0))
 names(shade) <- c("x", "y")
 p2 <- ggplot(density_df, aes(x = time, y = value)) +
   geom_line(col = "cyan2") + theme_classic() +
