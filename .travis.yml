@@ -9,7 +9,7 @@ before_install:
   - ./travis-tool.sh github_package hadley/testthat
   - sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
   - sudo apt-get -qq update
-  - sudo apt-get -qq install gcc-4.8 gfortran-4.8 ggcov
+  - sudo apt-get -qq install gcc-4.8 g++-4.8 gfortran-4.8 ggcov
   - sudo ln -sf /usr/bin/gcov-4.8 /usr/bin/gcov
   - mkdir ~/.R
   - echo -e "CC=gcc-4.8 -std=gnu99\nCXX=gcc-4.8 -std=c++11\nCXX1X=gcc-4.8\n" > ~/.R/Makevars

@@ -6,7 +6,7 @@
   a time series anomaly discovery.
 
 * Added RRA (Rare Rule Anomaly) algorithm implementation for grammar-based variable 
-  length time series anomaly discovery.
+  Elength time series anomaly discovery.
 
 # Version 1.0.2
 
