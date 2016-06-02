@@ -1,3 +1,13 @@
+# Version 1.0.3
+
+* Added the Re-Pair grammatical inference algorithm implementation.
+
+* Added grammatical "rule coverage" curve implementation facilitating 
+  a time series anomaly discovery.
+
+* Added RRA (Rare Rule Anomaly) algorithm implementation for grammatical 
+  inference-based time series anomly discovery.
+
 # Version 1.0.2
 
 * Added the HOT-SAX time series discord finding algorithm implementation.
