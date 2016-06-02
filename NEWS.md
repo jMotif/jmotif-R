@@ -5,8 +5,8 @@
 * Added grammatical "rule coverage" curve implementation facilitating 
   a time series anomaly discovery.
 
-* Added RRA (Rare Rule Anomaly) algorithm implementation for grammatical 
-  inference-based time series anomly discovery.
+* Added RRA (Rare Rule Anomaly) algorithm implementation for grammar-based variable 
+  length time series anomaly discovery.
 
 # Version 1.0.2
 
