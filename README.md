@@ -5,8 +5,8 @@
  * **[VSM](https://github.com/jMotif/jmotif-R#52-tfidf-weighting)**, i.e., Vector Space Model
  * **[SAX-VSM](https://github.com/jMotif/jmotif-R#70-hot-sax-algorithm-for-time-series-discord-discovery)**, an algorithm for interpretable time series classification (and parameters optimization)
  * **[RePair](https://github.com/jMotif/jmotif-R#70-grammatical-inference-with-repair)**, an algorithm for grammatical inference
- * **[rule density curve](https://github.com/jMotif/jmotif-R#80-rule-density-curve)**, an efficient technique for variable length approximate time series anomaly discovery
- * **[RRA](https://github.com/jMotif/jmotif-R#90-rare-rule-anomaly-algorithm)** (Rare Rule Anomaly), an algorithm for grammar-based variable length exact time series anomaly discovery
+ * **[Rule Density Curve](https://github.com/jMotif/jmotif-R#80-rule-density-curve)**, an efficient grammatical compression (i.e. [Kolmogorov Complexity](https://en.wikipedia.org/wiki/Kolmogorov_complexity)) -based technique for variable length approximate time series anomaly discovery
+ * **[RRA](https://github.com/jMotif/jmotif-R#90-rare-rule-anomaly-algorithm)** (Rare Rule Anomaly), a grammatical compression (i.e. [Kolmogorov Complexity](https://en.wikipedia.org/wiki/Kolmogorov_complexity)) -based algorithm for variable length exact time series anomaly discovery
 
 [![Build Status](https://travis-ci.org/jMotif/jmotif-R.svg?branch=master)](https://travis-ci.org/jMotif/jmotif-R)
 [![codecov.io](http://codecov.io/github/jMotif/jmotif-R/coverage.svg?branch=master)](http://codecov.io/github/jMotif/jmotif-R?branch=master)
