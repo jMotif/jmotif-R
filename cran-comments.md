@@ -1,21 +1,16 @@
-## Resubmission
+## Submission
 
-This is a re-submission of todays's rejected submission. In this version I have:
-
-* cleaned "RcppArmadillo" reference in the DESCRIPTION "Depends"
-
-This also fixes a previous submission error:
-
-* switched from system's RNG to the Armadillo's implementation.
+This is a submission of new library release implementing few new algorithms for time series 
+patterns discovery.
 
 ## Changes
 
-Second release with bug fixes and new functionality added (HOT-SAX algorithm).
+Third release with bug fixes, performance improvement, and new functionality.
 
 ## Test environments
 
-* Ubuntu LTS 13.04
-* Ubuntu LTS 12.04 (on travis-ci), R 3.2.2
+* Apple OS x86_64-apple-darwin13.4.0 (64-bit), R 3.2.3
+* Ubuntu LTS 12.04.5 (on travis-ci), R 3.2.2
 
 ## R CMD check results
 
