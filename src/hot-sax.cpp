@@ -123,7 +123,8 @@ discord_record find_best_discord_hotsax(std::vector<double>* ts, int w_size,
   return res;
 }
 
-//' Finds a discord with HOT-SAX.
+//' Finds a discord (i.e. time series anomaly) with HOT-SAX.
+//' Usually works the best with lower sizes of discretization parameters: PAA and Alphabet.
 //'
 //' @param ts the input timeseries.
 //' @param w_size the sliding window size.

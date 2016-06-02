@@ -44,7 +44,8 @@ early_abandoned_dist <- function(seq1, seq2, upper_limit) {
     .Call('jmotif_early_abandoned_dist', PACKAGE = 'jmotif', seq1, seq2, upper_limit)
 }
 
-#' Finds a discord with HOT-SAX.
+#' Finds a discord (i.e. time series anomaly) with HOT-SAX.
+#' Usually works the best with lower sizes of discretization parameters: PAA and Alphabet.
 #'
 #' @param ts the input timeseries.
 #' @param w_size the sliding window size.
@@ -98,7 +99,9 @@ str_to_repair_grammar <- function(str) {
     .Call('jmotif_str_to_repair_grammar', PACKAGE = 'jmotif', str)
 }
 
-#' Finds a discord with RRA.
+#' Finds a discord with RRA (Rare Rule Anomaly) algorithm.
+#' Usually works the best with higher than that for HOT-SAX sizes of discretization parameters
+#' (i.e., PAA and Alphabet sizes).
 #'
 #' @param series the input timeseries.
 #' @param w_size the sliding window size.

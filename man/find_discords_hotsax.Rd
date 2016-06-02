@@ -2,7 +2,8 @@
 % Please edit documentation in R/RcppExports.R
 \name{find_discords_hotsax}
 \alias{find_discords_hotsax}
-\title{Finds a discord with HOT-SAX.}
+\title{Finds a discord (i.e. time series anomaly) with HOT-SAX.
+Usually works the best with lower sizes of discretization parameters: PAA and Alphabet.}
 \usage{
 find_discords_hotsax(ts, w_size, paa_size, a_size, n_threshold, discords_num)
 }
@@ -20,7 +21,8 @@ find_discords_hotsax(ts, w_size, paa_size, a_size, n_threshold, discords_num)
 \item{discords_num}{the number of discords to report.}
 }
 \description{
-Finds a discord with HOT-SAX.
+Finds a discord (i.e. time series anomaly) with HOT-SAX.
+Usually works the best with lower sizes of discretization parameters: PAA and Alphabet.
 }
 \examples{
 discords = find_discords_hotsax(ecg0606, 100, 3, 3, 0.01, 1)

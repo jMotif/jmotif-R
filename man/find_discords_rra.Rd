@@ -2,7 +2,9 @@
 % Please edit documentation in R/RcppExports.R
 \name{find_discords_rra}
 \alias{find_discords_rra}
-\title{Finds a discord with RRA.}
+\title{Finds a discord with RRA (Rare Rule Anomaly) algorithm.
+Usually works the best with higher than that for HOT-SAX sizes of discretization parameters
+(i.e., PAA and Alphabet sizes).}
 \usage{
 find_discords_rra(series, w_size, paa_size, a_size, nr_strategy, n_threshold,
   discords_num)
@@ -23,7 +25,9 @@ find_discords_rra(series, w_size, paa_size, a_size, nr_strategy, n_threshold,
 \item{discords_num}{the number of discords to report.}
 }
 \description{
-Finds a discord with RRA.
+Finds a discord with RRA (Rare Rule Anomaly) algorithm.
+Usually works the best with higher than that for HOT-SAX sizes of discretization parameters
+(i.e., PAA and Alphabet sizes).
 }
 \examples{
 discords = find_discords_rra(ecg0606, 100, 4, 4, "none", 0.01, 1)

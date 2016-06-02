@@ -286,7 +286,9 @@ rra_discord_record find_best_rra_discord(std::vector<double> *ts, int w_size,
   return res;
 }
 
-//' Finds a discord with RRA.
+//' Finds a discord with RRA (Rare Rule Anomaly) algorithm.
+//' Usually works the best with higher than that for HOT-SAX sizes of discretization parameters
+//' (i.e., PAA and Alphabet sizes).
 //'
 //' @param series the input timeseries.
 //' @param w_size the sliding window size.
