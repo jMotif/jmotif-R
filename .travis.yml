@@ -17,11 +17,6 @@ before_install:
   - echo -e "CC=gcc-4.9 -std=gnu99\nCXX=g++-4.9 -std=c++11\nCXX1X=g++-4.9\n" > ~/.R/Makevars
   - echo -e "CXXFLAGS += -Werror -O0 -coverage\n" >> ~/.R/Makevars
 
-install:
-  # Install R packages
-  - ./travis-tool.sh r_binary_install rcpp rjsonio knitr ggplot2 png
-  - ./travis-tool.sh r_install yaml dplyr plyr stringr RcppArmadillo
-
 r_github_packages:
   - jimhester/covr
   - jimhester/lintr
