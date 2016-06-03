@@ -275,7 +275,7 @@ rra_discord_record find_best_rra_discord(std::vector<double> *ts, int w_size,
 
   }
 
-  Rcout << "  RRA, distance calls: " << distance_calls_counter << std::endl;
+  // Rcout << "  RRA, distance calls: " << distance_calls_counter << std::endl;
 
   rra_discord_record res;
   res.rule = bestSoFarRule;

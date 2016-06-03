@@ -115,7 +115,7 @@ discord_record find_best_discord_hotsax(std::vector<double>* ts, int w_size,
 
   }
 
-  Rcout << "  HOT-SAX, distance calls: " << distance_calls << std::endl;
+  // Rcout << "  HOT-SAX, distance calls: " << distance_calls << std::endl;
 
   struct discord_record res;
   res.index = best_so_far_index;
