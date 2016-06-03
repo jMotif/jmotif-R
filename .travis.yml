@@ -20,9 +20,7 @@ before_install:
 install:
   # Install R packages
   - ./travis-tool.sh r_binary_install rcpp rjsonio knitr ggplot2 png
-  - ./travis-tool.sh r_install yaml microbenchmark dplyr plyr stringr RcppArmadillo
-  - ./travis-tool.sh github_package hadley/pryr hadley/lineprof
-
+  - ./travis-tool.sh r_install yaml dplyr plyr stringr RcppArmadillo
 
 r_github_packages:
   - jimhester/covr
