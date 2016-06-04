@@ -1,4 +1,6 @@
-# Version 1.0.3
+# Version 1.0.2.9000
+
+* Pre-release
 
 * Added the Re-Pair grammatical inference algorithm implementation.
 

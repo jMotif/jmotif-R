@@ -534,7 +534,7 @@ Rcpp::List str_to_repair_grammar(CharacterVector str){
     Rcpp::CharacterVector expanded_rule_string = it->second->expanded_rule_string;
     Rcpp::NumericVector rule_interval_starts = Rcpp::wrap(it->second->rule_occurrences);
     Rcpp::NumericVector rule_interval_ends = rule_interval_starts +
-      _count_spaces(&it->second->expanded_rule_string);
+      _count_spaces(&(it->second->expanded_rule_string));
 
     res[it->first] = List::create(
       _["rule_name"]  = rule_name,
