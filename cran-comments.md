@@ -1,6 +1,6 @@
 ## Resubmission
 
-Fixed links. Now they are in "canonical" form.
+This is resubmission following up yesterday's rejection. Fixed links -- now they are in "canonical" form.
 
 ## Submission
 
