@@ -1,3 +1,7 @@
+## Resubmission
+
+Fixed links. Now they are in "canonical" form.
+
 ## Submission
 
 This is a submission of the new library release. Added implementation of few new algorithms 
