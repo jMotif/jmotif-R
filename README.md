@@ -10,7 +10,7 @@
 
 [![Build Status](https://travis-ci.org/jMotif/jmotif-R.svg?branch=master)](https://travis-ci.org/jMotif/jmotif-R)
 [![codecov.io](http://codecov.io/github/jMotif/jmotif-R/coverage.svg?branch=master)](http://codecov.io/github/jMotif/jmotif-R?branch=master)
-[![CRAN](http://www.r-pkg.org/badges/version/jmotif)](https://cran.rstudio.com/web/packages/jmotif/index.html)
+[![CRAN](http://www.r-pkg.org/badges/version/jmotif)](https://cran.r-project.org/package=jmotif)
 [![License](http://img.shields.io/:license-gpl2-green.svg)](http://www.gnu.org/licenses/gpl-2.0.html)
 [![Downloads](http://cranlogs.r-pkg.org/badges/jmotif?color=brightgreen)](https://github.com/jMotif/jmotif-R)
 
@@ -47,12 +47,12 @@ In Proc. ICDM (2005)
     library(devtools)
     install_github('jMotif/jmotif-R')
     
-to use the library, simply load it into R environment:
+to start using the library, simply load it into R environment:
 
     library(jmotif)
 
-#### 1.0 z-Normalization
-Z-normalization (`znorm(ts, threshold)`) is a common in time series pattern mining preprocessing step proposed by Goldin & Kannelakis whose goal is to allow the downstream analyses to focus on the time series structural similarities/differences instead of the signal amplitude.
+#### 1.0 Time series z-Normalization
+z-normalization (`znorm(ts, threshold)`) is a common to the field of time series patterns mining preprocessing step proposed by Goldin & Kannelakis which helps downstream analyses to focus on the time series structural features.
 
     x = seq(0, pi*4, 0.02)
     y = sin(x) * 5 + rnorm(length(x))
@@ -258,7 +258,7 @@ Using the weighted patterns obtained at the previous step and the cosine similar
     which((labels_test != labels_predicted))
 
 #### 6.0 SAX-VSM discretization parameters optimization
-Here I shall show how the classification task discretization parameters optimization can be done with third-party libraries, specifically [nloptr](https://cran.rstudio.com/web/packages/nloptr/index.html) which implements DIRECT and [cvTools](https://cran.rstudio.com/web/packages/cvTools/index.html) which facilitates CV process. But not forget the magic of [plyr](https://github.com/hadley/plyr)!!! So here is the code:
+Here I shall show how the classification task discretization parameters optimization can be done with third-party libraries, specifically [nloptr](https://cran.r-project.org/package=nloptr) which implements DIRECT and [cvTools](https://cran.r-project.org/package=cvTools) which facilitates CV process. But not forget the magic of [plyr](https://github.com/hadley/plyr)!!! So here is the code:
 
     library(plyr)
     library(cvTools)
@@ -582,7 +582,10 @@ and use RePar implementation to build the gramar curve:
 ![RePair rules density](https://raw.githubusercontent.com/jMotif/jmotif-R/master/inst/site/ecg_0606_repair_density.png)
 
 #### 9.0 Rare Rule Anomaly algorithm.
-RRA (i.e., Rare Rule Anomaly) algorithm extends the HOT-SAX algorithm leveraging grammar compression properties. In particular, it runs the same HOT-SAX outer and inner loops but (i) uses a diferent candidate subsequences pool which is (ii) ordered by different criterion.
+RRA (i.e., Rare Rule Anomaly) algorithm extends the HOT-SAX algorithm leveraging the grammatical compression properties (i.e. algorithmic, or Kolmogorov complexity properties). In contrast with the original algorithm, whose input is a set of time series subsequences extracted from the input time series via sliding window, RRA operates on the set of time series subsequences which correspond to a grammar' rules. The grammar, whose rules are used in RRA, is built by a grammar inference algorithm run on the set of tokens which are obtained by time series discretization with SAX and a aliding window. jmotif-R is using Re-Pair algorithm for grammatical inference. 
 
-Specifically, candidate subsequences are time series intervals corresponding to grammar rules (which naturally vary in length) and they are ordered by the corresponding grammar rule use (a grammar rule property which I utilize for the speed).
+Since each of the grammar rules consists of terminal and non-terminal tokens, the subsequences corresponding to rules naturaly vary in length. Moreover, due to the compression properties of utilized grammatical inference algorithm, which operates on digrams (i.e. pairs of subsequences extracted via sliding window), the amount of RRA input subsequences is usually significantly lower than those extracted via sliding window for HOT-SAX, which improves the complexity of HOT-SAX inner and outer loops by reducing the number of calls to the distance function. 
+
+In addition to the above, RRA uses a different heuristics for ordering the outer HOT-SAX loop: instead of ordering subsequences by their occurrence frequency, the rule-corresponding subsequences are ordered according to the "rule coverage" discussed above -- a value which reflects the compressibility of the subsequence. Naturally, we expect that incompressible subsequences correspond to anomalies.    
+
 
