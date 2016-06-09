@@ -165,9 +165,7 @@ Rcpp::DataFrame bags_to_tfidf(Rcpp::List data) {
         // if not found, create one
         std::vector<int> empty_counts(class_names.size());
         empty_counts[i] = curr_count;
-        char * new_key = new char [curr_word.size()+1];
-        std::copy(curr_word.begin(), curr_word.end(), new_key);
-        new_key[curr_word.size()] = '\0';
+        std::string new_key = curr_word;
         counts.insert(std::make_pair(new_key, empty_counts));
       } else {
         // if it was found, update the count array
@@ -206,9 +204,7 @@ Rcpp::DataFrame bags_to_tfidf(Rcpp::List data) {
   //
   std::map<std::string, NumericVector > tfidf;
   for(unsigned k=0;k<class_names.size();k++){
-    char * class_name_copy = new char [class_names[k].size()+1];
-    std::copy(class_names[k].begin(), class_names[k].end(), class_name_copy);
-    class_name_copy[class_names[k].size()] = '\0';
+    std::string class_name_copy = class_names[k];
     NumericVector new_values(non_zero_entries);
     tfidf.insert(std::make_pair(class_name_copy, new_values));
   }
@@ -232,9 +228,7 @@ Rcpp::DataFrame bags_to_tfidf(Rcpp::List data) {
     }
 
     // copy the word for the new key
-    char * word = new char [e_key.size()+1];
-    std::copy(e_key.begin(), e_key.end(), word);
-    word[e_key.size()] = '\0';
+    std::string word = e_key;
     res_words[counter] = word;
 
     // compute the tfidf for each of the elements
@@ -266,9 +260,7 @@ Rcpp::DataFrame bags_to_tfidf(Rcpp::List data) {
   CharacterVector df_names(class_names.size() + 1);
   df_names[0] = "words";
   for(unsigned k=0;k<class_names.size();k++){
-    char * class_name_copy = new char [class_names[k].size()+1];
-    std::copy(class_names[k].begin(), class_names[k].end(), class_name_copy);
-    class_name_copy[class_names[k].size()] = '\0';
+    std::string class_name_copy = class_names[k];
     df_names[k+1] = class_name_copy;
   }
 

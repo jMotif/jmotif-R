@@ -104,10 +104,12 @@ void repair_priority_queue::remove_node(repair_pqueue_node* node){
 
   // the head case
   if(nullptr == node->prev){
+    // Rcout << "  ++ it was a head...";
     // case if the queue size > 1
     if(nullptr != node->next){
       queue_head = node->next;
       queue_head->prev = nullptr;
+      // Rcout << "  ++ moved the head to " << queue_head->payload->digram << "\n";
     }
     // case when there is just a single element
     else {
@@ -117,6 +119,7 @@ void repair_priority_queue::remove_node(repair_pqueue_node* node){
 
   // the tail case
   else if (nullptr == node->next){
+    // Rcout << "  ++ it was a tail...";
     // obviously it is not the head too...
     node->prev->next = nullptr;
   }
@@ -124,6 +127,7 @@ void repair_priority_queue::remove_node(repair_pqueue_node* node){
   // all other cases, assumption is that prev and next are not nulls,
   // since we checked for these cases just above
   else{
+    // Rcout << "  ++ it was a middle node...";
     node->prev->next = node->next;
     node->next->prev = node->prev;
   }
@@ -139,15 +143,15 @@ repair_digram* repair_priority_queue::update_digram_frequency(
 
   // if element doesnt exist
   if (nodes.find(*digram_string) == nodes.end()) {
-    // Rcout << "  ++ attempted to correct the digram frequency for " << *digram_string <<
-    //   " but no node found..." << std::endl;
+//      Rcout << "  ++ attempted to correct the digram frequency for " << *digram_string <<
+//        " but no node found..." << std::endl;
     return nullptr;
   }
 
   // get a pointer on that node
   repair_pqueue_node* altered_node = nodes.find(*digram_string)->second;
-  // Rcout << "  ++ correcting the digram frequency for " << altered_node->payload->digram
-  //       << " from " << altered_node->payload->freq << " to " << new_value << std::endl;
+//   Rcout << "  ++ correcting the digram frequency for " << altered_node->payload->digram
+//         << " from " << altered_node->payload->freq << " to " << new_value << std::endl;
 
   // the trivial case
   if (new_value == altered_node->payload->freq) {
@@ -227,15 +231,21 @@ repair_digram* repair_priority_queue::update_digram_frequency(
 
     // going down..
     repair_pqueue_node* current_node = altered_node->next;
+    if (altered_node->payload->freq >= current_node->payload->freq) { // no need to go down
+      return altered_node->payload;
+    }
 
     remove_node(altered_node);
     altered_node->next = nullptr;
     altered_node->prev = nullptr;
 
+    int ctr = 0;
     while (nullptr != current_node->next &&
            current_node->payload->freq > altered_node->payload->freq) {
       current_node = current_node->next;
+      ctr++;
     }
+    // Rcout << " CTR: " << ctr;
 
     if (nullptr == current_node->next) { // we hit the tail
 
@@ -276,7 +286,9 @@ repair_digram* repair_priority_queue::update_digram_frequency(
     nodes.emplace(altered_node->payload->digram, altered_node);
   }
 
-  // consistency_check();
+  // Rcout << consistency_check();
+
+  // Rcout << to_string() << "\n";
 
   return altered_node->payload;
 

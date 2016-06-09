@@ -157,22 +157,24 @@ rra_discord_record find_best_rra_discord(std::vector<double> *ts, int w_size,
     // by default, we engage the random search
     bool do_random_search = true;
 
-    // Rcout << " considering interval " << c_interval.start << "-" << c_interval.end <<
-    //   " for rule " << c_interval.rule_id <<
-    //    ", best so far dist " << bestSoFarDistance << std::endl;
+//     Rcout << " considering interval " << c_interval.start << "-" << c_interval.end <<
+//       " for rule " << c_interval.rule_id <<
+//        ", best so far dist " << bestSoFarDistance << std::endl;
 
     auto this_rule_occurrences = grammar->at(c_interval.rule_id)->rule_intervals;
-    // Rcout << "   going to iterate over " << this_rule_occurrences.size() <<
-    //  " rule occurrences first " << std::endl;
+//     Rcout << "   going to iterate over " << this_rule_occurrences.size() <<
+//      " rule occurrences first " << std::endl;
 
     for(auto it=this_rule_occurrences.begin(); it !=this_rule_occurrences.end(); ++it) {
+      // Rcout << "0.0\n";
       int start = indexes->at(it->first);
+      // Rcout << "0.1" << start << "\n";
       auto found = visited_locations.find(start);
       if (found == visited_locations.end()) {
         visited_locations.emplace(start);
         int end = indexes->at(it->second) + w_size;
         // Rcout << "    examining a candidate at " << start << "-" <<
-        //  end << std::endl;
+         // end << std::endl;
         distance_calls_counter++;
         double dist = _normalized_distance(c_interval.start, c_interval.end,
                                           start, end, ts);
@@ -182,8 +184,8 @@ rra_discord_record find_best_rra_discord(std::vector<double> *ts, int w_size,
           nn_distance = dist;
         }
         if (dist < bestSoFarDistance) {
-          // Rcout << "   R " << c_interval.rule_id << ", dist " << dist <<
-          //  " is less than best so far, breaking off the search" << std::endl;
+//           Rcout << "   R " << c_interval.rule_id << ", dist " << dist <<
+//            " is less than best so far, breaking off the search" << std::endl;
           do_random_search = false;
           break;
         }
@@ -199,8 +201,8 @@ rra_discord_record find_best_rra_discord(std::vector<double> *ts, int w_size,
     // tstart = std::chrono::system_clock::now();
 
     if(do_random_search){
-      // Rcout << " starting the random search ..." <<
-      //   " nn dist " << nn_distance << std::endl;
+//       Rcout << " starting the random search ..." <<
+//         " nn dist " << nn_distance << std::endl;
       // Rcout << "visited locations ";
       // for(auto it=visited_locations.begin(); it != visited_locations.end(); ++it){
       //  Rcout << *it << ", ";
@@ -269,7 +271,7 @@ rra_discord_record find_best_rra_discord(std::vector<double> *ts, int w_size,
       bestSoFarLength = c_interval.end - c_interval.start;
       bestSoFarRule = c_interval.rule_id;
       // Rcout << "    updating the discord " << nn_distance << " at " << bestSoFarPosition <<
-      //  " of length " << bestSoFarLength << " for rule " << bestSoFarRule << std::endl;
+       // " of length " << bestSoFarLength << " for rule " << bestSoFarRule << std::endl;
     }
 
 
@@ -339,6 +341,7 @@ Rcpp::DataFrame find_discords_rra(NumericVector series, int w_size, int paa_size
     i++;
   }
   sort( indexes.begin(), indexes.end() );
+
   // Rcout << "  there are " << indexes.size() << " SAX words..." << std::endl;
 
   // now compose the string
@@ -359,6 +362,7 @@ Rcpp::DataFrame find_discords_rra(NumericVector series, int w_size, int paa_size
   // *****
   // tstart = std::chrono::system_clock::now();
   std::unordered_map<int, rule_record*> grammar = _str_to_repair_grammar(sax_str);
+
   // ****
   // tend = std::chrono::system_clock::now();
   // elapsed_seconds = tend - tstart;
@@ -472,6 +476,8 @@ Rcpp::DataFrame find_discords_rra(NumericVector series, int w_size, int paa_size
 
     rra_discord_record d = find_best_rra_discord(&ts, w_size, &grammar,
                               &indexes, &intervals, &global_visited_positions);
+    // Rcout << d.nn_distance;
+
     if(d.nn_distance<0){
       break;
     }
