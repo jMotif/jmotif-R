@@ -189,6 +189,9 @@ repair_digram* repair_priority_queue::update_digram_frequency(
 
     // in another case we need to traverse up and insert the altered node up there
     repair_pqueue_node* current_node = altered_node->prev;
+    if (altered_node->payload->freq <= current_node->payload->freq) { // no need to go up
+      return altered_node->payload;
+    }
 
     remove_node(altered_node);
     altered_node->next = nullptr;

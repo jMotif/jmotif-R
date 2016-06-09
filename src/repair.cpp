@@ -539,7 +539,7 @@ Rcpp::List str_to_repair_grammar(CharacterVector str){
     Rcpp::NumericVector rule_interval_starts = Rcpp::wrap(it->second->rule_occurrences);
     Rcpp::NumericVector rule_interval_ends(rule_interval_starts.length());
     int spaces_count = _count_spaces(&it->second->expanded_rule_string);
-    Rcout << "spaces: " <<spaces_count <<"\n";
+    // Rcout << "spaces: " <<spaces_count <<"\n";
     for(int j=0; j<rule_interval_starts.length(); ++j) {
      rule_interval_ends[j] = rule_interval_starts[j] + spaces_count;
     }
