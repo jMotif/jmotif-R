@@ -8,7 +8,7 @@ str_to_repair_grammar("adcc ccbb bbbd bbcb bdbb cbbc accb ccbb daba cbbc bbdb bc
 
 
 library(jmotif)
-str_to_repair_grammar("bbcb bdbb cbbc accb cdbb dbbb cbbd bccb bdab cbbc accb cdbb dbbb cbbd bbcb bdbb cbbc accc ccbb cbbd bbcb bdbb cbbc accb")
+str_to_repair_grammar("dacb bbbd bbcb bdbb cbbc accb ccbc dbba cbbc bbdb bcbb dbbc bbcb adcc ccbc daba cbbc bbdb bcbb dbbc bbcb adcb bdac dcbb cbbd bbcb bdbb cbbc accb cdbb dbbb cbbd bccb bdab cbbc accb cdbb dbbb cbbd bbcb bdbb cbbc accc ccbb cbbd bbcb bdbb cbbc accb")
 
 
 data = fread("/Users/psenin/workspace/grammarviz2_src/data/mitdb__100_180.txt")
@@ -22,3 +22,13 @@ for(i in c(2:95)){
 }
 
 source("http://bioconductor.org/biocLite.R")
+
+> library(jmotif)
+Warning message:
+package ‘Rcpp’ was built under R version 3.2.5 
+> bench <- microbenchmark(find_discords_rra(ecg0606, 100, 4, 4, "exact", 0.01, 4), find_discords_hotsax(ecg0606, 100, 4, 4, 0.01, 4), times=30L)
+> library(ggplot2)
+Warning message:
+package ‘ggplot2’ was built under R version 3.2.4 
+> autoplot(bench)
+> 
