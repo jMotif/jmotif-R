@@ -11,11 +11,7 @@ Depends:
     R (>= 3.1.0),
     Rcpp (>= 0.11.1)
 Imports:
-    stats,
-    grid,
-    lattice,
-    scatterplot3d,
-    reshape
+    stats
 Suggests:
     testthat
 LinkingTo:
