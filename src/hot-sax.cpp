@@ -4,7 +4,7 @@ using namespace Rcpp ;
 #include <jmotif.h>
 //
 
-discord_record find_best_discord_hotsax(std::vector<double>* ts, int w_size,
+discord_record find_best_discord_hotsax(std::vector<double>* ts, int w_size, double n_threshold,
           std::unordered_map<std::string, std::vector<int>>* word2indexes,
           std::multimap<int, std::string>* ordered_words, VisitRegistry* globalRegistry) {
 
@@ -34,7 +34,8 @@ discord_record find_best_discord_hotsax(std::vector<double>* ts, int w_size,
       // subseries extraction
       std::vector<double>::const_iterator first = ts->begin() + candidate_idx;
       std::vector<double>::const_iterator last = ts->begin() +  candidate_idx + w_size;
-      std::vector<double> candidate_seq(first, last);
+      std::vector<double> candidate_subseq(first, last);
+      std::vector<double> candidate_seq = _znorm(candidate_subseq, n_threshold);
 
       VisitRegistry innerRegistry(ts->size() - w_size);
       bool doRandomSearch = true;
@@ -52,7 +53,8 @@ discord_record find_best_discord_hotsax(std::vector<double>* ts, int w_size,
           // subseries extraction
           std::vector<double>::const_iterator first = ts->begin() + inner_idx;
           std::vector<double>::const_iterator last = ts->begin() + inner_idx + w_size;
-          std::vector<double> curr_seq(first, last);
+          std::vector<double> curr_subseq(first, last);
+          std::vector<double> curr_seq = _znorm(curr_subseq, n_threshold);
 
           double dist = _euclidean_dist(&candidate_seq, &curr_seq);
           distance_calls++;
@@ -83,7 +85,8 @@ discord_record find_best_discord_hotsax(std::vector<double>* ts, int w_size,
 
             std::vector<double>::const_iterator first = ts->begin() + inner_idx;
             std::vector<double>::const_iterator last = ts->begin() + inner_idx + w_size;
-            std::vector<double> curr_seq(first, last);
+            std::vector<double> curr_subseq(first, last);
+            std::vector<double> curr_seq = _znorm(curr_subseq, n_threshold);
 
             double dist = _euclidean_dist(&candidate_seq, &curr_seq);
             distance_calls++;
@@ -193,7 +196,7 @@ Rcpp::DataFrame find_discords_hotsax(NumericVector ts, int w_size, int paa_size,
   while(discord_counter < discords_num){
 
     discord_record rec = find_best_discord_hotsax(&series,
-                            w_size, &word2indexes, &ordered_words, &registry);
+                            w_size, n_threshold, &word2indexes, &ordered_words, &registry);
 
     if(rec.nn_distance == 0 || rec.index == -1){ break; }
 

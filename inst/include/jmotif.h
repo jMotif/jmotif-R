@@ -271,6 +271,5 @@ bool _is_equal_mindist(std::string a, std::string b);
 std::unordered_map<int, std::string> _sax_via_window(
     std::vector<double> ts, int w_size, int paa_size, int a_size,
     std::string nr_strategy, double n_threshold);
-//
 
 #endif
