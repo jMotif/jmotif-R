@@ -14,6 +14,8 @@
 [![CRAN](http://www.r-pkg.org/badges/version/jmotif)](https://cran.r-project.org/package=jmotif)
 [![License](http://img.shields.io/:license-gpl2-green.svg)](http://www.gnu.org/licenses/gpl-2.0.html)
 [![Downloads](http://cranlogs.r-pkg.org/badges/jmotif?color=brightgreen)](https://github.com/jMotif/jmotif-R)
+[![Downloads from Rstudio mirror per month](http://cranlogs.r-pkg.org/badges/jmotif)](http://www.r-pkg.org/pkg/jmotif)
+[![Downloads from Rstudio mirror](http://cranlogs.r-pkg.org/badges/grand-total/jmotif)](http://www.r-pkg.org/pkg/jmotif)
 
 #### References:
 
