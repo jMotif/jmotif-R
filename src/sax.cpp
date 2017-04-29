@@ -243,7 +243,16 @@ std::unordered_map<int, std::string> _sax_via_window(
 
   std::string old_str;
 
+  // Rcout << "series length " << ts.size() << ", window " << w_size << std::endl;
+
   for (int i = 0; i <= ts.size() - w_size; i++) {
+
+    // check if NA is encountered
+    int idx = i + w_size - 2;
+    if(R_IsNA(ts[idx])) {
+      // Rcout << "found an NA at " << idx << ", breaking on " << i << std::endl;
+      break;
+    }
 
     // subseries extraction
     std::vector<double>::const_iterator first = ts.begin() + i;

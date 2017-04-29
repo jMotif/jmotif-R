@@ -18,4 +18,3 @@ Gun_Point
 A standard UCR Gun Point dataset from http://www.cs.ucr.edu/~eamonn/time_series_data
 }
 \keyword{datasets}
-

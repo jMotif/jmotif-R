@@ -18,4 +18,3 @@ CBF
 A standard UCR Cylinder-Bell-Funnel dataset from http://www.cs.ucr.edu/~eamonn/time_series_data
 }
 \keyword{datasets}
-

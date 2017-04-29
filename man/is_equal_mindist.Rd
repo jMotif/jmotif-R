@@ -18,4 +18,3 @@ Compares two strings using mindist.
 is_equal_str("aaa", "bbb") # true
 is_equal_str("aaa", "ccc") # false
 }
-

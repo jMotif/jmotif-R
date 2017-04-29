@@ -23,4 +23,3 @@ Lonardi, S., Lin, J., Keogh, E., Patel, P.,
 Finding motifs in time series.
 In Proc. of the 2nd Workshop on Temporal Data Mining (pp. 53-68).
 }
-

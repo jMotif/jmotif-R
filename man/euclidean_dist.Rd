@@ -15,4 +15,3 @@ stops and the NAN is returned.}
 \description{
 Finds the Euclidean distance between points.
 }
-

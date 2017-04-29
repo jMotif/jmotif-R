@@ -19,4 +19,3 @@ str_to_repair_grammar("abc abc cba cba bac xxx abc abc cba cba bac")
 N.J. Larsson and A. Moffat. Offline dictionary-based compression.
 In Data Compression Conference, 1999.
 }
-

@@ -40,4 +40,3 @@ Senin Pavel and Malinchik Sergey,
 SAX-VSM: Interpretable Time Series Classification Using SAX and Vector Space Model.,
 Data Mining (ICDM), 2013 IEEE 13th International Conference on.
 }
-

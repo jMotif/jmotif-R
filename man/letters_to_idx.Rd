@@ -15,4 +15,3 @@ Get an ASCII indexes sequence for a given character array.
 \examples{
 letters_to_idx(c('a','b','c','a'))
 }
-

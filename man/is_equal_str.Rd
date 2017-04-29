@@ -18,4 +18,3 @@ Compares two strings using natural letter ordering.
 is_equal_str("aaa", "bbb")
 is_equal_str("ccc", "ccc")
 }
-

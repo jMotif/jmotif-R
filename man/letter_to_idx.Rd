@@ -16,4 +16,3 @@ Get the index for an ASCII letter.
 # letter 'b' translates to 2
 letter_to_idx('b')
 }
-

@@ -16,4 +16,3 @@ Get the ASCII letter by an index.
 # letter 'b'
 idx_to_letter(2)
 }
-

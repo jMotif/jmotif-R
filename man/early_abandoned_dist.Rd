@@ -19,4 +19,3 @@ stops and the NAN is returned.}
 Finds the Euclidean distance between points, if distance is above the threshold, abandons the computation
 and returns NAN.
 }
-

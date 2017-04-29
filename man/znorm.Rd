@@ -27,4 +27,3 @@ Dina Goldin and Paris Kanellakis,
 On similarity queries for time-series data: Constraint specification and implementation.
 In Principles and Practice of Constraint Programming (CP 1995), pages 137-153. (1995)
 }
-

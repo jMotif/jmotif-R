@@ -27,4 +27,3 @@ Keogh, E., Lin, J., Fu, A.,
 HOT SAX: Efficiently finding the most unusual time series subsequence.
 Proceeding ICDM '05 Proceedings of the Fifth IEEE International Conference on Data Mining
 }
-
