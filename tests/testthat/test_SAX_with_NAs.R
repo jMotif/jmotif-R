@@ -31,3 +31,25 @@ test_that("SAX with NAs", {
   expect_error(sax_via_window(dat, 70, 3, 3, "none", 0.01))
 
 })
+
+test_that("SAX with NAs #2, sax-vsm bags", {
+  w <- 60 # the sliding window size
+  p <- 6  # the PAA size
+  a <- 6  # the SAX alphabet size
+
+    cylinders <- CBF[["data_train"]][CBF[["labels_train"]] == 1,]
+
+    c <- cylinders[2,]
+  saxc <- series_to_wordbag(c, w, p, a, "none", 0.01)
+  cd <- c
+  cd[128] <- NA
+  saxcd <- series_to_wordbag(cd, w, p, a, "none", 0.01)
+
+  expect_equal(sum(saxc$counts), 69)
+  expect_equal(sum(saxcd$counts), 68)
+
+  cd[100] <- NA
+  saxcd <- series_to_wordbag(cd, w, p, a, "none", 0.01)
+  expect_equal(sum(saxcd$counts), 40)
+
+})

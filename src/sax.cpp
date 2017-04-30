@@ -252,9 +252,14 @@ std::unordered_map<int, std::string> _sax_via_window(
   for (int i = 0; i <= ts.size() - w_size; i++) {
 
     // check if NA is encountered
-    int idx = i + w_size - 2;
+    int idx = i + w_size - 1;
     if(R_IsNA(ts[idx])) {
-      // Rcout << "found an NA at " << idx << ", breaking on " << i << std::endl;
+      size_t size = std::snprintf(nullptr, 0, "encountered an Na and stopped processing at %i", i + w_size - 1) + 1;
+      std::unique_ptr<char[]> buf( new char[ size ] );
+      std::snprintf( buf.get(), size, "encountered an Na and stopped processing at %i", i + w_size - 1 );
+      Rcpp::warning(
+        std::string( buf.get(), buf.get() + size - 1 )
+      );
       break;
     }
 
@@ -331,9 +336,9 @@ std::map<int, std::string> sax_via_window(
     // check if NA is encountered
     int idx = i + w_size - 1;
     if(R_IsNA(ts[idx])) {
-      size_t size = std::snprintf(nullptr, 0, "encountered an Na and stopped processing at %i", i) + 1;
+      size_t size = std::snprintf(nullptr, 0, "encountered an Na and stopped processing at %i", i + w_size - 1) + 1;
       std::unique_ptr<char[]> buf( new char[ size ] );
-      std::snprintf( buf.get(), size, "encountered an Na and stopped processing at %i", i );
+      std::snprintf( buf.get(), size, "encountered an Na and stopped processing at %i", i + w_size - 1 );
       Rcpp::warning(
         std::string( buf.get(), buf.get() + size - 1 )
       );
