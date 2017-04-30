@@ -16,6 +16,9 @@
 [![Downloads from Rstudio mirror per month](http://cranlogs.r-pkg.org/badges/jmotif?color=brightgreen)](http://www.r-pkg.org/pkg/jmotif)
 [![Downloads from Rstudio mirror](http://cranlogs.r-pkg.org/badges/grand-total/jmotif?color=brightgreen)](http://www.r-pkg.org/pkg/jmotif)
 
+#### Notes:
+In order to process sets of timeseries with uneven length, pad shorter with NA within the input data frame (list). Window-based SAX discretization procedure (sliding window left to right) will detect NA within right side of sliding window and abandon any further processing for the current time series continuing to the next.  
+
 #### References:
 
 [1] Dina Goldin and Paris Kanellakis,
