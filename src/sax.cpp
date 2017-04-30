@@ -2,6 +2,10 @@
 using namespace Rcpp ;
 //
 #include <jmotif.h>
+#include <memory>
+#include <iostream>
+#include <string>
+#include <cstdio>
 #include <unordered_map>
 //
 
@@ -243,7 +247,7 @@ std::unordered_map<int, std::string> _sax_via_window(
 
   std::string old_str;
 
-  // Rcout << "series length " << ts.size() << ", window " << w_size << std::endl;
+  //Rcout << "series length " << ts.size() << ", window " << w_size << std::endl;
 
   for (int i = 0; i <= ts.size() - w_size; i++) {
 
@@ -255,9 +259,10 @@ std::unordered_map<int, std::string> _sax_via_window(
     }
 
     // subseries extraction
-    std::vector<double>::const_iterator first = ts.begin() + i;
-    std::vector<double>::const_iterator last = ts.begin() + i + w_size;
-    std::vector<double> subSection(first, last);
+    // std::vector<double>::const_iterator first = ts.begin() + i;
+    // std::vector<double>::const_iterator last = ts.begin() + i + w_size;
+    // std::vector<double> subSection(first, last);
+    std::vector<double> subSection = _subseries(&ts, i, i + w_size);
 
     subSection = _znorm(subSection, n_threshold);
 
@@ -303,6 +308,14 @@ std::map<int, std::string> sax_via_window(
     NumericVector ts, int w_size, int paa_size, int a_size,
     CharacterVector nr_strategy, double n_threshold) {
 
+  try {
+    if(ts.length() < w_size) {
+      throw std::range_error("sliding window is longer than timeseries");
+    }
+  } catch(std::exception &ex) {
+    forward_exception_to_r(ex);
+  }
+
   std::vector<double> series = Rcpp::as< std::vector<double> > (ts);
   bool strategy_exact = is_equal_str("exact", nr_strategy);
   bool strategy_mindist = is_equal_str("mindist", nr_strategy);
@@ -314,6 +327,18 @@ std::map<int, std::string> sax_via_window(
   std::string old_str("");
 
   for (int i = 0; i <= series.size() - w_size; i++) {
+
+    // check if NA is encountered
+    int idx = i + w_size - 1;
+    if(R_IsNA(ts[idx])) {
+      size_t size = std::snprintf(nullptr, 0, "encountered an Na and stopped processing at %i", i) + 1;
+      std::unique_ptr<char[]> buf( new char[ size ] );
+      std::snprintf( buf.get(), size, "encountered an Na and stopped processing at %i", i );
+      Rcpp::warning(
+        std::string( buf.get(), buf.get() + size - 1 )
+      );
+      break;
+    }
 
     NumericVector subSection = subseries(ts, i, i + w_size);
     std::vector<double>::const_iterator first = series.begin() + i;

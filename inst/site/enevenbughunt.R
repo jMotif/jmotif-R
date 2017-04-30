@@ -45,3 +45,12 @@ error
 # findout which time series were misclassified
 #
 which((labels_test != labels_predicted))
+#
+#
+#
+library(lineprof)
+library(microbenchmark)
+microbenchmark(
+  series_to_wordbag(c, w, p, a, "none", 0.01),
+  series_to_wordbag(c, w, p, a, "exact", 0.01)
+)
