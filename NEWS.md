@@ -1,4 +1,4 @@
-# Version 1.0.3.0000
+# Version 1.0.3
 * Fixed memory leaks in RRA.
 
 # Version 1.0.2.9000
