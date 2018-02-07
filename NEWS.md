@@ -1,3 +1,6 @@
+# Version 1.0.3.0000
+* Fixed memory leaks in RRA.
+
 # Version 1.0.2.9000
 
 * Pre-release development version.
