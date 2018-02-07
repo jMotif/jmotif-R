@@ -123,12 +123,6 @@ std::vector<double> _paa2(std::vector<double> ts, int paa_num) {
       // the following taken from
       // https://stackoverflow.com/questions/421573/best-way-to-extract-a-subvector-from-a-vector
       // but it may leak memory?
-      if(full_end > len) {
-        Rcout << "GOTTCHA! " << full_end << " , " << len << std::endl;
-        Rcout << " * seg_start " << seg_start << ", end " << seg_end << std::endl;
-        Rcout << " ** frac_begin " << frac_begin << ", frac_end " << frac_end << std::endl;
-        Rcout << " *** full_begin " << full_begin << ", full_end " << full_end << std::endl;
-      }
       std::vector<double>::const_iterator first = ts.begin() + full_begin;
       std::vector<double>::const_iterator last = ts.begin() +  full_end;
       std::vector<double> segment(first, last);
