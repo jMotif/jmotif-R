@@ -122,10 +122,12 @@ Rcpp::DataFrame find_discords_brute_force(
     if(start<0){
       start = 0;
     }
+
     int end = rec.index + w_size;
-    if(end>=ts.length()){
-      end = ts.length();
-    }
+    // it can't be greater
+    // if(end>=ts.length()){
+    //  end = ts.length();
+    //}
 
     // Rcout << "marking as visited from " << start << " to " << end << "\n";
     registry.markVisited(start, end);

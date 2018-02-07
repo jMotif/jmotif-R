@@ -157,9 +157,9 @@ rra_discord_record find_best_rra_discord(std::vector<double> *ts, int w_size,
     // by default, we engage the random search
     bool do_random_search = true;
 
-//     Rcout << " considering interval " << c_interval.start << "-" << c_interval.end <<
-//       " for rule " << c_interval.rule_id <<
-//        ", best so far dist " << bestSoFarDistance << std::endl;
+     //Rcout << " considering interval " << c_interval.start << "-" << c_interval.end <<
+    //   " for rule " << c_interval.rule_id <<
+    //    ", best so far dist " << bestSoFarDistance << std::endl;
 
     auto this_rule_occurrences = grammar->at(c_interval.rule_id)->rule_intervals;
 //     Rcout << "   going to iterate over " << this_rule_occurrences.size() <<
@@ -238,7 +238,7 @@ rra_discord_record find_best_rra_discord(std::vector<double> *ts, int w_size,
         rule_interval randomInterval = intervals->at(visit_array[cIndex]);
         cIndex--;
 
-        // Rcout << "    random candidate " << randomInterval.start << "-" <<
+        //Rcout << "    random candidate " << randomInterval.start << "-" <<
         //  randomInterval.end << ", cindex " << cIndex << std::endl;
 
         distance_calls_counter++;

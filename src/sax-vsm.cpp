@@ -266,6 +266,8 @@ Rcpp::DataFrame bags_to_tfidf(Rcpp::List data) {
 
   pre_res.names() = df_names;
 
+  tfidf.clear();
+
   // and return the results
   DataFrame df = Rcpp::DataFrame::create(pre_res, Rcpp::Named("stringsAsFactors")=false);
 

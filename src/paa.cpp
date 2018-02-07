@@ -69,6 +69,8 @@ std::vector<double> _paa(std::vector<double> ts, int paa_num) {
 
 std::vector<double> _paa2(std::vector<double> ts, int paa_num) {
 
+  std::vector<double> tempVector;
+
   // fix the length
   int len = ts.size();
   // Rcout << "len " << len << std::endl;
@@ -95,13 +97,13 @@ std::vector<double> _paa2(std::vector<double> ts, int paa_num) {
     for(int i = 0; i < paa_num + 1; i++){
       breaks[i] = i * points_per_segment;
     }
-    // Rcout << "breaks ";
+    // Rcout << "ts length: " << len << ", breaks: ";
     // for(auto it=breaks.begin(); it<breaks.end(); ++it){
-      // Rcout << *it << ", ";
-    // }
-    // Rcout << std::endl;
+    //   Rcout << *it << ", ";
+    //}
+    //Rcout << std::endl;
 
-    for(int i = 0; i< paa_num; i++){
+    for(int i = 0; i < paa_num; i++){
 
       double seg_start = breaks[i];
       double seg_end = breaks[i+1];
@@ -113,11 +115,24 @@ std::vector<double> _paa2(std::vector<double> ts, int paa_num) {
 
       int full_begin = floor(seg_start);
       int full_end = ceil(seg_end);
+      if(full_end > len) {
+        full_end = len;
+      }
       // Rcout << " *** full_begin " << full_begin << ", full_end " << full_end << std::endl;
 
+      // the following taken from
+      // https://stackoverflow.com/questions/421573/best-way-to-extract-a-subvector-from-a-vector
+      // but it may leak memory?
+      if(full_end > len) {
+        Rcout << "GOTTCHA! " << full_end << " , " << len << std::endl;
+        Rcout << " * seg_start " << seg_start << ", end " << seg_end << std::endl;
+        Rcout << " ** frac_begin " << frac_begin << ", frac_end " << frac_end << std::endl;
+        Rcout << " *** full_begin " << full_begin << ", full_end " << full_end << std::endl;
+      }
       std::vector<double>::const_iterator first = ts.begin() + full_begin;
       std::vector<double>::const_iterator last = ts.begin() +  full_end;
       std::vector<double> segment(first, last);
+      //std::vector<double> segment(ts.begin() + full_begin, ts.begin() +  full_end);
 
       // Rcout << "segment ";
       // for(auto it=segment.begin(); it<segment.end(); ++it){
@@ -139,9 +154,11 @@ std::vector<double> _paa2(std::vector<double> ts, int paa_num) {
       // Rcout << std::endl;
 
       double sum_of_elems = 0.0;
-      for (double n : segment)
-        sum_of_elems += n;
+      for (double e : segment)
+        sum_of_elems += e;
       // Rcout << " **** sum " << sum_of_elems << std::endl;
+
+      segment.swap(tempVector);
 
       res[i] = sum_of_elems / points_per_segment;
       // Rcout << " **** res[" << i << "] " << res[i] << std::endl;

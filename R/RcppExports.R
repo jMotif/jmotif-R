@@ -17,7 +17,7 @@
 #' lines(x=c(discords[1,2]:(discords[1,2]+100)),
 #'    y=ecg0606[discords[1,2]:(discords[1,2]+100)], col="red")
 find_discords_brute_force <- function(ts, w_size, discords_num) {
-    .Call('jmotif_find_discords_brute_force', PACKAGE = 'jmotif', ts, w_size, discords_num)
+    .Call('_jmotif_find_discords_brute_force', PACKAGE = 'jmotif', ts, w_size, discords_num)
 }
 
 #' Finds the Euclidean distance between points.
@@ -28,7 +28,7 @@ find_discords_brute_force <- function(ts, w_size, discords_num) {
 #' @useDynLib jmotif
 #' @export
 euclidean_dist <- function(seq1, seq2) {
-    .Call('jmotif_euclidean_dist', PACKAGE = 'jmotif', seq1, seq2)
+    .Call('_jmotif_euclidean_dist', PACKAGE = 'jmotif', seq1, seq2)
 }
 
 #' Finds the Euclidean distance between points, if distance is above the threshold, abandons the computation
@@ -41,7 +41,7 @@ euclidean_dist <- function(seq1, seq2) {
 #' @useDynLib jmotif
 #' @export
 early_abandoned_dist <- function(seq1, seq2, upper_limit) {
-    .Call('jmotif_early_abandoned_dist', PACKAGE = 'jmotif', seq1, seq2, upper_limit)
+    .Call('_jmotif_early_abandoned_dist', PACKAGE = 'jmotif', seq1, seq2, upper_limit)
 }
 
 #' Finds a discord (i.e. time series anomaly) with HOT-SAX.
@@ -64,7 +64,7 @@ early_abandoned_dist <- function(seq1, seq2, upper_limit) {
 #' lines(x=c(discords[1,2]:(discords[1,2]+100)),
 #'    y=ecg0606[discords[1,2]:(discords[1,2]+100)], col="red")
 find_discords_hotsax <- function(ts, w_size, paa_size, a_size, n_threshold, discords_num) {
-    .Call('jmotif_find_discords_hotsax', PACKAGE = 'jmotif', ts, w_size, paa_size, a_size, n_threshold, discords_num)
+    .Call('_jmotif_find_discords_hotsax', PACKAGE = 'jmotif', ts, w_size, paa_size, a_size, n_threshold, discords_num)
 }
 
 #' Computes a Piecewise Aggregate Approximation (PAA) for a time series.
@@ -83,7 +83,7 @@ find_discords_hotsax <- function(ts, w_size, paa_size, a_size, n_threshold, disc
 #' # segments
 #' abline(v = c(1, 1+7/3, 1+7/3 * 2, 8), lty = 3, lwd = 2)
 paa <- function(ts, paa_num) {
-    .Call('jmotif_paa', PACKAGE = 'jmotif', ts, paa_num)
+    .Call('_jmotif_paa', PACKAGE = 'jmotif', ts, paa_num)
 }
 
 #' Runs the repair on a string.
@@ -96,7 +96,7 @@ paa <- function(ts, paa_num) {
 #' @examples
 #' str_to_repair_grammar("abc abc cba cba bac xxx abc abc cba cba bac")
 str_to_repair_grammar <- function(str) {
-    .Call('jmotif_str_to_repair_grammar', PACKAGE = 'jmotif', str)
+    .Call('_jmotif_str_to_repair_grammar', PACKAGE = 'jmotif', str)
 }
 
 #' Finds a discord with RRA (Rare Rule Anomaly) algorithm.
@@ -121,7 +121,88 @@ str_to_repair_grammar <- function(str) {
 #' lines(x=c(discords[1,2]:(discords[1,2]+100)),
 #'    y=ecg0606[discords[1,2]:(discords[1,2]+100)], col="red")
 find_discords_rra <- function(series, w_size, paa_size, a_size, nr_strategy, n_threshold, discords_num) {
-    .Call('jmotif_find_discords_rra', PACKAGE = 'jmotif', series, w_size, paa_size, a_size, nr_strategy, n_threshold, discords_num)
+    .Call('_jmotif_find_discords_rra', PACKAGE = 'jmotif', series, w_size, paa_size, a_size, nr_strategy, n_threshold, discords_num)
+}
+
+#' Translates an alphabet size into the array of corresponding SAX cut-lines built using the Normal distribution.
+#'
+#' @param a_size the alphabet size, a value between 2 and 20 (inclusive).
+#' @useDynLib jmotif
+#' @export
+#' @references Lonardi, S., Lin, J., Keogh, E., Patel, P.,
+#' Finding motifs in time series.
+#' In Proc. of the 2nd Workshop on Temporal Data Mining (pp. 53-68). (2002)
+#' @examples
+#' alphabet_to_cuts(5)
+alphabet_to_cuts <- function(a_size) {
+    .Call('_jmotif_alphabet_to_cuts', PACKAGE = 'jmotif', a_size)
+}
+
+#' Transforms a time series into the char array using SAX and the normal alphabet.
+#'
+#' @param ts the timeseries.
+#' @param a_size the alphabet size.
+#' @useDynLib jmotif
+#' @export
+#' @references Lonardi, S., Lin, J., Keogh, E., Patel, P.,
+#' Finding motifs in time series.
+#' In Proc. of the 2nd Workshop on Temporal Data Mining (pp. 53-68). (2002)
+#' @examples
+#' y = c(-1, -2, -1, 0, 2, 1, 1, 0)
+#' y_paa3 = paa(y, 3)
+#' series_to_chars(y_paa3, 3)
+series_to_chars <- function(ts, a_size) {
+    .Call('_jmotif_series_to_chars', PACKAGE = 'jmotif', ts, a_size)
+}
+
+#' Transforms a time series into the string.
+#'
+#' @param ts the timeseries.
+#' @param a_size the alphabet size.
+#' @useDynLib jmotif
+#' @export
+#' @references Lonardi, S., Lin, J., Keogh, E., Patel, P.,
+#' Finding motifs in time series.
+#' In Proc. of the 2nd Workshop on Temporal Data Mining (pp. 53-68). (2002)
+#' @examples
+#' y = c(-1, -2, -1, 0, 2, 1, 1, 0)
+#' y_paa3 = paa(y, 3)
+#' series_to_string(y_paa3, 3)
+series_to_string <- function(ts, a_size) {
+    .Call('_jmotif_series_to_string', PACKAGE = 'jmotif', ts, a_size)
+}
+
+#' Discretizes a time series with SAX via sliding window.
+#'
+#' @param ts the input timeseries.
+#' @param w_size the sliding window size.
+#' @param paa_size the PAA size.
+#' @param a_size the alphabet size.
+#' @param nr_strategy the Numerosity Reduction strategy, acceptable values are "exact" and "mindist" --
+#' any other value triggers no numerosity reduction.
+#' @param n_threshold the normalization threshold.
+#' @useDynLib jmotif
+#' @export
+#' @references Lonardi, S., Lin, J., Keogh, E., Patel, P.,
+#' Finding motifs in time series.
+#' In Proc. of the 2nd Workshop on Temporal Data Mining (pp. 53-68). (2002)
+sax_via_window <- function(ts, w_size, paa_size, a_size, nr_strategy, n_threshold) {
+    .Call('_jmotif_sax_via_window', PACKAGE = 'jmotif', ts, w_size, paa_size, a_size, nr_strategy, n_threshold)
+}
+
+#' Discretize a time series with SAX using chunking (no sliding window).
+#'
+#' @param ts the input time series.
+#' @param paa_size the PAA size.
+#' @param a_size the alphabet size.
+#' @param n_threshold the normalization threshold.
+#' @useDynLib jmotif
+#' @export
+#' @references Lonardi, S., Lin, J., Keogh, E., Patel, P.,
+#' Finding motifs in time series.
+#' In Proc. of the 2nd Workshop on Temporal Data Mining (pp. 53-68). (2002)
+sax_by_chunking <- function(ts, paa_size, a_size, n_threshold) {
+    .Call('_jmotif_sax_by_chunking', PACKAGE = 'jmotif', ts, paa_size, a_size, n_threshold)
 }
 
 #' Converts a single time series into a bag of words.
@@ -140,7 +221,7 @@ find_discords_rra <- function(series, w_size, paa_size, a_size, nr_strategy, n_t
 #' @references Salton, G., Wong, A., Yang., C.,
 #' A vector space model for automatic indexing. Commun. ACM 18, 11, 613-620, 1975.
 series_to_wordbag <- function(ts, w_size, paa_size, a_size, nr_strategy, n_threshold) {
-    .Call('jmotif_series_to_wordbag', PACKAGE = 'jmotif', ts, w_size, paa_size, a_size, nr_strategy, n_threshold)
+    .Call('_jmotif_series_to_wordbag', PACKAGE = 'jmotif', ts, w_size, paa_size, a_size, nr_strategy, n_threshold)
 }
 
 #' Converts a set of time-series into a single bag of words.
@@ -159,7 +240,7 @@ series_to_wordbag <- function(ts, w_size, paa_size, a_size, nr_strategy, n_thres
 #' @references Salton, G., Wong, A., Yang., C.,
 #' A vector space model for automatic indexing. Commun. ACM 18, 11, 613-620, 1975.
 manyseries_to_wordbag <- function(data, w_size, paa_size, a_size, nr_strategy, n_threshold) {
-    .Call('jmotif_manyseries_to_wordbag', PACKAGE = 'jmotif', data, w_size, paa_size, a_size, nr_strategy, n_threshold)
+    .Call('_jmotif_manyseries_to_wordbag', PACKAGE = 'jmotif', data, w_size, paa_size, a_size, nr_strategy, n_threshold)
 }
 
 #' Computes a TF-IDF weight vectors for a set of word bags.
@@ -186,7 +267,7 @@ manyseries_to_wordbag <- function(data, w_size, paa_size, a_size, nr_strategy, n
 #' ll = list("bag1" = bag1, "bag2" = bag2)
 #' tfidf = bags_to_tfidf(ll)
 bags_to_tfidf <- function(data) {
-    .Call('jmotif_bags_to_tfidf', PACKAGE = 'jmotif', data)
+    .Call('_jmotif_bags_to_tfidf', PACKAGE = 'jmotif', data)
 }
 
 #' Computes the cosine distance value between a bag of words and a set of TF-IDF weight vectors.
@@ -200,88 +281,7 @@ bags_to_tfidf <- function(data) {
 #' @references Salton, G., Wong, A., Yang., C.,
 #' A vector space model for automatic indexing. Commun. ACM 18, 11, 613-620, 1975.
 cosine_sim <- function(data) {
-    .Call('jmotif_cosine_sim', PACKAGE = 'jmotif', data)
-}
-
-#' Translates an alphabet size into the array of corresponding SAX cut-lines built using the Normal distribution.
-#'
-#' @param a_size the alphabet size, a value between 2 and 20 (inclusive).
-#' @useDynLib jmotif
-#' @export
-#' @references Lonardi, S., Lin, J., Keogh, E., Patel, P.,
-#' Finding motifs in time series.
-#' In Proc. of the 2nd Workshop on Temporal Data Mining (pp. 53-68). (2002)
-#' @examples
-#' alphabet_to_cuts(5)
-alphabet_to_cuts <- function(a_size) {
-    .Call('jmotif_alphabet_to_cuts', PACKAGE = 'jmotif', a_size)
-}
-
-#' Transforms a time series into the char array using SAX and the normal alphabet.
-#'
-#' @param ts the timeseries.
-#' @param a_size the alphabet size.
-#' @useDynLib jmotif
-#' @export
-#' @references Lonardi, S., Lin, J., Keogh, E., Patel, P.,
-#' Finding motifs in time series.
-#' In Proc. of the 2nd Workshop on Temporal Data Mining (pp. 53-68). (2002)
-#' @examples
-#' y = c(-1, -2, -1, 0, 2, 1, 1, 0)
-#' y_paa3 = paa(y, 3)
-#' series_to_chars(y_paa3, 3)
-series_to_chars <- function(ts, a_size) {
-    .Call('jmotif_series_to_chars', PACKAGE = 'jmotif', ts, a_size)
-}
-
-#' Transforms a time series into the string.
-#'
-#' @param ts the timeseries.
-#' @param a_size the alphabet size.
-#' @useDynLib jmotif
-#' @export
-#' @references Lonardi, S., Lin, J., Keogh, E., Patel, P.,
-#' Finding motifs in time series.
-#' In Proc. of the 2nd Workshop on Temporal Data Mining (pp. 53-68). (2002)
-#' @examples
-#' y = c(-1, -2, -1, 0, 2, 1, 1, 0)
-#' y_paa3 = paa(y, 3)
-#' series_to_string(y_paa3, 3)
-series_to_string <- function(ts, a_size) {
-    .Call('jmotif_series_to_string', PACKAGE = 'jmotif', ts, a_size)
-}
-
-#' Discretizes a time series with SAX via sliding window.
-#'
-#' @param ts the input timeseries.
-#' @param w_size the sliding window size.
-#' @param paa_size the PAA size.
-#' @param a_size the alphabet size.
-#' @param nr_strategy the Numerosity Reduction strategy, acceptable values are "exact" and "mindist" --
-#' any other value triggers no numerosity reduction.
-#' @param n_threshold the normalization threshold.
-#' @useDynLib jmotif
-#' @export
-#' @references Lonardi, S., Lin, J., Keogh, E., Patel, P.,
-#' Finding motifs in time series.
-#' In Proc. of the 2nd Workshop on Temporal Data Mining (pp. 53-68). (2002)
-sax_via_window <- function(ts, w_size, paa_size, a_size, nr_strategy, n_threshold) {
-    .Call('jmotif_sax_via_window', PACKAGE = 'jmotif', ts, w_size, paa_size, a_size, nr_strategy, n_threshold)
-}
-
-#' Discretize a time series with SAX using chunking (no sliding window).
-#'
-#' @param ts the input time series.
-#' @param paa_size the PAA size.
-#' @param a_size the alphabet size.
-#' @param n_threshold the normalization threshold.
-#' @useDynLib jmotif
-#' @export
-#' @references Lonardi, S., Lin, J., Keogh, E., Patel, P.,
-#' Finding motifs in time series.
-#' In Proc. of the 2nd Workshop on Temporal Data Mining (pp. 53-68). (2002)
-sax_by_chunking <- function(ts, paa_size, a_size, n_threshold) {
-    .Call('jmotif_sax_by_chunking', PACKAGE = 'jmotif', ts, paa_size, a_size, n_threshold)
+    .Call('_jmotif_cosine_sim', PACKAGE = 'jmotif', data)
 }
 
 #' Get the ASCII letter by an index.
@@ -293,7 +293,7 @@ sax_by_chunking <- function(ts, paa_size, a_size, n_threshold) {
 #' # letter 'b'
 #' idx_to_letter(2)
 idx_to_letter <- function(idx) {
-    .Call('jmotif_idx_to_letter', PACKAGE = 'jmotif', idx)
+    .Call('_jmotif_idx_to_letter', PACKAGE = 'jmotif', idx)
 }
 
 #' Get the index for an ASCII letter.
@@ -305,7 +305,7 @@ idx_to_letter <- function(idx) {
 #' # letter 'b' translates to 2
 #' letter_to_idx('b')
 letter_to_idx <- function(letter) {
-    .Call('jmotif_letter_to_idx', PACKAGE = 'jmotif', letter)
+    .Call('_jmotif_letter_to_idx', PACKAGE = 'jmotif', letter)
 }
 
 #' Get an ASCII indexes sequence for a given character array.
@@ -316,7 +316,7 @@ letter_to_idx <- function(letter) {
 #' @examples
 #' letters_to_idx(c('a','b','c','a'))
 letters_to_idx <- function(str) {
-    .Call('jmotif_letters_to_idx', PACKAGE = 'jmotif', str)
+    .Call('_jmotif_letters_to_idx', PACKAGE = 'jmotif', str)
 }
 
 #' Compares two strings using natural letter ordering.
@@ -329,7 +329,7 @@ letters_to_idx <- function(str) {
 #' is_equal_str("aaa", "bbb")
 #' is_equal_str("ccc", "ccc")
 is_equal_str <- function(a, b) {
-    .Call('jmotif_is_equal_str', PACKAGE = 'jmotif', a, b)
+    .Call('_jmotif_is_equal_str', PACKAGE = 'jmotif', a, b)
 }
 
 #' Compares two strings using mindist.
@@ -342,7 +342,7 @@ is_equal_str <- function(a, b) {
 #' is_equal_str("aaa", "bbb") # true
 #' is_equal_str("aaa", "ccc") # false
 is_equal_mindist <- function(a, b) {
-    .Call('jmotif_is_equal_mindist', PACKAGE = 'jmotif', a, b)
+    .Call('_jmotif_is_equal_mindist', PACKAGE = 'jmotif', a, b)
 }
 
 #' Extracts a subseries.
@@ -356,7 +356,7 @@ is_equal_mindist <- function(a, b) {
 #' y = c(-1, -2, -1, 0, 2, 1, 1, 0)
 #' subseries(y, 0, 3)
 subseries <- function(ts, start, end) {
-    .Call('jmotif_subseries', PACKAGE = 'jmotif', ts, start, end)
+    .Call('_jmotif_subseries', PACKAGE = 'jmotif', ts, start, end)
 }
 
 #' Z-normalizes a time series by subtracting its mean and dividing by the standard deviation.
@@ -376,6 +376,6 @@ subseries <- function(ts, start, end) {
 #' plot(x, y, type="l", col="blue")
 #' lines(x, znorm(y, 0.01), type="l", col="red")
 znorm <- function(ts, threshold = 0.01) {
-    .Call('jmotif_znorm', PACKAGE = 'jmotif', ts, threshold)
+    .Call('_jmotif_znorm', PACKAGE = 'jmotif', ts, threshold)
 }
 

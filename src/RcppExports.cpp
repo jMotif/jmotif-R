@@ -9,7 +9,7 @@ using namespace Rcpp;
 
 // find_discords_brute_force
 Rcpp::DataFrame find_discords_brute_force(NumericVector ts, int w_size, int discords_num);
-RcppExport SEXP jmotif_find_discords_brute_force(SEXP tsSEXP, SEXP w_sizeSEXP, SEXP discords_numSEXP) {
+RcppExport SEXP _jmotif_find_discords_brute_force(SEXP tsSEXP, SEXP w_sizeSEXP, SEXP discords_numSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -22,7 +22,7 @@ END_RCPP
 }
 // euclidean_dist
 double euclidean_dist(NumericVector seq1, NumericVector seq2);
-RcppExport SEXP jmotif_euclidean_dist(SEXP seq1SEXP, SEXP seq2SEXP) {
+RcppExport SEXP _jmotif_euclidean_dist(SEXP seq1SEXP, SEXP seq2SEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -34,7 +34,7 @@ END_RCPP
 }
 // early_abandoned_dist
 double early_abandoned_dist(NumericVector seq1, NumericVector seq2, double upper_limit);
-RcppExport SEXP jmotif_early_abandoned_dist(SEXP seq1SEXP, SEXP seq2SEXP, SEXP upper_limitSEXP) {
+RcppExport SEXP _jmotif_early_abandoned_dist(SEXP seq1SEXP, SEXP seq2SEXP, SEXP upper_limitSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -47,7 +47,7 @@ END_RCPP
 }
 // find_discords_hotsax
 Rcpp::DataFrame find_discords_hotsax(NumericVector ts, int w_size, int paa_size, int a_size, double n_threshold, int discords_num);
-RcppExport SEXP jmotif_find_discords_hotsax(SEXP tsSEXP, SEXP w_sizeSEXP, SEXP paa_sizeSEXP, SEXP a_sizeSEXP, SEXP n_thresholdSEXP, SEXP discords_numSEXP) {
+RcppExport SEXP _jmotif_find_discords_hotsax(SEXP tsSEXP, SEXP w_sizeSEXP, SEXP paa_sizeSEXP, SEXP a_sizeSEXP, SEXP n_thresholdSEXP, SEXP discords_numSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -63,7 +63,7 @@ END_RCPP
 }
 // paa
 NumericVector paa(NumericVector ts, int paa_num);
-RcppExport SEXP jmotif_paa(SEXP tsSEXP, SEXP paa_numSEXP) {
+RcppExport SEXP _jmotif_paa(SEXP tsSEXP, SEXP paa_numSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -75,7 +75,7 @@ END_RCPP
 }
 // str_to_repair_grammar
 Rcpp::List str_to_repair_grammar(CharacterVector str);
-RcppExport SEXP jmotif_str_to_repair_grammar(SEXP strSEXP) {
+RcppExport SEXP _jmotif_str_to_repair_grammar(SEXP strSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -86,7 +86,7 @@ END_RCPP
 }
 // find_discords_rra
 Rcpp::DataFrame find_discords_rra(NumericVector series, int w_size, int paa_size, int a_size, CharacterVector nr_strategy, double n_threshold, int discords_num);
-RcppExport SEXP jmotif_find_discords_rra(SEXP seriesSEXP, SEXP w_sizeSEXP, SEXP paa_sizeSEXP, SEXP a_sizeSEXP, SEXP nr_strategySEXP, SEXP n_thresholdSEXP, SEXP discords_numSEXP) {
+RcppExport SEXP _jmotif_find_discords_rra(SEXP seriesSEXP, SEXP w_sizeSEXP, SEXP paa_sizeSEXP, SEXP a_sizeSEXP, SEXP nr_strategySEXP, SEXP n_thresholdSEXP, SEXP discords_numSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -101,63 +101,9 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// series_to_wordbag
-Rcpp::DataFrame series_to_wordbag(NumericVector ts, int w_size, int paa_size, int a_size, CharacterVector nr_strategy, double n_threshold);
-RcppExport SEXP jmotif_series_to_wordbag(SEXP tsSEXP, SEXP w_sizeSEXP, SEXP paa_sizeSEXP, SEXP a_sizeSEXP, SEXP nr_strategySEXP, SEXP n_thresholdSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< NumericVector >::type ts(tsSEXP);
-    Rcpp::traits::input_parameter< int >::type w_size(w_sizeSEXP);
-    Rcpp::traits::input_parameter< int >::type paa_size(paa_sizeSEXP);
-    Rcpp::traits::input_parameter< int >::type a_size(a_sizeSEXP);
-    Rcpp::traits::input_parameter< CharacterVector >::type nr_strategy(nr_strategySEXP);
-    Rcpp::traits::input_parameter< double >::type n_threshold(n_thresholdSEXP);
-    rcpp_result_gen = Rcpp::wrap(series_to_wordbag(ts, w_size, paa_size, a_size, nr_strategy, n_threshold));
-    return rcpp_result_gen;
-END_RCPP
-}
-// manyseries_to_wordbag
-Rcpp::DataFrame manyseries_to_wordbag(NumericMatrix data, int w_size, int paa_size, int a_size, CharacterVector nr_strategy, double n_threshold);
-RcppExport SEXP jmotif_manyseries_to_wordbag(SEXP dataSEXP, SEXP w_sizeSEXP, SEXP paa_sizeSEXP, SEXP a_sizeSEXP, SEXP nr_strategySEXP, SEXP n_thresholdSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< NumericMatrix >::type data(dataSEXP);
-    Rcpp::traits::input_parameter< int >::type w_size(w_sizeSEXP);
-    Rcpp::traits::input_parameter< int >::type paa_size(paa_sizeSEXP);
-    Rcpp::traits::input_parameter< int >::type a_size(a_sizeSEXP);
-    Rcpp::traits::input_parameter< CharacterVector >::type nr_strategy(nr_strategySEXP);
-    Rcpp::traits::input_parameter< double >::type n_threshold(n_thresholdSEXP);
-    rcpp_result_gen = Rcpp::wrap(manyseries_to_wordbag(data, w_size, paa_size, a_size, nr_strategy, n_threshold));
-    return rcpp_result_gen;
-END_RCPP
-}
-// bags_to_tfidf
-Rcpp::DataFrame bags_to_tfidf(Rcpp::List data);
-RcppExport SEXP jmotif_bags_to_tfidf(SEXP dataSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::List >::type data(dataSEXP);
-    rcpp_result_gen = Rcpp::wrap(bags_to_tfidf(data));
-    return rcpp_result_gen;
-END_RCPP
-}
-// cosine_sim
-Rcpp::DataFrame cosine_sim(Rcpp::List data);
-RcppExport SEXP jmotif_cosine_sim(SEXP dataSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::List >::type data(dataSEXP);
-    rcpp_result_gen = Rcpp::wrap(cosine_sim(data));
-    return rcpp_result_gen;
-END_RCPP
-}
 // alphabet_to_cuts
 NumericVector alphabet_to_cuts(int a_size);
-RcppExport SEXP jmotif_alphabet_to_cuts(SEXP a_sizeSEXP) {
+RcppExport SEXP _jmotif_alphabet_to_cuts(SEXP a_sizeSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -168,7 +114,7 @@ END_RCPP
 }
 // series_to_chars
 CharacterVector series_to_chars(NumericVector ts, int a_size);
-RcppExport SEXP jmotif_series_to_chars(SEXP tsSEXP, SEXP a_sizeSEXP) {
+RcppExport SEXP _jmotif_series_to_chars(SEXP tsSEXP, SEXP a_sizeSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -180,7 +126,7 @@ END_RCPP
 }
 // series_to_string
 CharacterVector series_to_string(NumericVector ts, int a_size);
-RcppExport SEXP jmotif_series_to_string(SEXP tsSEXP, SEXP a_sizeSEXP) {
+RcppExport SEXP _jmotif_series_to_string(SEXP tsSEXP, SEXP a_sizeSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -192,7 +138,7 @@ END_RCPP
 }
 // sax_via_window
 std::map<int, std::string> sax_via_window(NumericVector ts, int w_size, int paa_size, int a_size, CharacterVector nr_strategy, double n_threshold);
-RcppExport SEXP jmotif_sax_via_window(SEXP tsSEXP, SEXP w_sizeSEXP, SEXP paa_sizeSEXP, SEXP a_sizeSEXP, SEXP nr_strategySEXP, SEXP n_thresholdSEXP) {
+RcppExport SEXP _jmotif_sax_via_window(SEXP tsSEXP, SEXP w_sizeSEXP, SEXP paa_sizeSEXP, SEXP a_sizeSEXP, SEXP nr_strategySEXP, SEXP n_thresholdSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -208,7 +154,7 @@ END_RCPP
 }
 // sax_by_chunking
 std::map<int, CharacterVector> sax_by_chunking(NumericVector ts, int paa_size, int a_size, double n_threshold);
-RcppExport SEXP jmotif_sax_by_chunking(SEXP tsSEXP, SEXP paa_sizeSEXP, SEXP a_sizeSEXP, SEXP n_thresholdSEXP) {
+RcppExport SEXP _jmotif_sax_by_chunking(SEXP tsSEXP, SEXP paa_sizeSEXP, SEXP a_sizeSEXP, SEXP n_thresholdSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -220,9 +166,63 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// series_to_wordbag
+Rcpp::DataFrame series_to_wordbag(NumericVector ts, int w_size, int paa_size, int a_size, CharacterVector nr_strategy, double n_threshold);
+RcppExport SEXP _jmotif_series_to_wordbag(SEXP tsSEXP, SEXP w_sizeSEXP, SEXP paa_sizeSEXP, SEXP a_sizeSEXP, SEXP nr_strategySEXP, SEXP n_thresholdSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type ts(tsSEXP);
+    Rcpp::traits::input_parameter< int >::type w_size(w_sizeSEXP);
+    Rcpp::traits::input_parameter< int >::type paa_size(paa_sizeSEXP);
+    Rcpp::traits::input_parameter< int >::type a_size(a_sizeSEXP);
+    Rcpp::traits::input_parameter< CharacterVector >::type nr_strategy(nr_strategySEXP);
+    Rcpp::traits::input_parameter< double >::type n_threshold(n_thresholdSEXP);
+    rcpp_result_gen = Rcpp::wrap(series_to_wordbag(ts, w_size, paa_size, a_size, nr_strategy, n_threshold));
+    return rcpp_result_gen;
+END_RCPP
+}
+// manyseries_to_wordbag
+Rcpp::DataFrame manyseries_to_wordbag(NumericMatrix data, int w_size, int paa_size, int a_size, CharacterVector nr_strategy, double n_threshold);
+RcppExport SEXP _jmotif_manyseries_to_wordbag(SEXP dataSEXP, SEXP w_sizeSEXP, SEXP paa_sizeSEXP, SEXP a_sizeSEXP, SEXP nr_strategySEXP, SEXP n_thresholdSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericMatrix >::type data(dataSEXP);
+    Rcpp::traits::input_parameter< int >::type w_size(w_sizeSEXP);
+    Rcpp::traits::input_parameter< int >::type paa_size(paa_sizeSEXP);
+    Rcpp::traits::input_parameter< int >::type a_size(a_sizeSEXP);
+    Rcpp::traits::input_parameter< CharacterVector >::type nr_strategy(nr_strategySEXP);
+    Rcpp::traits::input_parameter< double >::type n_threshold(n_thresholdSEXP);
+    rcpp_result_gen = Rcpp::wrap(manyseries_to_wordbag(data, w_size, paa_size, a_size, nr_strategy, n_threshold));
+    return rcpp_result_gen;
+END_RCPP
+}
+// bags_to_tfidf
+Rcpp::DataFrame bags_to_tfidf(Rcpp::List data);
+RcppExport SEXP _jmotif_bags_to_tfidf(SEXP dataSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::List >::type data(dataSEXP);
+    rcpp_result_gen = Rcpp::wrap(bags_to_tfidf(data));
+    return rcpp_result_gen;
+END_RCPP
+}
+// cosine_sim
+Rcpp::DataFrame cosine_sim(Rcpp::List data);
+RcppExport SEXP _jmotif_cosine_sim(SEXP dataSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::List >::type data(dataSEXP);
+    rcpp_result_gen = Rcpp::wrap(cosine_sim(data));
+    return rcpp_result_gen;
+END_RCPP
+}
 // idx_to_letter
 char idx_to_letter(int idx);
-RcppExport SEXP jmotif_idx_to_letter(SEXP idxSEXP) {
+RcppExport SEXP _jmotif_idx_to_letter(SEXP idxSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -233,7 +233,7 @@ END_RCPP
 }
 // letter_to_idx
 int letter_to_idx(char letter);
-RcppExport SEXP jmotif_letter_to_idx(SEXP letterSEXP) {
+RcppExport SEXP _jmotif_letter_to_idx(SEXP letterSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -244,7 +244,7 @@ END_RCPP
 }
 // letters_to_idx
 IntegerVector letters_to_idx(CharacterVector str);
-RcppExport SEXP jmotif_letters_to_idx(SEXP strSEXP) {
+RcppExport SEXP _jmotif_letters_to_idx(SEXP strSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -255,7 +255,7 @@ END_RCPP
 }
 // is_equal_str
 bool is_equal_str(CharacterVector a, CharacterVector b);
-RcppExport SEXP jmotif_is_equal_str(SEXP aSEXP, SEXP bSEXP) {
+RcppExport SEXP _jmotif_is_equal_str(SEXP aSEXP, SEXP bSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -267,7 +267,7 @@ END_RCPP
 }
 // is_equal_mindist
 bool is_equal_mindist(CharacterVector a, CharacterVector b);
-RcppExport SEXP jmotif_is_equal_mindist(SEXP aSEXP, SEXP bSEXP) {
+RcppExport SEXP _jmotif_is_equal_mindist(SEXP aSEXP, SEXP bSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -279,7 +279,7 @@ END_RCPP
 }
 // subseries
 NumericVector subseries(NumericVector ts, int start, int end);
-RcppExport SEXP jmotif_subseries(SEXP tsSEXP, SEXP startSEXP, SEXP endSEXP) {
+RcppExport SEXP _jmotif_subseries(SEXP tsSEXP, SEXP startSEXP, SEXP endSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -292,7 +292,7 @@ END_RCPP
 }
 // znorm
 NumericVector znorm(NumericVector ts, double threshold);
-RcppExport SEXP jmotif_znorm(SEXP tsSEXP, SEXP thresholdSEXP) {
+RcppExport SEXP _jmotif_znorm(SEXP tsSEXP, SEXP thresholdSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -301,4 +301,36 @@ BEGIN_RCPP
     rcpp_result_gen = Rcpp::wrap(znorm(ts, threshold));
     return rcpp_result_gen;
 END_RCPP
+}
+
+static const R_CallMethodDef CallEntries[] = {
+    {"_jmotif_find_discords_brute_force", (DL_FUNC) &_jmotif_find_discords_brute_force, 3},
+    {"_jmotif_euclidean_dist", (DL_FUNC) &_jmotif_euclidean_dist, 2},
+    {"_jmotif_early_abandoned_dist", (DL_FUNC) &_jmotif_early_abandoned_dist, 3},
+    {"_jmotif_find_discords_hotsax", (DL_FUNC) &_jmotif_find_discords_hotsax, 6},
+    {"_jmotif_paa", (DL_FUNC) &_jmotif_paa, 2},
+    {"_jmotif_str_to_repair_grammar", (DL_FUNC) &_jmotif_str_to_repair_grammar, 1},
+    {"_jmotif_find_discords_rra", (DL_FUNC) &_jmotif_find_discords_rra, 7},
+    {"_jmotif_alphabet_to_cuts", (DL_FUNC) &_jmotif_alphabet_to_cuts, 1},
+    {"_jmotif_series_to_chars", (DL_FUNC) &_jmotif_series_to_chars, 2},
+    {"_jmotif_series_to_string", (DL_FUNC) &_jmotif_series_to_string, 2},
+    {"_jmotif_sax_via_window", (DL_FUNC) &_jmotif_sax_via_window, 6},
+    {"_jmotif_sax_by_chunking", (DL_FUNC) &_jmotif_sax_by_chunking, 4},
+    {"_jmotif_series_to_wordbag", (DL_FUNC) &_jmotif_series_to_wordbag, 6},
+    {"_jmotif_manyseries_to_wordbag", (DL_FUNC) &_jmotif_manyseries_to_wordbag, 6},
+    {"_jmotif_bags_to_tfidf", (DL_FUNC) &_jmotif_bags_to_tfidf, 1},
+    {"_jmotif_cosine_sim", (DL_FUNC) &_jmotif_cosine_sim, 1},
+    {"_jmotif_idx_to_letter", (DL_FUNC) &_jmotif_idx_to_letter, 1},
+    {"_jmotif_letter_to_idx", (DL_FUNC) &_jmotif_letter_to_idx, 1},
+    {"_jmotif_letters_to_idx", (DL_FUNC) &_jmotif_letters_to_idx, 1},
+    {"_jmotif_is_equal_str", (DL_FUNC) &_jmotif_is_equal_str, 2},
+    {"_jmotif_is_equal_mindist", (DL_FUNC) &_jmotif_is_equal_mindist, 2},
+    {"_jmotif_subseries", (DL_FUNC) &_jmotif_subseries, 3},
+    {"_jmotif_znorm", (DL_FUNC) &_jmotif_znorm, 2},
+    {NULL, NULL, 0}
+};
+
+RcppExport void R_init_jmotif(DllInfo *dll) {
+    R_registerRoutines(dll, NULL, CallEntries, NULL, NULL);
+    R_useDynamicSymbols(dll, FALSE);
 }
