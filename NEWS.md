@@ -1,5 +1,5 @@
 # Version 1.0.3
-* Fixed memory leaks in RRA.
+* Fixed vector overruns in RRA.
 
 # Version 1.0.2.9000
 
