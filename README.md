@@ -16,7 +16,7 @@
 [![Downloads from Rstudio mirror per month](http://cranlogs.r-pkg.org/badges/jmotif?color=brightgreen)](http://www.r-pkg.org/pkg/jmotif)
 [![Downloads from Rstudio mirror](http://cranlogs.r-pkg.org/badges/grand-total/jmotif?color=brightgreen)](http://www.r-pkg.org/pkg/jmotif)
 
-#### Most of this functionality is implemented in [Java](https://github.com/jMotif/SAX) and some in [Python](https://github.com/seninp/saxpy) as well...
+#### Most of this functionality is also implemented in [Java](https://github.com/jMotif/SAX) and some in [Python](https://github.com/seninp/saxpy) as well...
 
 #### Notes:
 In order to process sets of timeseries with uneven length, pad shorter with NA within the input data frame (list). Window-based SAX discretization procedure (sliding window left to right) will detect NA within right side of sliding window and abandon any further processing for the current time series continuing to the next.  
