@@ -16,10 +16,16 @@ Computes a Piecewise Aggregate Approximation (PAA) for a time series.
 }
 \examples{
 x = c(-1, -2, -1, 0, 2, 1, 1, 0)
-plot(x, type = "l", main = "8-points time series and it PAA transform into three points")
-points(x,pch = 16, lwd = 5)
-# segments
-abline(v = c(1, 1+7/3, 1+7/3 * 2, 8), lty = 3, lwd = 2)
+x_paa3 = paa(x, 3)
+#
+plot(x, type = "l", main = c("8-points time series and its PAA transform into three points",
+                          "PAA shown schematically in blue"))
+points(x, pch = 16, lwd = 5)
+#
+paa_bounds = c(1, 1+7/3, 1+7/3*2, 8)
+abline(v = paa_bounds, lty = 3, lwd = 2, col = "cornflowerblue")
+segments(paa_bounds[1:3], x_paa3, paa_bounds[2:4], x_paa3, col = "cornflowerblue", lwd = 2)
+points(x = c(1, 1+7/3, 1+7/3*2) + (7/3)/2, y = x_paa3, pch = 15, lwd = 5, col = "cornflowerblue")
 }
 \references{
 Keogh, E., Chakrabarti, K., Pazzani, M., Mehrotra, S.,
