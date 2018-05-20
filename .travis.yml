@@ -10,6 +10,10 @@ r:
 - release
 - devel
 
+r_github_packages:
+  - jimhester/covr
+  - jimhester/lintr
+
 after_success:
   - Rscript -e 'covr::codecov()'
   - Rscript -e 'lintr::lint_package()'
