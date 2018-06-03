@@ -142,7 +142,7 @@ Rcpp::DataFrame bags_to_tfidf(Rcpp::List data) {
   // iterate over the list elements building the global word entry count matrix
   //
   std::map<std::string, std::vector<int> > counts;
-  for(unsigned i = 0; i< class_names.size(); i++) {
+  for(unsigned i = 0; i < class_names.size(); i++) {
 
     // get a current class' wordbag
     std::string current_class_name = class_names[i];
