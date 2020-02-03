@@ -17,7 +17,7 @@ cverror <- function(x) {
   m <- length(train_labels)
   c <- length(unique(train_labels))
 
-  folds <- cvFolds(m, K = nfolds, type = "random")
+  folds <- cvTools::cvFolds(m, K = nfolds, type = "random")
 
   errors <- list()
   for (i in c(1:nfolds)) {
@@ -29,15 +29,15 @@ cverror <- function(x) {
     for (j in 1:c) {
       ll <- which(train_labels[set_train] == unique(train_labels)[j])
       bags[[unique(train_labels)[j]]] <-
-                  manyseries_to_wordbag( (train_data[set_train, ])[ll,], w, p, a, "exact", 0.01)
+                  manyseries_to_wordbag((train_data[set_train, ])[ll, ], w, p, a, "exact", 0.01)
     }
-    tfidf <- jmotif::bags_to_tfidf( bags )
+    tfidf <- jmotif::bags_to_tfidf(bags)
 
     labels_predicted <- rep(-1, length(set_test))
     labels_test <- train_labels[set_test]
     data_test <- train_data[set_test, ]
 
-    for (j in c(1:length(labels_predicted))) {
+    for (j in c(seq_along(labels_predicted))) {
       bag <- NA
       if (length(labels_predicted) > 1) {
         bag <- series_to_wordbag(data_test[j, ], w, p, a, "exact", 0.01)
@@ -57,7 +57,7 @@ cverror <- function(x) {
 
   }
 
-  err <- mean(laply(errors,function(x){x}))
+  err <- mean(laply(errors, function(x){x}))
 
   print(paste(w, p, a, " -> ", err))
 
@@ -68,25 +68,26 @@ cverror <- function(x) {
 train_data <- CBF[["data_train"]]
 train_labels <- CBF[["labels_train"]]
 nfolds <- 30
-S <- directL(cverror, rep(c(10, 2, 2)), rep(c(120, 60, 12)),
+fit <- directL(cverror, rep(c(10, 2, 2)), rep(c(120, 60, 12)),
              nl.info = TRUE, control = list(xtol_rel = 1e-8, maxeval = 30))
+cverror(fit$par)
 
 train_data <- Gun_Point[["data_train"]]
 train_labels <- Gun_Point[["labels_train"]]
 nfolds <- 50
-S <- directL(cverror, rep(c(10, 2, 2)), rep(c(140, 50, 12)),
+fit <- directL(cverror, rep(c(10, 2, 2)), rep(c(140, 50, 12)),
              nl.info = TRUE, control = list(xtol_rel = 1e-8, maxeval = 30))
-cverror( S$par)
+cverror(fit$par)
 
 data <- read.table("../../sax-vsm_classic.git/src/resources/data/Beef/Beef_TRAIN")
 train_labels <- unlist(data[, 1])
 train_data <- matrix(unlist(data[, -1]), nrow = length(train_labels))
 nfolds <- 30
 
-S <- directL(cverror, rep(c(10, 2, 2)), rep(c(470, 100, 16)),
+fit <- directL(cverror, rep(c(10, 2, 2)), rep(c(470, 100, 16)),
              nl.info = TRUE, control = list(xtol_rel = 1e-8, maxeval = 1000))
 
-cverror( S$par)
+cverror(fit$par)
 
 # 19 40 14
 # nloptr.print.options()

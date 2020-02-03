@@ -15,7 +15,7 @@ funnel <- manyseries_to_wordbag(CBF[["data_train"]][CBF[["labels_train"]] == 3, 
 
 # compute tf*idf weights for three bags
 #
-tfidf <- bags_to_tfidf( list("cylinder" = cylinder, "bell" = bell, "funnel" = funnel) )
+tfidf <- bags_to_tfidf(list("cylinder" = cylinder, "bell" = bell, "funnel" = funnel))
 
 # classify the test data
 #
@@ -26,7 +26,7 @@ data_test <- CBF[["data_test"]]
 
 # assign labels using the cosine similarity
 #
-for (i in c(1:length(data_test[, 1]))) {
+for (i in c(seq_len(length(data_test[, 1])))) {
   series <- data_test[i, ]
   bag <- series_to_wordbag(series, w, p, a, "exact", 0.01)
   cosines <- cosine_sim(list("bag" = bag, "tfidf" = tfidf))
@@ -35,7 +35,7 @@ for (i in c(1:length(data_test[, 1]))) {
 
 # compute the classification error
 #
-error <- length( which(labels_test != labels_predicted)) / length(labels_test)
+error <- length(which(labels_test != labels_predicted)) / length(labels_test)
 error
 
 # findout which time series were misclassified
