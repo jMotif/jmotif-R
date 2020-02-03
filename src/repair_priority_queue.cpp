@@ -133,7 +133,7 @@ void repair_priority_queue::remove_node(repair_pqueue_node* node){
   }
 
   // consistency_check();
-};
+}
 
 //
 // updates the digram's frequency and moves it around the queue to the proper place
