@@ -101,6 +101,60 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// series_to_wordbag
+Rcpp::DataFrame series_to_wordbag(NumericVector ts, int w_size, int paa_size, int a_size, CharacterVector nr_strategy, double n_threshold);
+RcppExport SEXP _jmotif_series_to_wordbag(SEXP tsSEXP, SEXP w_sizeSEXP, SEXP paa_sizeSEXP, SEXP a_sizeSEXP, SEXP nr_strategySEXP, SEXP n_thresholdSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type ts(tsSEXP);
+    Rcpp::traits::input_parameter< int >::type w_size(w_sizeSEXP);
+    Rcpp::traits::input_parameter< int >::type paa_size(paa_sizeSEXP);
+    Rcpp::traits::input_parameter< int >::type a_size(a_sizeSEXP);
+    Rcpp::traits::input_parameter< CharacterVector >::type nr_strategy(nr_strategySEXP);
+    Rcpp::traits::input_parameter< double >::type n_threshold(n_thresholdSEXP);
+    rcpp_result_gen = Rcpp::wrap(series_to_wordbag(ts, w_size, paa_size, a_size, nr_strategy, n_threshold));
+    return rcpp_result_gen;
+END_RCPP
+}
+// manyseries_to_wordbag
+Rcpp::DataFrame manyseries_to_wordbag(NumericMatrix data, int w_size, int paa_size, int a_size, CharacterVector nr_strategy, double n_threshold);
+RcppExport SEXP _jmotif_manyseries_to_wordbag(SEXP dataSEXP, SEXP w_sizeSEXP, SEXP paa_sizeSEXP, SEXP a_sizeSEXP, SEXP nr_strategySEXP, SEXP n_thresholdSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericMatrix >::type data(dataSEXP);
+    Rcpp::traits::input_parameter< int >::type w_size(w_sizeSEXP);
+    Rcpp::traits::input_parameter< int >::type paa_size(paa_sizeSEXP);
+    Rcpp::traits::input_parameter< int >::type a_size(a_sizeSEXP);
+    Rcpp::traits::input_parameter< CharacterVector >::type nr_strategy(nr_strategySEXP);
+    Rcpp::traits::input_parameter< double >::type n_threshold(n_thresholdSEXP);
+    rcpp_result_gen = Rcpp::wrap(manyseries_to_wordbag(data, w_size, paa_size, a_size, nr_strategy, n_threshold));
+    return rcpp_result_gen;
+END_RCPP
+}
+// bags_to_tfidf
+Rcpp::DataFrame bags_to_tfidf(Rcpp::List data);
+RcppExport SEXP _jmotif_bags_to_tfidf(SEXP dataSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::List >::type data(dataSEXP);
+    rcpp_result_gen = Rcpp::wrap(bags_to_tfidf(data));
+    return rcpp_result_gen;
+END_RCPP
+}
+// cosine_sim
+Rcpp::DataFrame cosine_sim(Rcpp::List data);
+RcppExport SEXP _jmotif_cosine_sim(SEXP dataSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::List >::type data(dataSEXP);
+    rcpp_result_gen = Rcpp::wrap(cosine_sim(data));
+    return rcpp_result_gen;
+END_RCPP
+}
 // alphabet_to_cuts
 NumericVector alphabet_to_cuts(int a_size);
 RcppExport SEXP _jmotif_alphabet_to_cuts(SEXP a_sizeSEXP) {
@@ -163,60 +217,6 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< int >::type a_size(a_sizeSEXP);
     Rcpp::traits::input_parameter< double >::type n_threshold(n_thresholdSEXP);
     rcpp_result_gen = Rcpp::wrap(sax_by_chunking(ts, paa_size, a_size, n_threshold));
-    return rcpp_result_gen;
-END_RCPP
-}
-// series_to_wordbag
-Rcpp::DataFrame series_to_wordbag(NumericVector ts, int w_size, int paa_size, int a_size, CharacterVector nr_strategy, double n_threshold);
-RcppExport SEXP _jmotif_series_to_wordbag(SEXP tsSEXP, SEXP w_sizeSEXP, SEXP paa_sizeSEXP, SEXP a_sizeSEXP, SEXP nr_strategySEXP, SEXP n_thresholdSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< NumericVector >::type ts(tsSEXP);
-    Rcpp::traits::input_parameter< int >::type w_size(w_sizeSEXP);
-    Rcpp::traits::input_parameter< int >::type paa_size(paa_sizeSEXP);
-    Rcpp::traits::input_parameter< int >::type a_size(a_sizeSEXP);
-    Rcpp::traits::input_parameter< CharacterVector >::type nr_strategy(nr_strategySEXP);
-    Rcpp::traits::input_parameter< double >::type n_threshold(n_thresholdSEXP);
-    rcpp_result_gen = Rcpp::wrap(series_to_wordbag(ts, w_size, paa_size, a_size, nr_strategy, n_threshold));
-    return rcpp_result_gen;
-END_RCPP
-}
-// manyseries_to_wordbag
-Rcpp::DataFrame manyseries_to_wordbag(NumericMatrix data, int w_size, int paa_size, int a_size, CharacterVector nr_strategy, double n_threshold);
-RcppExport SEXP _jmotif_manyseries_to_wordbag(SEXP dataSEXP, SEXP w_sizeSEXP, SEXP paa_sizeSEXP, SEXP a_sizeSEXP, SEXP nr_strategySEXP, SEXP n_thresholdSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< NumericMatrix >::type data(dataSEXP);
-    Rcpp::traits::input_parameter< int >::type w_size(w_sizeSEXP);
-    Rcpp::traits::input_parameter< int >::type paa_size(paa_sizeSEXP);
-    Rcpp::traits::input_parameter< int >::type a_size(a_sizeSEXP);
-    Rcpp::traits::input_parameter< CharacterVector >::type nr_strategy(nr_strategySEXP);
-    Rcpp::traits::input_parameter< double >::type n_threshold(n_thresholdSEXP);
-    rcpp_result_gen = Rcpp::wrap(manyseries_to_wordbag(data, w_size, paa_size, a_size, nr_strategy, n_threshold));
-    return rcpp_result_gen;
-END_RCPP
-}
-// bags_to_tfidf
-Rcpp::DataFrame bags_to_tfidf(Rcpp::List data);
-RcppExport SEXP _jmotif_bags_to_tfidf(SEXP dataSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::List >::type data(dataSEXP);
-    rcpp_result_gen = Rcpp::wrap(bags_to_tfidf(data));
-    return rcpp_result_gen;
-END_RCPP
-}
-// cosine_sim
-Rcpp::DataFrame cosine_sim(Rcpp::List data);
-RcppExport SEXP _jmotif_cosine_sim(SEXP dataSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::List >::type data(dataSEXP);
-    rcpp_result_gen = Rcpp::wrap(cosine_sim(data));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -311,15 +311,15 @@ static const R_CallMethodDef CallEntries[] = {
     {"_jmotif_paa", (DL_FUNC) &_jmotif_paa, 2},
     {"_jmotif_str_to_repair_grammar", (DL_FUNC) &_jmotif_str_to_repair_grammar, 1},
     {"_jmotif_find_discords_rra", (DL_FUNC) &_jmotif_find_discords_rra, 7},
+    {"_jmotif_series_to_wordbag", (DL_FUNC) &_jmotif_series_to_wordbag, 6},
+    {"_jmotif_manyseries_to_wordbag", (DL_FUNC) &_jmotif_manyseries_to_wordbag, 6},
+    {"_jmotif_bags_to_tfidf", (DL_FUNC) &_jmotif_bags_to_tfidf, 1},
+    {"_jmotif_cosine_sim", (DL_FUNC) &_jmotif_cosine_sim, 1},
     {"_jmotif_alphabet_to_cuts", (DL_FUNC) &_jmotif_alphabet_to_cuts, 1},
     {"_jmotif_series_to_chars", (DL_FUNC) &_jmotif_series_to_chars, 2},
     {"_jmotif_series_to_string", (DL_FUNC) &_jmotif_series_to_string, 2},
     {"_jmotif_sax_via_window", (DL_FUNC) &_jmotif_sax_via_window, 6},
     {"_jmotif_sax_by_chunking", (DL_FUNC) &_jmotif_sax_by_chunking, 4},
-    {"_jmotif_series_to_wordbag", (DL_FUNC) &_jmotif_series_to_wordbag, 6},
-    {"_jmotif_manyseries_to_wordbag", (DL_FUNC) &_jmotif_manyseries_to_wordbag, 6},
-    {"_jmotif_bags_to_tfidf", (DL_FUNC) &_jmotif_bags_to_tfidf, 1},
-    {"_jmotif_cosine_sim", (DL_FUNC) &_jmotif_cosine_sim, 1},
     {"_jmotif_idx_to_letter", (DL_FUNC) &_jmotif_idx_to_letter, 1},
     {"_jmotif_letter_to_idx", (DL_FUNC) &_jmotif_letter_to_idx, 1},
     {"_jmotif_letters_to_idx", (DL_FUNC) &_jmotif_letters_to_idx, 1},

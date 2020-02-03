@@ -6,8 +6,15 @@
 Usually works the best with higher than that for HOT-SAX sizes of discretization parameters
 (i.e., PAA and Alphabet sizes).}
 \usage{
-find_discords_rra(series, w_size, paa_size, a_size, nr_strategy, n_threshold,
-  discords_num)
+find_discords_rra(
+  series,
+  w_size,
+  paa_size,
+  a_size,
+  nr_strategy,
+  n_threshold,
+  discords_num
+)
 }
 \arguments{
 \item{series}{the input timeseries.}

@@ -1,5 +1,6 @@
 Package: jmotif
 Version: 1.0.3
+Encoding: UTF-8
 Title: Time Series Analysis Toolkit Based on Symbolic Aggregate Dicretization, i.e. SAX
 Description: Implements time series z-normalization, SAX, HOT-SAX, VSM, SAX-VSM, RePair, and RRA
     algorithms facilitating time series motif (i.e., recurrent pattern), discord (i.e., anomaly),
@@ -20,4 +21,4 @@ LinkingTo:
 LazyData: true
 SystemRequirements: C++11
 License: GPL-2
-RoxygenNote: 6.0.1
+RoxygenNote: 7.0.2

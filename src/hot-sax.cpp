@@ -156,7 +156,7 @@ Rcpp::DataFrame find_discords_hotsax(NumericVector ts, int w_size, int paa_size,
   std::unordered_map<std::string, std::vector<int> > word2indexes;
 
   CharacterVector old_str("");
-  for (int i = 0; i <= series.size() - w_size; i++) {
+  for (unsigned i = 0; i <= series.size() - w_size; i++) {
 
     std::vector<double>::const_iterator first = series.begin() + i;
     std::vector<double>::const_iterator last = series.begin() + i + w_size;
@@ -206,7 +206,7 @@ Rcpp::DataFrame find_discords_hotsax(NumericVector ts, int w_size, int paa_size,
     if(start<0){
       start = 0;
     }
-    int end = rec.index + w_size;
+    unsigned end = rec.index + w_size;
     if(end>=series.size()){
       end = series.size();
     }
