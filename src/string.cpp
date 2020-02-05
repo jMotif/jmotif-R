@@ -103,7 +103,7 @@ bool is_equal_mindist(CharacterVector a, CharacterVector b) {
 
 int _count_spaces(std::string *s) {
   int count = 0;
-  for (int i = 0; i < s->size(); i++)
+  for (unsigned i = 0; i < s->size(); i++)
     if (s->at(i) == ' ') count++;
     return count;
 }

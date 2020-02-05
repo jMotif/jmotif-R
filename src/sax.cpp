@@ -175,7 +175,7 @@ CharacterVector series_to_chars(NumericVector ts, int a_size) {
   std::vector<char> res(len);
   for (int i=0; i<len; i++) {
     int ctr = 0;
-    for(int j=0; j<cuts.size(); j++){
+    for(unsigned j=0; j<cuts.size(); j++){
       if(cuts[j]<ts[i]){
         ctr++;
       } else {
@@ -207,7 +207,7 @@ CharacterVector series_to_string(NumericVector ts, int a_size) {
   std::string res(len, ' ');
   for (int i=0; i<len; i++) {
     int ctr = 0;
-    for(int j=0; j<cuts.size(); j++){
+    for(unsigned j=0; j<cuts.size(); j++){
       if(cuts[j]<ts[i]){
         ctr++;
       } else {
@@ -225,7 +225,7 @@ std::string _series_to_string(std::vector<double> ts, int a_size) {
   std::string res(len, ' ');
   for (int i=0; i<len; i++) {
     int ctr = 0;
-    for(int j=0; j<cuts.size(); j++){
+    for(unsigned j=0; j<cuts.size(); j++){
       if(cuts[j]<ts[i]){
         ctr++;
       } else {
@@ -249,7 +249,7 @@ std::unordered_map<int, std::string> _sax_via_window(
 
   //Rcout << "series length " << ts.size() << ", window " << w_size << std::endl;
 
-  for (int i = 0; i <= ts.size() - w_size; i++) {
+  for (unsigned i = 0; i <= ts.size() - w_size; i++) {
 
     // check if NA is encountered
     int idx = i + w_size - 1;
@@ -331,7 +331,7 @@ std::map<int, std::string> sax_via_window(
 
   std::string old_str("");
 
-  for (int i = 0; i <= series.size() - w_size; i++) {
+  for (unsigned i = 0; i <= series.size() - w_size; i++) {
 
     // check if NA is encountered
     int idx = i + w_size - 1;

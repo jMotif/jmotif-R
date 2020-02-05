@@ -52,7 +52,7 @@ std::vector<double> _znorm(std::vector<double> ts, double threshold) {
   }
 
   std::vector<double> res(ts.size());
-  for(int i=0; i<ts.size(); i++){
+  for(unsigned i=0; i<ts.size(); i++){
     res[i] = (ts[i]-mean)/stdev;
   }
   return res;

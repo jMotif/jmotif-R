@@ -314,7 +314,7 @@ std::unordered_map<int, rule_record*> _str_to_repair_grammar(std::string s) {
 
       // ### now need to fix the OLE RIGHT digram
       // ###
-      if(occ < r0.size() - 2 && nullptr != next_not_null){
+      if(occ < (int) r0.size() - 2 && nullptr != next_not_null){
 
         // Rcout << " *** fixing old right digram: ";
 
@@ -526,7 +526,7 @@ Rcpp::List str_to_repair_grammar(CharacterVector str){
   // make results
   Rcpp::List res(rules.size());
 
-  for(int i = 0; i < rules.size(); ++i) {
+  for(unsigned i = 0; i < rules.size(); ++i) {
 
     std::unordered_map<int, rule_record*>::iterator it = rules.find(i);
 

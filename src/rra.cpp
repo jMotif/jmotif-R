@@ -121,7 +121,7 @@ rra_discord_record find_best_rra_discord(std::vector<double> *ts, int w_size,
   double bestSoFarDistance = -1;
 
   // outer loop over all intervals
-  for(int i = 0; i < intervals->size(); i++){
+  for(int i = 0; i < (int) intervals->size(); i++){
 
     // ****
     // tstart = std::chrono::system_clock::now();
@@ -144,7 +144,7 @@ rra_discord_record find_best_rra_discord(std::vector<double> *ts, int w_size,
       markStart = 0;
     }
     int markEnd = c_interval.end;
-    if (markEnd > ts->size()) {
+    if (markEnd > (int) ts->size()) {
       markEnd = ts->size();
     }
     for(int j=markStart;j<markEnd;j++){
@@ -211,7 +211,7 @@ rra_discord_record find_best_rra_discord(std::vector<double> *ts, int w_size,
 
       // init the visit array
       int cIndex = 0;
-      for (int j = 0; j < intervals->size(); j++) {
+      for (unsigned j = 0; j < intervals->size(); j++) {
         rule_interval interval = intervals->at(j);
         auto found = visited_locations.find(interval.start);
         if (found == visited_locations.end()) {
@@ -347,7 +347,7 @@ Rcpp::DataFrame find_discords_rra(NumericVector series, int w_size, int paa_size
   // now compose the string
   //
   std::string sax_str;
-  for(int i=0; i<indexes.size(); i++){
+  for(unsigned i=0; i<indexes.size(); i++){
     sax_str.append(sax_map[ indexes[i] ]).append(" ");
   }
   sax_str.erase( sax_str.end()-1 );
@@ -411,7 +411,7 @@ Rcpp::DataFrame find_discords_rra(NumericVector series, int w_size, int paa_size
   bool need_placement = false;
   int start = -1;
   bool in_interval = false;
-  for (int i = 0; i < coverage_array.size(); i++) {
+  for (unsigned i = 0; i < coverage_array.size(); i++) {
     if (0 == coverage_array[i] && !in_interval) {
       start = i;
       in_interval = true;
@@ -470,7 +470,7 @@ Rcpp::DataFrame find_discords_rra(NumericVector series, int w_size, int paa_size
 
   std::vector<rra_discord_record> discords;
 
-  while(discords.size() < discords_num){
+  while((int) discords.size() < discords_num){
 
     // tstart = std::chrono::system_clock::now();
 
@@ -489,7 +489,7 @@ Rcpp::DataFrame find_discords_rra(NumericVector series, int w_size, int paa_size
       markStart = 0;
     }
     int markEnd = d.end;
-    if (markEnd > ts.size()) {
+    if (markEnd > (int) ts.size()) {
       markEnd = ts.size();
     }
     for(int j=markStart;j<markEnd;j++){
