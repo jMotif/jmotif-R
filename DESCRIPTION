@@ -1,5 +1,5 @@
 Package: jmotif
-Version: 1.0.3
+Version: 1.1.0
 Encoding: UTF-8
 Title: Time Series Analysis Toolkit Based on Symbolic Aggregate Dicretization, i.e. SAX
 Description: Implements time series z-normalization, SAX, HOT-SAX, VSM, SAX-VSM, RePair, and RRA

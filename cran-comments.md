@@ -1,14 +1,16 @@
 ## Submission
-
-This can be considered as a resubmission with valgrind buffer overrun fixes.
+This is a maintenance release fixing warnings with libraries deprecation. 
+Compiled using
+CXX11FLAGS = -Wdeprecated-declarations -Wsign-compare -pedantic
+No warnings were thrown.
 
 ## Changes
 
-Fixing memory leaks.
+All over source code in order to fix any thrown warnings.
 
 ## Test environments
-* Ubuntu LTS 16.04 (localhost), R 3.4.3
-* Ubuntu LTS 14.04.5 (on travis-ci), R 3.4.2
+* Ubuntu LTS 19.10 (localhost), R 3.6.1
+* Ubuntu LTS 16.04 (on travis-ci), R 3.5
 * win-builder (devel and release)
 
 ## R CMD check results

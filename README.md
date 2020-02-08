@@ -63,7 +63,7 @@ to start using the library, simply load it into R environment:
     library(jmotif)
 
 #### 1.0 Time series z-Normalization
-z-normalization (`znorm(ts, threshold)`) is a common to the field of time series patterns mining preprocessing step proposed by Goldin & Kannelakis which helps downstream analyses to focus on the time series structural features.
+z-normalization (`znorm(ts, threshold)`) is a common to the field of time series patterns mining preprocessing step proposed by Goldin & Kannellakis which helps downstream analyses to focus on the time series structural features.
 
     x = seq(0, pi*4, 0.02)
     y = sin(x) * 5 + rnorm(length(x))
@@ -428,13 +428,13 @@ At this point S contains the best SAX parameters which were found using 10 DIREC
 which shows us that one instance of each of the classes was misclassified....
 
 #### 7.0 HOT-SAX algorithm for time series discord discovery
-Given a time series _T_, its subsequence _C_  is called *discord* if it has the largest Euclidean distance to its nearest non-self match. Thus, time series discord is a subsequence within a time series that is _maximally different_ to all the rest of subsequences in the time series, and therefore naturaly captures the most unusual subsequence within the time series.
+Given a time series _T_, its subsequence _C_  is called *discord* if it has the largest Euclidean distance to its nearest non-self match. Thus, time series discord is a subsequence within a time series that is _maximally different_ to all the rest of subsequences in the time series, and therefore naturally captures the most unusual subsequence within the time series.
 
 The library embeds the ECG0606 dataset taken from [PHYSIONET FTP](http://physionet.org/physiobank/database/qtdb/). The raw data was transformed with their `rdsamp` utility 
 
     rdsamp -r sele0606 -f 120.000 -l 60.000 -p -c | sed -n '701,3000p' >0606.csv
 
-and conists of 15 heartbeats:
+and consists of 15 heartbeats:
 
 ![ECG0606 data](https://raw.githubusercontent.com/jMotif/jmotif-R/master/inst/site/ecg0606.png)
 
@@ -442,7 +442,7 @@ We know, that the third heartbeat of this dataset contains the true anomaly as i
 
 ![ECG0606 clusters](https://raw.githubusercontent.com/jMotif/jmotif-R/master/inst/site/demo-ecg0606_cluster.png)
 
-Two implementation of discord discovery provided within the code: the brute-force didcord discovery and HOT-SAX. 
+Two implementation of discord discovery provided within the code: the brute-force discord discovery and HOT-SAX. 
 
 The brute-force takes 14 seconds to discover 5 discords in the data (with early-abandoning distance):
 
@@ -521,9 +521,9 @@ produces a list of data frames, each of which contains the RePair grammar rule i
      $ rule_interval_ends  : num [1:2] 3 9
 
 #### 8.0 Rule density curve
-As we have discussed in our work, SAX opens door for many high-level string algorithms aplication to the problem of patterns mining in time series. Specifically in [[8](http://csdl.ics.hawaii.edu/techreports/2014/14-05/14-05.pdf)], we have shown useful properties of grammatical compression (i.e., algorithmic complexity) when applied to the problem of recurrent and anomalous pattern discovery.
+As we have discussed in our work, SAX opens door for many high-level string algorithms application to the problem of patterns mining in time series. Specifically in [[8](http://csdl.ics.hawaii.edu/techreports/2014/14-05/14-05.pdf)], we have shown useful properties of grammatical compression (i.e., algorithmic complexity) when applied to the problem of recurrent and anomalous pattern discovery.
 
-Jmotif-R implements RePair [7] algoithm for grammar induction, which can be used to build the rule density curve enabling highly efficient approximate time series anomaly discovery.
+Jmotif-R implements RePair [7] algorithm for grammar induction, which can be used to build the rule density curve enabling highly efficient approximate time series anomaly discovery.
 
 I use the same ECG0606 dataset in this example:
 
@@ -538,7 +538,7 @@ I use the same ECG0606 dataset in this example:
         axis.ticks.y=element_blank(),axis.text.y=element_blank())
     p1
     
-and use RePar implementation to build the gramar curve:
+and use RePar implementation to build the grammar curve:
 
     # discretization parameters
     w=100
