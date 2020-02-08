@@ -1,3 +1,6 @@
+# Version 1.1.0
+* Fixed deprecation and comparison warnings, C++ 11 compatibility.
+
 # Version 1.0.3
 * Fixed vector overruns in RRA.
 
