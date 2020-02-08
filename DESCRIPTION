@@ -1,7 +1,7 @@
 Package: jmotif
 Version: 1.1.0
 Encoding: UTF-8
-Title: Time Series Analysis Toolkit Based on Symbolic Aggregate Dicretization, i.e. SAX
+Title: Time Series Analysis Toolkit Based on Symbolic Aggregate Discretization, i.e. SAX
 Description: Implements time series z-normalization, SAX, HOT-SAX, VSM, SAX-VSM, RePair, and RRA
     algorithms facilitating time series motif (i.e., recurrent pattern), discord (i.e., anomaly),
     and characteristic pattern discovery along with interpretable time series classification.
