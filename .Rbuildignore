@@ -8,3 +8,4 @@ inst/test_data
 NEWS\.md
 ^\.lintr$
 ^cran-comments.md$
+^CRAN-RELEASE$

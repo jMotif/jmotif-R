@@ -6,7 +6,6 @@ No warnings were thrown.
 
 The check_rhub() yielded two notes:
 
-
 * checking CRAN incoming feasibility ... NOTE
 Maintainer: 'Pavel Senin <seninp@gmail.com>'
 
