@@ -105,5 +105,5 @@ int _count_spaces(std::string *s) {
   int count = 0;
   for (unsigned i = 0; i < s->size(); i++)
     if (s->at(i) == ' ') count++;
-    return count;
+  return count;
 }
