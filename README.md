@@ -124,7 +124,7 @@ The figure below illustrates the PAA+SAX procedure: 8 points time series is conv
 ![an application of SAX transform (3 letters word size and 3 letters alphabet size) to an 8 points time series ](https://raw.githubusercontent.com/jMotif/jmotif-R/master/inst/site/fig_sax83.png)
 
 #### 4.0 Time series SAX transform via sliding window 
-Another common way to use SAX is to apply the procedure to sliding window-extracted subseries (`sax_via_window(ts, win_size, paa_size, alp_size, nr_strategy, n_threshold)`). This technique is used in SAX-VSM, where it unables the conversion of a time series into the word bags. Note, the use of a numerosity reduction strategy.
+Another common way to use SAX is to apply the procedure to sliding window-extracted subseries (`sax_via_window(ts, win_size, paa_size, alp_size, nr_strategy, n_threshold)`). This technique is used in SAX-VSM, where it enables the conversion of a time series into the word bags. Note, the use of a numerosity reduction strategy.
 
 #### 5.0 SAX-VSM classifier
 I use the one of [standard UCR time series datasets](http://www.cs.ucr.edu/~eamonn/time_series_data/) to illustrate the implemented approach. The Cylinder-Bell-Funnel dataset (Saito, N: *Local feature extraction and its application using a library of bases.* PhD thesis, Yale University (1994)) consists of three time series classes. The dataset is embedded into the `jmotif` library:  
@@ -538,7 +538,7 @@ I use the same ECG0606 dataset in this example:
         axis.ticks.y=element_blank(),axis.text.y=element_blank())
     p1
     
-and use RePar implementation to build the grammar curve:
+and use RePair implementation to build the grammar curve:
 
     # discretization parameters
     w=100
@@ -595,7 +595,7 @@ and use RePar implementation to build the grammar curve:
 #### 9.0 Rare Rule Anomaly algorithm.
 RRA (i.e., Rare Rule Anomaly) algorithm extends the HOT-SAX algorithm leveraging the grammatical compression properties (i.e. algorithmic, or Kolmogorov complexity properties). In contrast with the original algorithm, whose input is a set of time series subsequences extracted from the input time series via sliding window, RRA operates on the set of time series subsequences which correspond to a grammar' rules. The grammar, whose rules are used in RRA, is built by a grammar inference algorithm run on the set of tokens which are obtained by time series discretization with SAX and a sliding window (i.e. a HOT-SAX input). jmotif-R is using Re-Pair algorithm for grammatical inference.
 
-Since each of the grammar rules consists of terminal and non-terminal tokens, the subsequences corresponding to rules naturaly vary in length. Moreover, due to the compression properties of the utilized grammatical inference algorithm, which operates on digrams (i.e. pairs of subsequences extracted via sliding window), the amount of input subsequences for RAA is usually significantly lower than those extracted via sliding window for HOT-SAX, which improves the efficiency of HOT-SAX inner and outer loops by reducing the number of calls to the distance function. 
+Since each of the grammar rules consists of terminal and non-terminal tokens, the subsequences corresponding to rules naturally vary in length. Moreover, due to the compression properties of the utilized grammatical inference algorithm, which operates on digrams (i.e. pairs of subsequences extracted via sliding window), the amount of input subsequences for RAA is usually significantly lower than those extracted via sliding window for HOT-SAX, which improves the efficiency of HOT-SAX inner and outer loops by reducing the number of calls to the distance function. 
 
 In addition to the above, RRA uses a different heuristics for the ordering in the HOT-SAX outer loop: instead of ordering subsequences by their occurrence frequency, the rule-corresponding subsequences are ordered according to the "rule coverage" values discussed above -- a value which reflects the compressibility of the subsequence. Naturally, we expect that incompressible subsequences correspond to potential anomalies.    
 
