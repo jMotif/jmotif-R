@@ -19,6 +19,6 @@ LinkingTo:
     Rcpp,
     RcppArmadillo
 LazyData: true
-SystemRequirements: C++111
+SystemRequirements: C++11
 License: GPL-2
 RoxygenNote: 7.0.2
