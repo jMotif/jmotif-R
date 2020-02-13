@@ -1,31 +1,15 @@
 ## Submission
-This is a maintenance release fixing warnings with libraries deprecation. 
-Compiled using
-CXX11FLAGS = -Wdeprecated-declarations -Wsign-compare -pedantic
-No warnings were thrown.
+This yet another C++11 fix, fixing clang warning: 
+  Result: WARN
+    Found the following significant warnings:
+     znorm.cpp:44:59: warning: 'bind2nd<std::__1::minus<double>, double>' is deprecated [-Wdeprecated-declarations]
 
-The check_rhub() yielded two notes:
+The old code:
+std::transform(ts.begin(), ts.end(), diff.begin(), std::bind2nd(std::minus<double>(), mean));
 
-* checking CRAN incoming feasibility ... NOTE
-Maintainer: 'Pavel Senin <seninp@gmail.com>'
-
-New submission
-
-Package was archived on CRAN
-
-Possibly mis-spelled words in DESCRIPTION:
-  RRA (6:94)
-  RePair (6:82)
-  VSM (6:68, 6:77)
-  interpretable (8:53)
-
-CRAN repository db overrides:
-  X-CRAN-Comment: Archived on 2019-12-01 as installation warnings were
-    not addressed despite reminders.
-* checking for non-standard things in the check directory ... NOTE
-Found the following files/directories:
-  'examples_i386' 'examples_x64' 'jmotif-Ex_i386.Rout'
-  'jmotif-Ex_x64.Rout' 'tests_i386' 'tests_x64'
+The new code:
+ for(unsigned i=0; i<ts.size(); i++)
+    diff[i] = ts[i]-mean;
 
 ## Changes
 

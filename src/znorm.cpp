@@ -41,7 +41,10 @@ std::vector<double> _znorm(std::vector<double> ts, double threshold) {
   // Rcout << " mean2 " << mean << "\n";
 
   std::vector<double> diff(ts.size());
-  std::transform(ts.begin(), ts.end(), diff.begin(), std::bind2nd(std::minus<double>(), mean));
+  //std::transform(ts.begin(), ts.end(), diff.begin(), std::bind2nd(std::minus<double>(), mean));
+  for(unsigned i=0; i<ts.size(); i++)
+    diff[i] = ts[i]-mean;
+
   double sq_sum = std::inner_product(diff.begin(), diff.end(), diff.begin(), 0.0);
   double stdev = std::sqrt(sq_sum / (ts.size()-1));
   // Rcout << " stdev2 " << stdev << "\n";
