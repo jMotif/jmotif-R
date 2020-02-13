@@ -1,7 +1,6 @@
 # Version 1.1.1
 * Fixed std::bind2nd deprecation warning.
 
-
 # Version 1.1.0
 * Fixed deprecation and comparison warnings, C++ 11 compatibility.
 
