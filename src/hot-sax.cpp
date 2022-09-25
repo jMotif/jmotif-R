@@ -1,6 +1,3 @@
-#include <RcppArmadillo.h>
-using namespace Rcpp ;
-//
 #include <jmotif.h>
 //
 
@@ -35,7 +32,7 @@ discord_record find_best_discord_hotsax(std::vector<double>* ts, int w_size, dou
       std::vector<double>::const_iterator first = ts->begin() + candidate_idx;
       std::vector<double>::const_iterator last = ts->begin() +  candidate_idx + w_size;
       std::vector<double> candidate_subseq(first, last);
-      std::vector<double> candidate_seq = _znorm(candidate_subseq, n_threshold);
+      // std::vector<double> candidate_seq = _znorm(candidate_subseq, n_threshold);
 
       VisitRegistry innerRegistry(ts->size() - w_size);
       bool doRandomSearch = true;
@@ -54,9 +51,9 @@ discord_record find_best_discord_hotsax(std::vector<double>* ts, int w_size, dou
           std::vector<double>::const_iterator first = ts->begin() + inner_idx;
           std::vector<double>::const_iterator last = ts->begin() + inner_idx + w_size;
           std::vector<double> curr_subseq(first, last);
-          std::vector<double> curr_seq = _znorm(curr_subseq, n_threshold);
+          // std::vector<double> curr_seq = _znorm(curr_subseq, n_threshold);
 
-          double dist = _euclidean_dist(&candidate_seq, &curr_seq);
+          double dist = _euclidean_dist(&candidate_subseq, &curr_subseq);
           distance_calls++;
 
           if(dist < nnDistance){
@@ -86,9 +83,9 @@ discord_record find_best_discord_hotsax(std::vector<double>* ts, int w_size, dou
             std::vector<double>::const_iterator first = ts->begin() + inner_idx;
             std::vector<double>::const_iterator last = ts->begin() + inner_idx + w_size;
             std::vector<double> curr_subseq(first, last);
-            std::vector<double> curr_seq = _znorm(curr_subseq, n_threshold);
+            //std::vector<double> curr_seq = _znorm(curr_subseq, n_threshold);
 
-            double dist = _euclidean_dist(&candidate_seq, &curr_seq);
+            double dist = _euclidean_dist(&candidate_subseq, &curr_subseq);
             distance_calls++;
 
             if(dist < nnDistance){

@@ -1,6 +1,3 @@
-#include <RcppArmadillo.h>
-using namespace Rcpp ;
-//
 #include <jmotif.h>
 //
 
@@ -34,11 +31,4 @@ std::vector<double> _subseries(std::vector<double> *ts, int start, int end) {
   std::vector<double>::const_iterator last = ts->begin() + end;
   std::vector<double> res(first, last);
   return res;
-}
-
-// the random generator wrapper
-//
-int armaRand() {
-  arma::ivec x = arma::randi(1);
-  return x(0);
 }

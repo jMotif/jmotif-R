@@ -1,19 +1,4 @@
-#include <RcppArmadillo.h>
-using namespace Rcpp ;
-//
 #include <jmotif.h>
-//
-
-// NumericVector subseries(const NumericVector& ts, int start, int end) {
-//   if(start < 0 || end > ts.length()){
-//     stop("provided start and stop indexes are invalid.");
-//   }
-//   NumericVector res(end-start);
-//   for (int i=start; i<end; i++) {
-//     res[i-start] = ts[i];
-//   }
-//   return res;
-// }
 
 discord_record find_best_discord_brute_force(const NumericVector& series,
                                              int w_size, VisitRegistry* globalRegistry) {
@@ -27,7 +12,7 @@ discord_record find_best_discord_brute_force(const NumericVector& series,
 
   int outer_idx = outerRegistry.getNextUnvisited();
 
-  while(!(-1==outer_idx)){
+  while(!(-1==outer_idx)){ // while there is a position to try
 
     outerRegistry.markVisited(outer_idx);
     if(globalRegistry->isVisited(outer_idx)){
@@ -51,7 +36,8 @@ discord_record find_best_discord_brute_force(const NumericVector& series,
       if(std::abs(inner_idx - outer_idx) > w_size) {
 
         NumericVector curr_seq = subseries(series, inner_idx, inner_idx + w_size);
-        double dist = early_abandoned_dist(candidate_seq, curr_seq, nnDistance);
+        // double dist = early_abandoned_dist(candidate_seq, curr_seq, nnDistance);
+        double dist = euclidean_dist(candidate_seq, curr_seq);
         // Rcout << "  .. dist:  " << dist << " best dist " << nnDistance << "\n";
 
         if ( (!std::isnan(dist)) && dist < nnDistance) {

@@ -1,6 +1,3 @@
-#include <RcppArmadillo.h>
-using namespace Rcpp ;
-//
 #include <jmotif.h>
 #include <math.h>
 // #include <iomanip>

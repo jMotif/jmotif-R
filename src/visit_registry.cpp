@@ -1,36 +1,41 @@
-#include <RcppArmadillo.h>
-using namespace Rcpp;
-//
 #include <jmotif.h>
-//
 
 // constructor
 //
 VisitRegistry::VisitRegistry( int capacity ) {
-  registry = new bool[capacity];
+
+  indexes = std::vector<int>(capacity);
+  registry = std::vector<bool>(capacity);
+
   for( int i = 0; i < capacity; i++ ) {
-    registry[i] = false;
+    indexes[i] = i;
   }
+  auto rng = std::default_random_engine {};
+  std::shuffle(std::begin(indexes), std::end(indexes), rng);
+
   unvisited_count = capacity;
   size = capacity;
+
 }
 
 // destructor
 //
 VisitRegistry::~VisitRegistry() {
-  delete[] registry;
+  registry = std::vector<bool>();
+  indexes = std::vector<int>();
 }
 
 // gets next unvisited position... following the HOTSAX heuristics this need to be a random
 // position, so we can abandon the search earlier, if possible
 //
 int VisitRegistry::getNextUnvisited(){
-  if(0 == unvisited_count){
+  if(indexes.size()<=0){
     return -1;
   } else {
     int random_index = -1;
-    do{ // iterate over random indexes until we hit an unvisited position
-      random_index = armaRand() % size;
+    do {
+      random_index = indexes.back();
+      indexes.pop_back();
     } while ( registry[random_index] );
     return random_index;
   }
@@ -39,11 +44,13 @@ int VisitRegistry::getNextUnvisited(){
 // marks a position visited, takes care about the counter
 //
 void VisitRegistry::markVisited(int idx){
-  if(registry[idx]){
-    return;
-  }else{
-    unvisited_count = unvisited_count - 1;
-    registry[idx] = true;
+  if(idx>=0 && idx<registry.size()){
+    if(registry[idx]){
+      return;
+    }else{
+      unvisited_count = unvisited_count - 1;
+      registry[idx] = true;
+    }
   }
 }
 
@@ -51,11 +58,13 @@ void VisitRegistry::markVisited(int idx){
 //
 void VisitRegistry::markVisited(int start, int end){
   for(int i=start; i<end; i++){
-    if(registry[i]){
-      continue;
-    }else{
-      unvisited_count = unvisited_count - 1;
-      registry[i] = true;
+    if(i>=0 && i<registry.size()){
+      if(registry[i]){
+        continue;
+      }else{
+        unvisited_count = unvisited_count - 1;
+        registry[i] = true;
+      }
     }
   }
 }
@@ -63,5 +72,8 @@ void VisitRegistry::markVisited(int start, int end){
 // check if the position has been marked as visited
 //
 bool VisitRegistry::isVisited(int idx){
-  return(registry[idx]);
+  if(idx>=0 && idx<registry.size()){
+    return(registry[idx]);
+  }
+  return false;
 }

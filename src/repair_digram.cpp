@@ -1,5 +1,4 @@
 #include <jmotif.h>
-using namespace Rcpp ;
 
 // constructor
 //

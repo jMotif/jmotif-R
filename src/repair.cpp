@@ -1,6 +1,5 @@
 #include <jmotif.h>
-using namespace Rcpp;
-//
+
 #include <iomanip>
 #include <chrono>
 #include <ctime>

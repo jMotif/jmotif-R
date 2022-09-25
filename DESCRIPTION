@@ -9,16 +9,16 @@ Authors@R: person("Pavel", "Senin", , "seninp@gmail.com", c("aut", "cre"))
 URL: https://github.com/jMotif/jmotif-R
 BugReports: https://github.com/jMotif/jmotif-R/issues
 Depends:
-    R (>= 3.1.0),
-    Rcpp (>= 0.11.1)
+    R (>= 4.0.0),
+    Rcpp (>= 1.0.0)
 Imports:
+    Rcpp,
     stats
 Suggests:
     testthat
 LinkingTo:
-    Rcpp,
-    RcppArmadillo
+    Rcpp
 LazyData: true
 SystemRequirements: C++11
 License: GPL-2
-RoxygenNote: 7.0.2
+RoxygenNote: 7.2.1

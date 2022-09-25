@@ -1,7 +1,5 @@
-#include <RcppArmadillo.h>
-using namespace Rcpp ;
-//
 #include <jmotif.h>
+
 #include <memory>
 #include <iostream>
 #include <string>

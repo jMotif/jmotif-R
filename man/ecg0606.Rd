@@ -4,7 +4,9 @@
 \name{ecg0606}
 \alias{ecg0606}
 \title{A PHYSIONET dataset}
-\format{A vector of numeric values}
+\format{
+A vector of numeric values
+}
 \usage{
 ecg0606
 }
