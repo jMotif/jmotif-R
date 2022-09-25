@@ -11,9 +11,9 @@ VisitRegistry::VisitRegistry( int capacity ) {
     indexes[i] = i;
   }
 
-  std::srand(std::time(nullptr));
-  auto rng = std::default_random_engine {};
-  std::shuffle(std::begin(indexes), std::end(indexes), rng);
+  std::random_device rd;
+  std::mt19937 g(rd());
+  std::shuffle(std::begin(indexes), std::end(indexes), g);
 
   unvisited_count = capacity;
   size = capacity;
@@ -31,16 +31,15 @@ VisitRegistry::~VisitRegistry() {
 // position, so we can abandon the search earlier, if possible
 //
 int VisitRegistry::getNextUnvisited(){
-  if(indexes.size()<=0){
-    return -1;
-  } else {
-    int random_index = -1;
+  int random_index = -1;
     do {
+      if(indexes.size()<=0){
+        return -1;
+      }
       random_index = indexes.back();
       indexes.pop_back();
     } while ( registry[random_index] );
     return random_index;
-  }
 }
 
 // marks a position visited, takes care about the counter

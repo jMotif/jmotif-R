@@ -80,7 +80,6 @@ Rcpp::DataFrame find_discords_brute_force(
   std::vector<unsigned int> distance_calls;
   std::vector<double > distances;
 
-
   VisitRegistry registry(ts.length());
   registry.markVisited(ts.length() - w_size, ts.length());
 
