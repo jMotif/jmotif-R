@@ -454,13 +454,13 @@ The brute-force takes 14 seconds to discover 5 discords in the data (with early-
 
 whereas HOT-SAX finishes in fraction of a second:
 
-    > lineprof( find_discords_hot_sax(ecg0606, 100, 4, 4, 0.01, 5) )
+    > lineprof( find_discords_hotsax(ecg0606, 100, 4, 4, 0.01, 5) )
        time alloc release dups     ref   src
     1 0.191 0.245       0   56 ".Call" .Call
 
 The discords returned as a data frame sorted by the position:
 
-    > discords = find_discords_hot_sax(ecg0606, 100, 4, 4, 0.01, 5)
+    > discords = find_discords_hotsax(ecg0606, 100, 4, 4, 0.01, 5)
     > discords
       nn_distance position
     1   0.4787745       37
@@ -471,7 +471,7 @@ The discords returned as a data frame sorted by the position:
     
 The best discord is the third one at 411:
 
-    discords = find_discords_hot_sax(ecg0606, 100, 4, 4, 0.01, 5)
+    discords = find_discords_hotsax(ecg0606, 100, 4, 4, 0.01, 5)
     plot(ecg0606, type = "l", col = "cornflowerblue", main = "ECG 0606")
     lines(x=c(discords[3,2]:(discords[3,2]+100)),
         y=ecg0606[discords[3,2]:(discords[3,2]+100)], col="red")
