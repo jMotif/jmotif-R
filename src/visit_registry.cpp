@@ -10,6 +10,8 @@ VisitRegistry::VisitRegistry( int capacity ) {
   for( int i = 0; i < capacity; i++ ) {
     indexes[i] = i;
   }
+
+  std::srand(std::time(nullptr));
   auto rng = std::default_random_engine {};
   std::shuffle(std::begin(indexes), std::end(indexes), rng);
 

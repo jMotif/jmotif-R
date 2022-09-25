@@ -74,6 +74,7 @@ Rcpp::DataFrame cosine_sim(Rcpp::List data);
 struct discord_record {
   int index;
   double nn_distance;
+  int dist_calls;
 };
 //
 class VisitRegistry {

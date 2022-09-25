@@ -1,27 +1,24 @@
 #include <jmotif.h>
 
+// this finds the best discord given a time series, sliding window size, and a
+// "registry" of the position which are to be tested
 discord_record find_best_discord_brute_force(const NumericVector& series,
                                              int w_size, VisitRegistry* globalRegistry) {
 
-  // Rcout << "looking for the best discord, series length " << series.size() << "\n";
-
   double best_so_far_distance = -1.0;
   int best_so_far_index = -1;
+  unsigned int dist_calls = 0;
 
   VisitRegistry outerRegistry(series.size() - w_size);
-
   int outer_idx = outerRegistry.getNextUnvisited();
 
   while(!(-1==outer_idx)){ // while there is a position to try
 
     outerRegistry.markVisited(outer_idx);
     if(globalRegistry->isVisited(outer_idx)){
-      // Rcout << " skipping " << outer_idx << ", marked as visited in global\n";
       outer_idx = outerRegistry.getNextUnvisited();
-      continue;
+      continue; // break the loop
     }
-    // Rcout << " outer unvisited candidate at " << outer_idx << "\n";
-
 
     NumericVector candidate_seq = subseries(series, outer_idx, outer_idx + w_size);
 
@@ -31,27 +28,20 @@ discord_record find_best_discord_brute_force(const NumericVector& series,
     int inner_idx = innerRegistry.getNextUnvisited();
     while(!(-1==inner_idx)){
       innerRegistry.markVisited(inner_idx);
-      // Rcout << "examining the subsequences starting at outer " << outer_idx << " and inner " << inner_idx << "\n";
-
-      if(std::abs(inner_idx - outer_idx) > w_size) {
-
+      if(std::abs(inner_idx - outer_idx) > w_size) { // if no overlap between two intervals
         NumericVector curr_seq = subseries(series, inner_idx, inner_idx + w_size);
-        // double dist = early_abandoned_dist(candidate_seq, curr_seq, nnDistance);
-        double dist = euclidean_dist(candidate_seq, curr_seq);
-        // Rcout << "  .. dist:  " << dist << " best dist " << nnDistance << "\n";
-
+        double dist = early_abandoned_dist(candidate_seq, curr_seq, nnDistance);
+        //double dist = euclidean_dist(candidate_seq, curr_seq);
+        dist_calls = dist_calls + 1;
         if ( (!std::isnan(dist)) && dist < nnDistance) {
           nnDistance = dist;
         }
-
       }
-
       inner_idx = innerRegistry.getNextUnvisited();
     }
 
     if (!(std::numeric_limits<double>::max() == nnDistance)
-          && nnDistance > best_so_far_distance) {
-      // Rcout << "** updating discord " << nnDistance << " at " << outer_idx << "\n";
+          && (nnDistance > best_so_far_distance)) {
       best_so_far_distance = nnDistance;
       best_so_far_index = outer_idx;
     }
@@ -62,6 +52,7 @@ discord_record find_best_discord_brute_force(const NumericVector& series,
   struct discord_record res;
   res.index = best_so_far_index;
   res.nn_distance = best_so_far_distance;
+  res.dist_calls = dist_calls;
   return res;
 }
 
@@ -85,24 +76,24 @@ discord_record find_best_discord_brute_force(const NumericVector& series,
 Rcpp::DataFrame find_discords_brute_force(
     NumericVector ts, int w_size, int discords_num) {
 
-  std::map<int, double> res;
+  std::vector<int> positions;
+  std::vector<unsigned int> distance_calls;
+  std::vector<double > distances;
+
 
   VisitRegistry registry(ts.length());
   registry.markVisited(ts.length() - w_size, ts.length());
-
-  // Rcout << "starting search of " << discords_num << " discords..." << "\n";
 
   int discord_counter = 0;
   while(discord_counter < discords_num){
 
     discord_record rec = find_best_discord_brute_force(ts, w_size, &registry);
 
-    //     Rcout << "found a discord " << discord_counter << " at " << rec.index;
-    //     Rcout << ", NN distance: " << rec.nn_distance << "\n";
-
     if(rec.nn_distance == 0 || rec.index == -1){ break; }
 
-    res.insert(std::make_pair(rec.index, rec.nn_distance));
+    positions.push_back(rec.index);
+    distances.push_back(rec.nn_distance);
+    distance_calls.push_back(rec.dist_calls);
 
     int start = rec.index - w_size;
     if(start<0){
@@ -110,26 +101,15 @@ Rcpp::DataFrame find_discords_brute_force(
     }
 
     int end = rec.index + w_size;
-    // it can't be greater
-    // if(end>=ts.length()){
-    //  end = ts.length();
-    //}
 
-    // Rcout << "marking as visited from " << start << " to " << end << "\n";
     registry.markVisited(start, end);
     discord_counter = discord_counter + 1;
   }
 
-  std::vector<int> positions;
-  std::vector<double > distances;
-
-  for(std::map<int, double>::iterator it = res.begin(); it != res.end(); it++) {
-    positions.push_back(it->first);
-    distances.push_back(it->second);
-  }
   // make results
   return Rcpp::DataFrame::create(
     Named("nn_distance") = distances,
-    Named("position") = positions
+    Named("position") = positions,
+    Named("distance_calls") = distance_calls
   );
 }
