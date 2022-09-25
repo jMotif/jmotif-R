@@ -2,8 +2,8 @@ library(jmotif)
 
 ## makes a gun-point dataset
 #
-dtrain <- read.table("data/Gun_Point/Gun_Point_TRAIN", as.is = T)
-dtest <- read.table("data/Gun_Point/Gun_Point_TEST", as.is = T)
+dtrain <- read.table("data/Gun_Point/Gun_Point_TRAIN", as.is = TRUE)
+dtest <- read.table("data/Gun_Point/Gun_Point_TEST", as.is = TRUE)
 
 labels_train = unlist(dtrain[,1])
 labels_test = unlist(dtest[,1])
@@ -18,8 +18,8 @@ save(Gun_Point, file = "data/Gun_Point.rda")
 
 ## makes the CBF dataset
 #
-dtrain <- read.table("data/CBF/CBF_TRAIN", as.is = T)
-dtest <- read.table("data/CBF/CBF_TEST", as.is = T)
+dtrain <- read.table("data/CBF/CBF_TRAIN", as.is = TRUE)
+dtest <- read.table("data/CBF/CBF_TEST", as.is = TRUE)
 
 labels_train <- unlist(dtrain[,1])
 labels_test <- unlist(dtest[,1])

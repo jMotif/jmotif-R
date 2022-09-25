@@ -1,10 +1,11 @@
-#include <RcppArmadillo.h>
-using namespace Rcpp ;
-//
 #include <jmotif.h>
+
 #include <limits>
 #include <chrono>
 #include <ctime>
+#include <vector>
+#include <random>
+
 
 class rule_interval {
 public:
@@ -225,12 +226,14 @@ rra_discord_record find_best_rra_discord(std::vector<double> *ts, int w_size,
       cIndex--;
 
       // shuffle the visit array
-      for (int j = cIndex; j > 0; j--) {
-        int index = armaRand() % (j + 1);
-        int a = visit_array[index];
-        visit_array[index] = visit_array[j];
-        visit_array[j] = a;
-      }
+      auto rng = std::default_random_engine {};
+      std::shuffle(std::begin(visit_array), std::end(visit_array), rng);
+//      for (int j = cIndex; j > 0; j--) {
+//        int index = armaRand() % (j + 1);
+//        int a = visit_array[index];
+//        visit_array[index] = visit_array[j];
+//        visit_array[j] = a;
+//      }
 
       // while there are unvisited locations
       while (cIndex >= 0) {

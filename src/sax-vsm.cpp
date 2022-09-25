@@ -1,8 +1,4 @@
-#include <RcppArmadillo.h>
-using namespace Rcpp ;
-//
 #include <jmotif.h>
-//
 
 //' Converts a single time series into a bag of words.
 //'

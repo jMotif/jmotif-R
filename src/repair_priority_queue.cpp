@@ -1,5 +1,4 @@
 #include <jmotif.h>
-using namespace Rcpp ;
 
 // enqueue a new element, if older element's version exists, throws an error
 //

@@ -2,10 +2,14 @@
 // Generator token: 10BE3573-1514-4C36-9D1C-5A225CD40393
 
 #include "../inst/include/jmotif.h"
-#include <RcppArmadillo.h>
 #include <Rcpp.h>
 
 using namespace Rcpp;
+
+#ifdef RCPP_USE_GLOBAL_ROSTREAM
+Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
+Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
+#endif
 
 // find_discords_brute_force
 Rcpp::DataFrame find_discords_brute_force(NumericVector ts, int w_size, int discords_num);

@@ -29,7 +29,7 @@ for (i in 2:length(ecg_grammar)) {
   for (j in seq_along(rule$rule_interval_starts)) {
     xs <- rule$rule_interval_starts[j]
     xe <- rule$rule_interval_ends[j] + w
-    density_curve[xs:xe] <- density_curve[xs:xe] + 1;
+    density_curve[xs:xe] <- density_curve[xs:xe] + 1
   }
 }
 

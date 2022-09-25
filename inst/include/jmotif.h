@@ -1,10 +1,13 @@
 #ifndef JMOTIF_h
 #define JMOTIF_h
 //
-#include <RcppArmadillo.h>
-using namespace Rcpp ;
+//#include <RcppArmadillo.h>
+#include <vector>
+#include <random>
+#include <Rcpp.h>
+using namespace Rcpp;
 // Enable C++11 via this plugin (Rcpp 0.10.3 or later)
-// [[Rcpp::plugins("cpp11")]]
+// [[Rcpp::plugins("cpp14")]]
 
 //
 // Define the letters array
@@ -71,12 +74,14 @@ Rcpp::DataFrame cosine_sim(Rcpp::List data);
 struct discord_record {
   int index;
   double nn_distance;
+  int dist_calls;
 };
 //
 class VisitRegistry {
 public:
   int size;
-  bool* registry;
+  std::vector<bool> registry;
+  std::vector<int> indexes;
   int unvisited_count;
   VisitRegistry( int capacity );
   int getNextUnvisited();

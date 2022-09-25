@@ -25,7 +25,7 @@ cverror <- function(x) {
     set_test <- which(folds$which == i)
     set_train <- setdiff(1:m, set_test)
 
-    bags <- plyr::alply(unique(train_labels), 1, function(x){x})
+    bags <- plyr::alply(unique(train_labels), 1, function(x) {x} )
     for (j in 1:c) {
       ll <- which(train_labels[set_train] == unique(train_labels)[j])
       bags[[unique(train_labels)[j]]] <-
