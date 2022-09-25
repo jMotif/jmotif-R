@@ -29,7 +29,6 @@ discord_record find_best_discord_hotsax(std::vector<double>* ts, int w_size, dou
       std::vector<double>::const_iterator first = ts->begin() + candidate_idx;
       std::vector<double>::const_iterator last = ts->begin() +  candidate_idx + w_size;
       std::vector<double> candidate_subseq(first, last);
-      // std::vector<double> candidate_seq = _znorm(candidate_subseq, n_threshold);
 
       VisitRegistry innerRegistry(ts->size() - w_size);
       bool doRandomSearch = true;
@@ -63,24 +62,19 @@ discord_record find_best_discord_hotsax(std::vector<double>* ts, int w_size, dou
           }
         }
       }
-      // Rcout << " same word iterations finished with nnDistance " << nnDistance <<
-      //  ", best so far distance " << best_so_far_distance << "\n";
 
       if(doRandomSearch){
-        //Rcout << " doing random search... \n";
 
         int inner_idx = innerRegistry.getNextUnvisited();
 
         while(!(-1==inner_idx)){
           innerRegistry.markVisited(inner_idx);
-          //Rcout << innerRegistry.unvisited_count << ", " << inner_idx << "\n";
 
           if( std::abs(inner_idx-candidate_idx) > w_size){
 
             std::vector<double>::const_iterator first = ts->begin() + inner_idx;
             std::vector<double>::const_iterator last = ts->begin() + inner_idx + w_size;
             std::vector<double> curr_subseq(first, last);
-            //std::vector<double> curr_seq = _znorm(curr_subseq, n_threshold);
 
             double dist = _euclidean_dist(&candidate_subseq, &curr_subseq);
             distance_calls++;
@@ -96,23 +90,16 @@ discord_record find_best_discord_hotsax(std::vector<double>* ts, int w_size, dou
           inner_idx = innerRegistry.getNextUnvisited();
         }
       }
-      //Rcout << " ended random iterations\n";
 
       if(nnDistance > best_so_far_distance && nnDistance < std::numeric_limits<double>::max()){
         best_so_far_distance = nnDistance;
         best_so_far_index = candidate_idx;
         best_so_far_word = it->second;
-        //Rcout << "updated discord record: "<< best_so_far_word << " at " << best_so_far_index <<
-        //  " nnDistance " << best_so_far_distance << "\n";
       }
 
-      //Rcout << "discord: "<< best_so_far_word << " at " << best_so_far_index <<
-      //  " nnDistance " << best_so_far_distance << "\n";
     }
 
   }
-
-  // Rcout << "  HOT-SAX, distance calls: " << distance_calls << std::endl;
 
   struct discord_record res;
   res.index = best_so_far_index;
@@ -189,8 +176,6 @@ Rcpp::DataFrame find_discords_hotsax(NumericVector ts, int w_size, int paa_size,
 
   VisitRegistry registry(series.size());
   registry.markVisited(series.size()- w_size, series.size());
-
-  // Rcout << "starting search of " << discords_num << " discords..." << "\n";
 
   int discord_counter = 0;
   while(discord_counter < discords_num){

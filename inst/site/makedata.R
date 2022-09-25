@@ -5,8 +5,8 @@ library(jmotif)
 dtrain <- read.table("data/Gun_Point/Gun_Point_TRAIN", as.is = TRUE)
 dtest <- read.table("data/Gun_Point/Gun_Point_TEST", as.is = TRUE)
 
-labels_train = unlist(dtrain[,1])
-labels_test = unlist(dtest[,1])
+labels_train <- unlist(dtrain[, 1])
+labels_test <- unlist(dtest[, 1])
 
 data_train <- matrix(unlist(dtrain[,-1]), nrow = length(labels_train))
 data_test <- matrix(unlist(dtest[,-1]), nrow = length(labels_test))
