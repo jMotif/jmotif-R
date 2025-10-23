@@ -1,20 +1,11 @@
-- name: Run lintr
-  shell: Rscript {0}
-  run: |
-    linters <- lintr::linters_with_defaults(
-      line_length_linter         = lintr::line_length_linter(80),
-      object_name_linter         = lintr::object_name_linter(styles = "snake_case"),
-      assignment_linter          = lintr::assignment_linter(),
-      commas_linter              = lintr::commas_linter(),
-      infix_spaces_linter        = lintr::infix_spaces_linter(),
-      trailing_blank_lines_linter= lintr::trailing_blank_lines_linter(),
-      trailing_whitespace_linter = lintr::trailing_whitespace_linter(),
-      no_tab_linter              = lintr::no_tab_linter(),
-      semicolon_terminator_linter= lintr::semicolon_terminator_linter(),
-      spaces_inside_linter       = lintr::spaces_inside_linter(),
-      object_usage_linter        = NULL
-    )
-    res <- lintr::lint_package(linters = linters,
-                               exclusions = c("inst/doc/**","data-raw/**","packrat/**","renv/**","docs/**","vignettes/**"))
-    lintr::print_lints(res)
-    if (length(res)) quit(status = 1)
+linters: linters_with_defaults(
+  line_length_linter(80),
+  object_name_linter = object_name_linter(styles = "snake_case"),
+  assignment_linter = assignment_linter(),
+  object_usage_linter = NULL
+)
+exclusions: list(
+  "renv",
+  "inst/doc"
+)
+encoding: UTF-8
