@@ -1,23 +1,27 @@
 ## Submission
-This yet another C++11 fix, fixing clang warning: 
-  Result: WARN
-    Found the following significant warnings:
-     znorm.cpp:44:59: warning: 'bind2nd<std::__1::minus<double>, double>' is deprecated [-Wdeprecated-declarations]
+This is addressing project deletion following your email.
+===
+Please see the problems shown on
+<https://cran.r-project.org/web/checks/check_results_jmotif.html>.
+Please correct before 2025-11-15 to safely retain your package on CRAN.
+Note that this will be the *final* reminder.
+===
 
-The old code:
-std::transform(ts.begin(), ts.end(), diff.begin(), std::bind2nd(std::minus<double>(), mean));
+I've fixed RcppArmadillo-related issues by removing hard requirement for C++ 11.
 
-The new code:
- for(unsigned i=0; i<ts.size(); i++)
-    diff[i] = ts[i]-mean;
+Some bugs popped up and I fixed those as well.
+
+Tests pass and checks as well.
+
+Have a great day! Thank you!
+
 
 ## Changes
 
-All over source code in order to fix any thrown warnings.
+Build routines and some sources.
 
 ## Test environments
-* Ubuntu LTS 19.10 (localhost), R 3.6.1
-* Ubuntu LTS 16.04 (on travis-ci), R 3.5
+* Ubuntu LTS 22.04.05 (localhost), R 4.5.1
 * win-builder (devel and release)
 
 ## R CMD check results
