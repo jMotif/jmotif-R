@@ -1,26 +1,21 @@
-linters: lintr::linters_with_defaults(
-  line_length_linter        = lintr::line_length_linter(80),
-  object_name_linter        = lintr::object_name_linter(styles = "snake_case"),
-  assignment_linter         = lintr::assignment_linter(),     # prefer '<-'
-  commas_linter             = lintr::commas_linter(),
-  infix_spaces_linter       = lintr::infix_spaces_linter(),
-  trailing_blank_lines_linter = lintr::trailing_blank_lines_linter(),
-  trailing_whitespace_linter  = lintr::trailing_whitespace_linter(),
-  no_tab_linter             = lintr::no_tab_linter(),
-  semicolon_terminator_linter = lintr::semicolon_terminator_linter(),
-  spaces_inside_linter      = lintr::spaces_inside_linter(),
-  # Often noisy/slow across packages; enable if you want stricter checks:
-  object_usage_linter       = NULL
+linters: linters_with_defaults(
+  line_length_linter = line_length_linter(80),
+  object_name_linter = object_name_linter(styles = "snake_case"),
+  assignment_linter = assignment_linter(),
+  commas_linter = commas_linter(),
+  infix_spaces_linter = infix_spaces_linter(),
+  trailing_blank_lines_linter = trailing_blank_lines_linter(),
+  trailing_whitespace_linter = trailing_whitespace_linter(),
+  no_tab_linter = no_tab_linter(),
+  semicolon_terminator_linter = semicolon_terminator_linter(),
+  spaces_inside_linter = spaces_inside_linter(),
+  object_usage_linter = NULL
 )
-
-# make the CI job fail when there are lints
 error_on_lint: true
-
-# exclude typical generated/third-party spots
-exclusions:
-  - "inst/doc/**"
-  - "data-raw/**"
-  - "packrat/**"
-  - "renv/**"
-  - "docs/**"
-  - "vignettes/**"   # if you prefer to lint these, remove this line
+exclusions: 
+  inst/doc/**, 
+  data-raw/**, 
+  packrat/**, 
+  renv/**, 
+  docs/**, 
+  vignettes/**
