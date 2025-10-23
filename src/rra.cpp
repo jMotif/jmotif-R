@@ -226,8 +226,12 @@ rra_discord_record find_best_rra_discord(std::vector<double> *ts, int w_size,
       cIndex--;
 
       // shuffle the visit array
-      auto rng = std::default_random_engine {};
-      std::shuffle(std::begin(visit_array), std::end(visit_array), rng);
+      // only shuffle the filled portion of visit_array
+      if (cIndex >= 0) {
+        auto rng = std::default_random_engine {};
+        // std::shuffle(std::begin(visit_array), std::end(visit_array), rng); # old bad code, throws us into -1 zone
+        std::shuffle(visit_array.begin(), visit_array.begin() + cIndex + 1, rng);
+      }
 //      for (int j = cIndex; j > 0; j--) {
 //        int index = armaRand() % (j + 1);
 //        int a = visit_array[index];
@@ -237,28 +241,53 @@ rra_discord_record find_best_rra_discord(std::vector<double> *ts, int w_size,
 
       // while there are unvisited locations
       while (cIndex >= 0) {
-
-        rule_interval randomInterval = intervals->at(visit_array[cIndex]);
+        int idx = visit_array[cIndex];
         cIndex--;
 
-        //Rcout << "    random candidate " << randomInterval.start << "-" <<
-        //  randomInterval.end << ", cindex " << cIndex << std::endl;
+        // safety check (optional)
+        if (idx < 0 || idx >= intervals->size()) continue;
+
+        rule_interval randomInterval = intervals->at(idx);
 
         distance_calls_counter++;
-        double dist = _normalized_distance(c_interval.start, c_interval.end,
-                        randomInterval.start, randomInterval.end, ts);
+        double dist = _normalized_distance(
+          c_interval.start, c_interval.end,
+          randomInterval.start, randomInterval.end, ts
+        );
+
         if (dist < bestSoFarDistance) {
-          // Rcout << "    dist " << dist <<
-          //   " is less than best so far, breaking off the search" << std::endl;
           nn_distance = dist;
           break;
         }
         if (dist < nn_distance) {
-          // Rcout << "    better nn distance found " << dist << std::endl;
           nn_distance = dist;
         }
-
       }
+
+      // while there are unvisited locations
+      //while (cIndex >= 0) {
+
+        //rule_interval randomInterval = intervals->at(visit_array[cIndex]);
+        //cIndex--;
+
+        //Rcout << "    random candidate " << randomInterval.start << "-" <<
+        //  randomInterval.end << ", cindex " << cIndex << std::endl;
+
+        //distance_calls_counter++;
+        //double dist = _normalized_distance(c_interval.start, c_interval.end,
+        //                randomInterval.start, randomInterval.end, ts);
+        //if (dist < bestSoFarDistance) {
+          // Rcout << "    dist " << dist <<
+          //   " is less than best so far, breaking off the search" << std::endl;
+        //  nn_distance = dist;
+        //  break;
+        //}
+        //if (dist < nn_distance) {
+          // Rcout << "    better nn distance found " << dist << std::endl;
+        //  nn_distance = dist;
+        //}
+
+      //}
 
       // ****
       // tend = std::chrono::system_clock::now();

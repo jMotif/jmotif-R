@@ -403,23 +403,23 @@ std::map<int, std::string> sax_via_window(
 // [[Rcpp::export]]
 std::map<int, CharacterVector> sax_by_chunking(
     NumericVector ts, int paa_size, int a_size, double n_threshold) {
-
-  // Rcout << "ts of length " << ts.length();
-  // Rcout << ", paa " << paa_size;
-  // Rcout << ", a " << a_size;
-  // Rcout << ", n_th " << n_threshold << "\n";
-
   std::map<int, CharacterVector> idx2word;
 
-  NumericVector vec = znorm(ts, n_threshold);
+  // Convert once at the start
+  std::vector<double> ts_std = Rcpp::as<std::vector<double>>(ts);
 
-  vec = paa(vec, paa_size);
+  // Z-normalize (works on std::vector)
+  ts_std = _znorm(ts_std, n_threshold);
 
-  std::string curr_str = Rcpp::as<std::string>(series_to_string(vec, a_size));
-  // Rcout << curr_str << "\n";
+  // Apply PAA (use the _paa2 version if it supports std::vector directly)
+  ts_std = _paa2(ts_std, paa_size);
 
-  for(unsigned i=0; i<curr_str.length(); i++){
-    idx2word.insert(std::make_pair(i,curr_str.substr(i,1)));
+  // Convert to string for SAX
+  std::string curr_str = _series_to_string(ts_std, a_size);
+
+  // Insert characters into map without creating intermediate CharacterVectors
+  for (unsigned i = 0; i < curr_str.length(); i++) {
+    idx2word[i] = CharacterVector::create(curr_str.substr(i, 1));
   }
 
   return idx2word;

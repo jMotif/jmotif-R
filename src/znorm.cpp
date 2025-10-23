@@ -1,5 +1,4 @@
 #include <jmotif.h>
-//
 
 //' Z-normalizes a time series by subtracting its mean and dividing by the standard deviation.
 //'
@@ -18,22 +17,18 @@
 //' plot(x, y, type="l", col="blue")
 //' lines(x, znorm(y, 0.01), type="l", col="red")
 // [[Rcpp::export]]
-NumericVector znorm(NumericVector ts, double threshold  = 0.01) {
-  // double ts_sd = sd(ts);
-  // if (ts_sd < threshold){
-  //  return clone(ts);
-  // }
-  // Rcout << " mean1 " << mean(ts)  << "\n";
-  // Rcout << " stdev1 " << ts_sd << "\n";
-  // return (ts - mean(ts)) / ts_sd;
-  return wrap(_znorm(Rcpp::as< std::vector<double> >(ts), threshold));
+NumericVector znorm(NumericVector ts, double threshold = 0.01) {
+
+  if (ts.size() == 0) stop("Input vector cannot be empty");
+
+  std::vector<double> ts_std = as<std::vector<double>>(ts);
+  std::vector<double> out = _znorm(ts_std, threshold);
+  return wrap(out);
 }
 
-// this is the main implementation, above is the wrapper
-//
-std::vector<double> _znorm(std::vector<double> ts, double threshold) {
+std::vector<double> _znorm(const std::vector<double>& ts, double threshold) {
 
-  double sum = std::accumulate(std::begin(ts), std::end(ts), 0.0);
+  double sum = std::accumulate(ts.begin(), ts.end(), 0.0);
   double mean =  sum / ts.size();
   // Rcout << " mean2 " << mean << "\n";
 
@@ -46,15 +41,11 @@ std::vector<double> _znorm(std::vector<double> ts, double threshold) {
   double stdev = std::sqrt(sq_sum / (ts.size()-1));
   // Rcout << " stdev2 " << stdev << "\n";
 
-  if (stdev < threshold){
-    std::vector<double> res(ts);
-    return res;
-  }
+  if (stdev < threshold) return ts; // return clone
 
-  std::vector<double> res(ts.size());
-  for(unsigned i=0; i<ts.size(); i++){
-    res[i] = (ts[i]-mean)/stdev;
-  }
-  return res;
+  for (unsigned i = 0; i < ts.size(); i++)
+    diff[i] = (ts[i] - mean) / stdev;
+
+  return diff;
 
 }

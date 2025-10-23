@@ -19,12 +19,12 @@ test_that("SAX with NAs", {
 
   dat2 <- dat
   dat2[60] <- NA
-  sax2 <- sax_via_window(dat2, 6, 3, 3, "none", 0.01)
+  sax2 <- suppressWarnings(sax_via_window(dat2, 6, 3, 3, "none", 0.01))
   expect_equal(length(sax2), 54)
 
   dat3 <- dat
   dat3[50] <- NA
-  sax3 <- sax_via_window(dat3, 6, 3, 3, "none", 0.01)
+  sax3 <- suppressWarnings(sax_via_window(dat3, 6, 3, 3, "none", 0.01))
   expect_equal(length(sax3), 44)
 
   expect_warning(sax_via_window(dat3, 6, 3, 3, "none", 0.01))
@@ -43,13 +43,13 @@ test_that("SAX with NAs #2, sax-vsm bags", {
   saxc <- series_to_wordbag(c, w, p, a, "none", 0.01)
   cd <- c
   cd[128] <- NA
-  saxcd <- series_to_wordbag(cd, w, p, a, "none", 0.01)
+  saxcd <- suppressWarnings(series_to_wordbag(cd, w, p, a, "none", 0.01))
 
   expect_equal(sum(saxc$counts), 69)
   expect_equal(sum(saxcd$counts), 68)
 
   cd[100] <- NA
-  saxcd <- series_to_wordbag(cd, w, p, a, "none", 0.01)
+  saxcd <- suppressWarnings(series_to_wordbag(cd, w, p, a, "none", 0.01))
   expect_equal(sum(saxcd$counts), 40)
 
 })

@@ -1,3 +1,11 @@
+# Version 1.2.0
+* Fixed blocking C++ issues with RcppArmaddillo 
+* Removed hard requirement for C++ 11
+* Fixed R exports into the namespace
+* Fixed occasional RRA discord exception when hitting outside of interval
+* Fixed broken tests
+* Improved some code for efficiency
+
 # Version 1.1.1
 * Fixed std::bind2nd deprecation warning.
 

@@ -10,12 +10,12 @@
  * **[RRA](https://github.com/jMotif/jmotif-R#90-rare-rule-anomaly-algorithm)** (Rare Rule Anomaly), a grammatical compression (i.e. [Kolmogorov Complexity](https://en.wikipedia.org/wiki/Kolmogorov_complexity)) -based algorithm for variable length exact time series anomaly discovery
  
 
-[![Build Status](https://travis-ci.org/jMotif/jmotif-R.svg?branch=master)](https://travis-ci.org/jMotif/jmotif-R)
-[![codecov.io](http://codecov.io/github/jMotif/jmotif-R/coverage.svg?branch=master)](http://codecov.io/github/jMotif/jmotif-R?branch=master)
-[![CRAN](http://www.r-pkg.org/badges/version/jmotif)](https://cran.r-project.org/package=jmotif)
-[![License](http://img.shields.io/:license-gpl2-green.svg)](http://www.gnu.org/licenses/gpl-2.0.html)
-[![Downloads from Rstudio mirror per month](http://cranlogs.r-pkg.org/badges/jmotif?color=brightgreen)](http://www.r-pkg.org/pkg/jmotif)
-[![Downloads from Rstudio mirror](http://cranlogs.r-pkg.org/badges/grand-total/jmotif?color=brightgreen)](http://www.r-pkg.org/pkg/jmotif)
+[![Build Status](https://app.travis-ci.com/jMotif/jmotif-R.svg?branch=master)](https://app.travis-ci.com/jMotif/jmotif-R)
+[![codecov.io](https://app.codecov.io/github/jMotif/jmotif-R/coverage.svg?branch=master)](https://app.codecov.io/github/jMotif/jmotif-R?branch=master)
+[![CRAN](https://www.r-pkg.org/badges/version/jmotif)](https://cran.r-project.org/package=jmotif)
+[![License](https://img.shields.io/:license-gpl2-green.svg)](https://www.gnu.org/licenses/gpl-2.0.html)
+[![Downloads from Rstudio mirror per month](https://cranlogs.r-pkg.org/badges/jmotif?color=brightgreen)](https://www.r-pkg.org/pkg/jmotif)
+[![Downloads from Rstudio mirror](https://cranlogs.r-pkg.org/badges/grand-total/jmotif?color=brightgreen)](https://www.r-pkg.org/pkg/jmotif)
 
 #### Most of this functionality is also implemented in [Java](https://github.com/jMotif/SAX) and some in [Python](https://github.com/seninp/saxpy) as well...
 
@@ -28,7 +28,7 @@ In order to process sets of timeseries with uneven length, pad shorter with NA w
 #### References:
 
 [1] Dina Goldin and Paris Kanellakis,
-[*On similarity queries for time-series data: Constraint specification and implementation*](http://dl.acm.org/citation.cfm?id=726176),
+[*On similarity queries for time-series data: Constraint specification and implementation*](https://dl.acm.org/citation.cfm?id=726176),
 In Principles and Practice of Constraint Programming – CP ’95, pages 137–153. (1995)
 
 [2] Keogh, E., Chakrabarti, K., Pazzani, M., & Mehrotra, S., 
@@ -38,19 +38,19 @@ Knowledge and information Systems, 3(3), 263-286. (2001)
 [3] Lonardi, S., Lin, J., Keogh, E., & Patel, P., 
 [*Finding motifs in time series*](https://scholar.google.com/scholar?cluster=9053042128452360340&hl=en&as_sdt=0,5), In Proc. of the 2nd Workshop on Temporal Data Mining (pp. 53-68). (2002)
 
-[4] Salton, G., Wong, A., Yang., C., [*A vector space model for automatic indexing*](http://dl.acm.org/citation.cfm?id=361220), Commun. ACM 18, 11, 613–620, 1975.
+[4] Salton, G., Wong, A., Yang., C., [*A vector space model for automatic indexing*](https://dl.acm.org/citation.cfm?id=361220), Commun. ACM 18, 11, 613–620, 1975.
 
 [5] Senin Pavel and Malinchik Sergey, 
 [*SAX-VSM: Interpretable Time Series Classification Using SAX and Vector Space Model.*](https://scholar.google.fr/citations?view_op=view_citation&citation_for_view=pVTcEd8AAAAJ:5nxA0vEk-isC),
 Data Mining (ICDM), 2013 IEEE 13th International Conference on, pp.1175,1180, 7-10 Dec. 2013.
 
 [6] Keogh, E., Lin, J., Fu, A.,
-[*HOT SAX: Efficiently finding the most unusual time series subsequence*](http://www.cs.ucr.edu/~eamonn/HOT%20SAX%20%20long-ver.pdf),
+[*HOT SAX: Efficiently finding the most unusual time series subsequence*](https://www.cs.ucr.edu/~eamonn/HOT%20SAX%20%20long-ver.pdf),
 In Proc. ICDM (2005)
 
-[7] N.J. Larsson and A. Moffat. [*Offline dictionary-based compression.*](http://ieeexplore.ieee.org/xpl/login.jsp?tp=&arnumber=755679), In Data Compression Conference, 1999.
+[7] N.J. Larsson and A. Moffat. [*Offline dictionary-based compression.*](https://ieeexplore.ieee.org/document/755679), In Data Compression Conference, 1999.
 
-[8] Pavel Senin, Jessica Lin , Xing Wang, Tim Oates, Sunil Gandhi, Arnold P. Boedihardjo, Crystal Chen, Susan Frankenstein, [*Time series anomaly discovery with grammar-based compression.*](http://openproceedings.org/2015/conf/edbt/paper-155.pdf), In Proc. of The International Conference on Extending Database Technology, EDBT 15.
+[8] Pavel Senin, Jessica Lin , Xing Wang, Tim Oates, Sunil Gandhi, Arnold P. Boedihardjo, Crystal Chen, Susan Frankenstein, [*Time series anomaly discovery with grammar-based compression.*](https://openproceedings.org/2015/conf/edbt/paper-155.pdf), In Proc. of The International Conference on Extending Database Technology, EDBT 15.
 
 
 #### 0.0 Installation from latest sources
@@ -127,7 +127,7 @@ The figure below illustrates the PAA+SAX procedure: 8 points time series is conv
 Another common way to use SAX is to apply the procedure to sliding window-extracted subseries (`sax_via_window(ts, win_size, paa_size, alp_size, nr_strategy, n_threshold)`). This technique is used in SAX-VSM, where it enables the conversion of a time series into the word bags. Note, the use of a numerosity reduction strategy.
 
 #### 5.0 SAX-VSM classifier
-I use the one of [standard UCR time series datasets](http://www.cs.ucr.edu/~eamonn/time_series_data/) to illustrate the implemented approach. The Cylinder-Bell-Funnel dataset (Saito, N: *Local feature extraction and its application using a library of bases.* PhD thesis, Yale University (1994)) consists of three time series classes. The dataset is embedded into the `jmotif` library:  
+I use the one of [standard UCR time series datasets](https://www.cs.ucr.edu/~eamonn/time_series_data/) to illustrate the implemented approach. The Cylinder-Bell-Funnel dataset (Saito, N: *Local feature extraction and its application using a library of bases.* PhD thesis, Yale University (1994)) consists of three time series classes. The dataset is embedded into the `jmotif` library:  
 
     # load Cylinder-Bell-Funnel data
     data("CBF")
@@ -430,7 +430,7 @@ which shows us that one instance of each of the classes was misclassified....
 #### 7.0 HOT-SAX algorithm for time series discord discovery
 Given a time series _T_, its subsequence _C_  is called *discord* if it has the largest Euclidean distance to its nearest non-self match. Thus, time series discord is a subsequence within a time series that is _maximally different_ to all the rest of subsequences in the time series, and therefore naturally captures the most unusual subsequence within the time series.
 
-The library embeds the ECG0606 dataset taken from [PHYSIONET FTP](http://physionet.org/physiobank/database/qtdb/). The raw data was transformed with their `rdsamp` utility 
+The library embeds the ECG0606 dataset taken from [PHYSIONET FTP](https://physionet.org/physiobank/database/qtdb/). The raw data was transformed with their `rdsamp` utility 
 
     rdsamp -r sele0606 -f 120.000 -l 60.000 -p -c | sed -n '701,3000p' >0606.csv
 
@@ -521,7 +521,7 @@ produces a list of data frames, each of which contains the RePair grammar rule i
      $ rule_interval_ends  : num [1:2] 3 9
 
 #### 8.0 Rule density curve
-As we have discussed in our work, SAX opens door for many high-level string algorithms application to the problem of patterns mining in time series. Specifically in [[8](http://csdl.ics.hawaii.edu/techreports/2014/14-05/14-05.pdf)], we have shown useful properties of grammatical compression (i.e., algorithmic complexity) when applied to the problem of recurrent and anomalous pattern discovery.
+As we have discussed in our work, SAX opens door for many high-level string algorithms application to the problem of patterns mining in time series. Specifically in [[8](https://csdl.ics.hawaii.edu/techreports/2014/14-05/14-05.pdf)], we have shown useful properties of grammatical compression (i.e., algorithmic complexity) when applied to the problem of recurrent and anomalous pattern discovery.
 
 Jmotif-R implements RePair [7] algorithm for grammar induction, which can be used to build the rule density curve enabling highly efficient approximate time series anomaly discovery.
 
