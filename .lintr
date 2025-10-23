@@ -1,11 +1,5 @@
-linters: linters_with_defaults(
-  line_length_linter(80),
-  object_name_linter = object_name_linter(styles = "snake_case"),
-  assignment_linter = assignment_linter(),
-  object_usage_linter = NULL
-)
-exclusions: list(
-  "renv",
-  "inst/doc"
-)
-encoding: UTF-8
+linters: with_defaults(
+    "single_quotes_linter" = NULL,
+    "camel_case_linter" = NULL,
+    "line_length_linter" = line_length_linter(100)
+  )
