@@ -13,7 +13,7 @@
 [![Build Status](https://app.travis-ci.com/jMotif/jmotif-R.svg?branch=master)](https://app.travis-ci.com/jMotif/jmotif-R)
 [![codecov.io](https://app.codecov.io/github/jMotif/jmotif-R/coverage.svg?branch=master)](https://app.codecov.io/github/jMotif/jmotif-R?branch=master)
 [![CRAN](https://www.r-pkg.org/badges/version/jmotif)](https://cran.r-project.org/package=jmotif)
-[![License](https://img.shields.io/:license-gpl2-green.svg)](https://www.gnu.org/licenses/gpl-2.0.html)
+[![License](https://img.shields.io/:license-gpl2-green.svg)](https://www.gnu.org/licenses/old-licenses/gpl-2.0.html)
 [![Downloads from Rstudio mirror per month](https://cranlogs.r-pkg.org/badges/jmotif?color=brightgreen)](https://www.r-pkg.org/pkg/jmotif)
 [![Downloads from Rstudio mirror](https://cranlogs.r-pkg.org/badges/grand-total/jmotif?color=brightgreen)](https://www.r-pkg.org/pkg/jmotif)
 

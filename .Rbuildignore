@@ -13,3 +13,4 @@ NEWS\.md
 ^\.lintr$
 ^cran-comments.md$
 ^CRAN-RELEASE$
+^CRAN-SUBMISSION$
