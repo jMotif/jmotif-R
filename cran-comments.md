@@ -23,10 +23,11 @@ Build routines and some sources.
 ## Test environments
 * Ubuntu LTS 22.04.05 (localhost), R 4.5.1
 * win-builder (devel and release)
+* r-actions -- ubuntu-, macos-, windows- latest 
 
 ## R CMD check results
 
-There were no ERRORs or WARNINGs
+There were no ERRORs or WARNINGs, one NOTE
 
 ## Downstream dependencies
 
