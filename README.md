@@ -11,7 +11,7 @@
  
 
 [![R-CMD-check](https://github.com/jMotif/jmotif-R/actions/workflows/devcheck.yml/badge.svg)](https://github.com/jMotif/jmotif-R/actions/workflows/devcheck.yml)
-[![coverage](https://app.codecov.io/github/jMotif/jmotif-R/graph/badge.svg?branch=master)](https://app.codecov.io/github/jMotif/jmotif-R?branch=master)
+[![coverage](https://codecov.io/gh/jMotif/jmotif-R/graph/badge.svg?branch=master)](https://app.codecov.io/github/jMotif/jmotif-R?branch=master)
 [![CRAN](https://www.r-pkg.org/badges/version/jmotif)](https://cran.r-project.org/package=jmotif)
 [![License: GPL v2](https://img.shields.io/badge/License-GPL_v2-blue.svg)](https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html)
 [![downloads](https://cranlogs.r-pkg.org/badges/jmotif?color=brightgreen)](https://www.r-pkg.org/pkg/jmotif)
